@@ -13,17 +13,286 @@
     <meta name="apple-mobile-web-app-title" content="متتبع الصلاة">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="متتبع الصلاة">
-    <meta name="msapplication-TileColor" content="#0f4c3a">
-    <meta name="msapplication-TileImage" content="icons/icon-144x144.png">
-    
-    <!-- PWA Icons -->
     <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512x512.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
     <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192x192.png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap');
+
+        /* ==================== THEME SYSTEM ==================== */
+        :root {
+            /* Default: Green & Gold Islamic */
+            --primary-dark: #0f4c3a;
+            --primary-medium: #1a5f4a;
+            --primary-light: rgba(15, 76, 58, 0.1);
+            --primary-lighter: rgba(15, 76, 58, 0.05);
+            --accent: #d4af37;
+            --accent-dark: #b8941f;
+            --accent-light: rgba(212, 175, 55, 0.5);
+            --accent-border: rgba(212, 175, 55, 0.2);
+            --accent-border-light: rgba(212, 175, 55, 0.3);
+            --bg-body-start: #0f4c3a;
+            --bg-body-mid: #1a5f4a;
+            --bg-body-end: #0f4c3a;
+            --bg-container-start: #fefdfb;
+            --bg-container-end: #f5f3ed;
+            --bg-card: white;
+            --text-primary: #0f4c3a;
+            --text-on-primary: #d4af37;
+            --text-on-dark: white;
+            --text-muted: #666;
+            --text-body: #333;
+            --chart-completed: #2d7a4f;
+            --pattern-opacity: 0.03;
+            --shadow-color: rgba(0,0,0,0.4);
+        }
+
+        [data-theme="navy"] {
+            --primary-dark: #0d1b2a;
+            --primary-medium: #1b2d45;
+            --primary-light: rgba(13, 27, 42, 0.1);
+            --primary-lighter: rgba(13, 27, 42, 0.05);
+            --accent: #c0c0c0;
+            --accent-dark: #a8a8a8;
+            --accent-light: rgba(192, 192, 192, 0.5);
+            --accent-border: rgba(192, 192, 192, 0.2);
+            --accent-border-light: rgba(192, 192, 192, 0.3);
+            --bg-body-start: #0d1b2a;
+            --bg-body-mid: #1b2d45;
+            --bg-body-end: #0d1b2a;
+            --bg-container-start: #f5f7fa;
+            --bg-container-end: #e8ecf1;
+            --bg-card: white;
+            --text-primary: #0d1b2a;
+            --text-on-primary: #c0c0c0;
+            --text-on-dark: white;
+            --text-muted: #666;
+            --text-body: #333;
+            --chart-completed: #1b4f72;
+            --pattern-opacity: 0.03;
+            --shadow-color: rgba(0,0,0,0.4);
+        }
+
+        [data-theme="purple"] {
+            --primary-dark: #2d1b4e;
+            --primary-medium: #432874;
+            --primary-light: rgba(45, 27, 78, 0.1);
+            --primary-lighter: rgba(45, 27, 78, 0.05);
+            --accent: #d4af37;
+            --accent-dark: #b8941f;
+            --accent-light: rgba(212, 175, 55, 0.5);
+            --accent-border: rgba(212, 175, 55, 0.2);
+            --accent-border-light: rgba(212, 175, 55, 0.3);
+            --bg-body-start: #2d1b4e;
+            --bg-body-mid: #432874;
+            --bg-body-end: #2d1b4e;
+            --bg-container-start: #faf8ff;
+            --bg-container-end: #f0ecf5;
+            --bg-card: white;
+            --text-primary: #2d1b4e;
+            --text-on-primary: #d4af37;
+            --text-on-dark: white;
+            --text-muted: #666;
+            --text-body: #333;
+            --chart-completed: #6b3fa0;
+            --pattern-opacity: 0.03;
+            --shadow-color: rgba(0,0,0,0.4);
+        }
+
+        /* Theme Switcher Styles */
+        .theme-switcher {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 3px solid var(--accent);
+            background: var(--primary-dark);
+            color: var(--accent);
+            font-size: 1.3em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .theme-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        .theme-options {
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            border: 2px solid var(--accent);
+        }
+
+        .theme-options.show {
+            display: flex;
+        }
+
+        .theme-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.2s;
+            white-space: nowrap;
+            background: none;
+            color: var(--text-primary);
+        }
+
+        .theme-option:hover {
+            border-color: var(--accent);
+            background: var(--primary-light);
+        }
+
+        .theme-option.active {
+            border-color: var(--accent);
+            background: var(--primary-dark);
+            color: var(--text-on-primary);
+        }
+
+        .theme-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            flex-shrink: 0;
+        }
+
+        /* Streak Section Styles */
+        .streak-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            border-radius: 15px;
+            border: 2px solid var(--accent);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .streak-title {
+            color: var(--accent);
+            font-size: 1.4em;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(255,255,255,0.15);
+        }
+
+        .streak-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .streak-card {
+            background: linear-gradient(to bottom, var(--bg-container-start), var(--bg-container-end));
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid var(--accent-border-light);
+            transition: all 0.3s;
+        }
+
+        .streak-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+            border-color: var(--accent);
+        }
+
+        .streak-prayer-name {
+            font-size: 0.95em;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .streak-value {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .streak-value.fire {
+            color: #e65100;
+        }
+
+        .streak-label {
+            font-size: 0.8em;
+            color: var(--text-muted);
+        }
+
+        .streak-best {
+            font-size: 0.75em;
+            color: var(--accent-dark);
+            margin-top: 6px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .theme-switcher {
+                top: 10px;
+                left: 10px;
+            }
+            .theme-toggle-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1em;
+            }
+            .streak-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 8px;
+            }
+            .streak-value {
+                font-size: 1.8em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .streak-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
+            }
+            .streak-card {
+                padding: 10px;
+            }
+            .streak-value {
+                font-size: 1.5em;
+            }
+        }
+
+
 
         * {
             margin: 0;
@@ -33,7 +302,7 @@
 
         body {
             font-family: 'Cairo', 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #0f4c3a 0%, #1a5f4a 50%, #0f4c3a 100%);
+            background: linear-gradient(135deg, var(--bg-body-start) 0%, var(--bg-body-mid) 50%, var(--bg-body-end) 100%);
             background-attachment: fixed;
             min-height: 100vh;
             padding: 20px;
@@ -58,12 +327,12 @@
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: linear-gradient(to bottom, #fefdfb 0%, #f5f3ed 100%);
+            background: linear-gradient(to bottom, var(--bg-container-start) 0%, var(--bg-container-end) 100%);
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.4), 
                         inset 0 1px 0 rgba(255,255,255,0.8);
             padding: 40px;
-            border: 3px solid #d4af37;
+            border: 3px solid var(--accent);
             position: relative;
             z-index: 1;
         }
@@ -74,7 +343,7 @@
             position: absolute;
             width: 80px;
             height: 80px;
-            border: 3px solid #d4af37;
+            border: 3px solid var(--accent);
         }
 
         .container::before {
@@ -96,10 +365,10 @@
             margin-bottom: 40px;
             padding: 30px 20px;
             position: relative;
-            background: linear-gradient(135deg, #0f4c3a 0%, #1a5f4a 100%);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
             border-radius: 15px;
-            border: 2px solid #d4af37;
-            box-shadow: 0 8px 25px rgba(15, 76, 58, 0.3);
+            border: 2px solid var(--accent);
+            box-shadow: 0 8px 25px var(--shadow-color);
         }
 
         .islamic-pattern {
@@ -109,15 +378,15 @@
             right: 0;
             bottom: 0;
             opacity: 0.1;
-            background-image: radial-gradient(circle at 20% 50%, transparent 0%, transparent 49%, #d4af37 50%, transparent 51%),
-                              radial-gradient(circle at 80% 50%, transparent 0%, transparent 49%, #d4af37 50%, transparent 51%);
+            background-image: radial-gradient(circle at 20% 50%, transparent 0%, transparent 49%, var(--accent) 50%, transparent 51%),
+                              radial-gradient(circle at 80% 50%, transparent 0%, transparent 49%, var(--accent) 50%, transparent 51%);
             background-size: 60px 60px;
             border-radius: 15px;
             pointer-events: none;
         }
 
         .header h1 {
-            color: #d4af37;
+            color: var(--accent);
             font-size: 2.5em;
             margin-bottom: 15px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
@@ -128,7 +397,7 @@
 
         .quran-verse {
             font-family: 'Amiri', serif;
-            color: #fefdfb;
+            color: var(--text-on-dark);
             font-size: 1.6em;
             margin-bottom: 8px;
             line-height: 1.8;
@@ -139,7 +408,7 @@
         }
 
         .verse-ref {
-            color: #d4af37;
+            color: var(--accent);
             font-size: 1em;
             font-style: italic;
             position: relative;
@@ -151,7 +420,7 @@
             content: '۩';
             position: absolute;
             font-size: 2em;
-            color: #d4af37;
+            color: var(--accent);
             opacity: 0.4;
         }
 
@@ -175,9 +444,9 @@
 
         .main-toggle-btn {
             padding: 15px 40px;
-            background: linear-gradient(135deg, #0f4c3a 0%, #1a5f4a 100%);
-            color: #d4af37;
-            border: 3px solid #d4af37;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--accent);
+            border: 3px solid var(--accent);
             border-radius: 12px;
             cursor: pointer;
             font-size: 1.2em;
@@ -193,10 +462,10 @@
 
         .main-toggle-btn:hover,
         .main-toggle-btn.active {
-            background: #d4af37;
-            color: #0f4c3a;
+            background: var(--accent);
+            color: var(--primary-dark);
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+            box-shadow: 0 8px 25px var(--accent-light);
         }
 
         .main-toggle-btn:active {
@@ -220,9 +489,9 @@
 
         .toggle-btn {
             padding: 15px 40px;
-            background: linear-gradient(135deg, rgba(15, 76, 58, 0.1) 0%, rgba(26, 95, 74, 0.1) 100%);
-            color: #0f4c3a;
-            border: 2px solid #d4af37;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-light) 100%);
+            color: var(--text-primary);
+            border: 2px solid var(--accent);
             border-radius: 10px;
             cursor: pointer;
             font-size: 1.1em;
@@ -235,10 +504,10 @@
 
         .toggle-btn:hover,
         .toggle-btn.active {
-            background: linear-gradient(135deg, #0f4c3a 0%, #1a5f4a 100%);
-            color: #d4af37;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--accent);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(15, 76, 58, 0.4);
+            box-shadow: 0 5px 15px var(--shadow-color);
         }
 
         .toggle-btn:active {
@@ -261,10 +530,10 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #0f4c3a 0%, #1a5f4a 100%);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
             padding: 25px;
             border-radius: 15px;
-            border: 2px solid #d4af37;
+            border: 2px solid var(--accent);
             box-shadow: 0 8px 20px rgba(0,0,0,0.2);
             text-align: center;
             transition: all 0.3s;
@@ -276,7 +545,7 @@
         }
 
         .stat-card .label {
-            color: #d4af37;
+            color: var(--accent);
             font-size: 1.1em;
             margin-bottom: 10px;
             font-weight: 600;
@@ -306,17 +575,17 @@
             background: white;
             padding: 25px;
             border-radius: 15px;
-            border: 2px solid #d4af37;
+            border: 2px solid var(--accent);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
         .chart-card h3 {
-            color: #0f4c3a;
+            color: var(--text-primary);
             margin-bottom: 20px;
             font-size: 1.3em;
             text-align: center;
             padding-bottom: 10px;
-            border-bottom: 2px solid #d4af37;
+            border-bottom: 2px solid var(--accent);
         }
 
         .chart-wrapper {
@@ -331,20 +600,20 @@
             gap: 20px;
             margin-bottom: 30px;
             padding: 20px;
-            background: linear-gradient(135deg, rgba(15, 76, 58, 0.05) 0%, rgba(26, 95, 74, 0.05) 100%);
+            background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--primary-lighter) 100%);
             border-radius: 12px;
-            border: 2px solid rgba(212, 175, 55, 0.2);
+            border: 2px solid var(--accent-border);
         }
 
         .year-controls label {
             font-weight: 700;
-            color: #0f4c3a;
+            color: var(--text-primary);
             font-size: 1.2em;
         }
 
         .year-controls input {
             padding: 10px 20px;
-            border: 2px solid #d4af37;
+            border: 2px solid var(--accent);
             border-radius: 8px;
             font-size: 1.1em;
             font-family: 'Cairo', sans-serif;
@@ -361,7 +630,7 @@
 
         .month-card {
             background: white;
-            border: 3px solid #d4af37;
+            border: 3px solid var(--accent);
             border-radius: 12px;
             padding: 20px;
             cursor: pointer;
@@ -375,12 +644,12 @@
         }
 
         .month-card h3 {
-            color: #0f4c3a;
+            color: var(--text-primary);
             font-size: 1.4em;
             margin-bottom: 15px;
             text-align: center;
             padding-bottom: 10px;
-            border-bottom: 2px solid #d4af37;
+            border-bottom: 2px solid var(--accent);
         }
 
         .progress-bar {
@@ -389,12 +658,12 @@
             height: 25px;
             overflow: hidden;
             margin-bottom: 10px;
-            border: 2px solid #d4af37;
+            border: 2px solid var(--accent);
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(135deg, #0f4c3a 0%, #1a5f4a 100%);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -412,11 +681,11 @@
         }
 
         .month-stat {
-            background: linear-gradient(135deg, rgba(15, 76, 58, 0.1) 0%, rgba(26, 95, 74, 0.1) 100%);
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-light) 100%);
             padding: 10px;
             border-radius: 8px;
             text-align: center;
-            border: 1px solid rgba(212, 175, 55, 0.3);
+            border: 1px solid var(--accent-border-light);
         }
 
         .month-stat .label {
@@ -428,7 +697,7 @@
         .month-stat .value {
             font-size: 1.3em;
             font-weight: 700;
-            color: #0f4c3a;
+            color: var(--text-primary);
         }
 
         .month-detail-header {
@@ -437,20 +706,20 @@
             align-items: center;
             margin-bottom: 30px;
             padding: 20px;
-            background: linear-gradient(135deg, #0f4c3a 0%, #1a5f4a 100%);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
             border-radius: 12px;
-            border: 2px solid #d4af37;
+            border: 2px solid var(--accent);
         }
 
         .month-detail-header h2 {
-            color: #d4af37;
+            color: var(--accent);
             font-size: 2em;
         }
 
         .back-btn {
             padding: 10px 25px;
-            background: #d4af37;
-            color: #0f4c3a;
+            background: var(--accent);
+            color: var(--primary-dark);
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -461,7 +730,7 @@
 
         .back-btn:hover {
             transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 5px 15px var(--accent-light);
         }
 
         .controls {
@@ -472,9 +741,9 @@
             margin-bottom: 30px;
             flex-wrap: wrap;
             padding: 20px;
-            background: linear-gradient(135deg, rgba(15, 76, 58, 0.05) 0%, rgba(26, 95, 74, 0.05) 100%);
+            background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--primary-lighter) 100%);
             border-radius: 12px;
-            border: 2px solid rgba(212, 175, 55, 0.2);
+            border: 2px solid var(--accent-border);
         }
 
         .input-group {
@@ -485,27 +754,27 @@
 
         .input-group label {
             font-weight: 700;
-            color: #0f4c3a;
+            color: var(--text-primary);
             font-size: 1.1em;
         }
 
         .input-group select,
         .input-group input {
             padding: 10px 15px;
-            border: 2px solid #d4af37;
+            border: 2px solid var(--accent);
             border-radius: 8px;
             font-size: 1em;
             font-family: 'Cairo', sans-serif;
             transition: all 0.3s;
             min-width: 120px;
-            background: white;
+            background: var(--bg-card);
         }
 
         .input-group select:focus,
         .input-group input:focus {
             outline: none;
-            border-color: #0f4c3a;
-            box-shadow: 0 0 10px rgba(15, 76, 58, 0.3);
+            border-color: var(--primary-dark);
+            box-shadow: 0 0 10px var(--shadow-color);
         }
 
         .nav-buttons {
@@ -515,9 +784,9 @@
 
         .nav-btn {
             padding: 10px 20px;
-            background: linear-gradient(135deg, #0f4c3a 0%, #1a5f4a 100%);
-            color: #d4af37;
-            border: 2px solid #d4af37;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--accent);
+            border: 2px solid var(--accent);
             border-radius: 8px;
             cursor: pointer;
             font-size: 1em;
@@ -527,9 +796,9 @@
         }
 
         .nav-btn:hover {
-            background: linear-gradient(135deg, #1a5f4a 0%, #0f4c3a 100%);
+            background: linear-gradient(135deg, var(--primary-medium) 0%, var(--primary-dark) 100%);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(15, 76, 58, 0.4);
+            box-shadow: 0 5px 15px var(--shadow-color);
         }
 
         .stats {
@@ -538,31 +807,31 @@
             gap: 15px;
             margin-bottom: 30px;
             padding: 25px;
-            background: linear-gradient(135deg, #0f4c3a 0%, #1a5f4a 100%);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
             border-radius: 12px;
-            border: 2px solid #d4af37;
+            border: 2px solid var(--accent);
             box-shadow: 0 8px 25px rgba(15, 76, 58, 0.3);
         }
 
         .stat-item {
             text-align: center;
             padding: 20px;
-            background: linear-gradient(to bottom, #fefdfb, #f5f3ed);
+            background: linear-gradient(to bottom, var(--bg-container-start), var(--bg-container-end));
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border: 2px solid rgba(212, 175, 55, 0.3);
+            border: 2px solid var(--accent-border-light);
             transition: all 0.3s;
         }
 
         .stat-item:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            border-color: #d4af37;
+            border-color: var(--accent);
         }
 
         .stat-item .label {
             font-size: 0.95em;
-            color: #0f4c3a;
+            color: var(--text-primary);
             margin-bottom: 8px;
             font-weight: 600;
         }
@@ -570,8 +839,8 @@
         .stat-item .value {
             font-size: 2em;
             font-weight: 700;
-            color: #1a5f4a;
-            text-shadow: 1px 1px 2px rgba(212, 175, 55, 0.3);
+            color: var(--primary-medium);
+            text-shadow: 1px 1px 2px var(--accent-border-light);
         }
 
         .prayers-container {
@@ -585,7 +854,7 @@
             border-radius: 15px;
             padding: 25px;
             transition: all 0.3s;
-            background: linear-gradient(to bottom, #fefdfb, #f5f3ed);
+            background: linear-gradient(to bottom, var(--bg-container-start), var(--bg-container-end));
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             position: relative;
             overflow: hidden;
@@ -634,12 +903,12 @@
         .prayer-counter {
             font-size: 1.1em;
             padding: 8px 20px;
-            background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
-            color: #0f4c3a;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: var(--primary-dark);
             border-radius: 25px;
             font-weight: 700;
             box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-            border: 2px solid #0f4c3a;
+            border: 2px solid var(--primary-dark);
         }
 
         .days-grid {
@@ -688,7 +957,7 @@
             position: absolute;
             font-size: 1.8em;
             font-weight: 700;
-            color: #d4af37;
+            color: var(--accent);
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
@@ -809,7 +1078,7 @@
             .container {
                 box-shadow: none;
                 padding: 20px;
-                border: 2px solid #0f4c3a;
+                border: 2px solid var(--primary-dark);
             }
 
             .container::before,
@@ -999,6 +1268,25 @@
     </style>
 </head>
 <body>
+    <!-- Theme Switcher -->
+    <div class="theme-switcher">
+        <button class="theme-toggle-btn" onclick="toggleThemeMenu()" title="تغيير السمة">🎨</button>
+        <div class="theme-options" id="themeOptions">
+            <button class="theme-option active" data-theme="green" onclick="setTheme('green')">
+                <span class="theme-dot" style="background: linear-gradient(135deg, #0f4c3a, #d4af37);"></span>
+                أخضر وذهبي
+            </button>
+            <button class="theme-option" data-theme="navy" onclick="setTheme('navy')">
+                <span class="theme-dot" style="background: linear-gradient(135deg, #0d1b2a, #c0c0c0);"></span>
+                كحلي وفضي
+            </button>
+            <button class="theme-option" data-theme="purple" onclick="setTheme('purple')">
+                <span class="theme-dot" style="background: linear-gradient(135deg, #2d1b4e, #d4af37);"></span>
+                بنفسجي وذهبي
+            </button>
+        </div>
+    </div>
+
     <div class="container">
         <div class="header">
             <div class="islamic-pattern"></div>
@@ -1066,6 +1354,13 @@
                         <div class="label">نسبة الإنجاز</div>
                         <div class="value" id="fardTrackerCompletionRate">0%</div>
                     </div>
+                </div>
+
+                
+                <!-- Fard Streak Section -->
+                <div class="streak-section" id="fardStreakSection">
+                    <div class="streak-title">🔥 سلاسل المواظبة على الفرائض</div>
+                    <div class="streak-grid" id="fardStreakGrid"></div>
                 </div>
 
                 <div class="prayers-container" id="fardTrackerPrayersContainer"></div>
@@ -1210,6 +1505,13 @@
                         <div class="label">نسبة الإنجاز</div>
                         <div class="value" id="sunnahTrackerCompletionRate">0%</div>
                     </div>
+                </div>
+
+                
+                <!-- Sunnah Streak Section -->
+                <div class="streak-section" id="sunnahStreakSection">
+                    <div class="streak-title">🔥 سلاسل المواظبة على السنن</div>
+                    <div class="streak-grid" id="sunnahStreakGrid"></div>
                 </div>
 
                 <div class="prayers-container" id="sunnahTrackerPrayersContainer"></div>
@@ -1867,6 +2169,7 @@
             loadAllData(type);
             renderTrackerMonth(type);
             updateTrackerStats(type);
+            renderStreaks(type);
         }
 
         function renderTrackerMonth(type) {
@@ -1957,6 +2260,7 @@
             saveMonthData(type, currentMonth);
             renderTrackerMonth(type);
             updateTrackerStats(type);
+            renderStreaks(type);
         }
 
         function updateTrackerStats(type) {
@@ -2009,6 +2313,7 @@
                 saveMonthData(type, currentMonth);
                 renderTrackerMonth(type);
                 updateTrackerStats(type);
+                renderStreaks(type);
             }
         }
 
@@ -2062,77 +2367,215 @@
             event.target.value = '';
         }
 
-        init();
 
-        // ==================== PWA Service Worker & Install ====================
+        // ==================== THEME SYSTEM ====================
         
-        // Register Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js')
-                    .then(reg => console.log('Service Worker registered:', reg.scope))
-                    .catch(err => console.log('SW registration failed:', err));
-            });
+        function toggleThemeMenu() {
+            document.getElementById('themeOptions').classList.toggle('show');
         }
 
-        // Install Prompt
-        let deferredPrompt;
-        
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            showInstallBanner();
+        // Close theme menu on outside click
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.theme-switcher')) {
+                document.getElementById('themeOptions').classList.remove('show');
+            }
         });
 
-        function showInstallBanner() {
-            // Check if already dismissed
-            if (localStorage.getItem('pwa_install_dismissed')) return;
+        function setTheme(theme) {
+            if (theme === 'green') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', theme);
+            }
             
-            const banner = document.createElement('div');
-            banner.id = 'installBanner';
-            banner.innerHTML = `
-                <div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#0f4c3a,#1a5f4a);
-                    padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;
-                    z-index:10000;box-shadow:0 -4px 20px rgba(0,0,0,0.3);border-top:3px solid #d4af37;direction:rtl;">
-                    <div style="color:white;font-family:'Cairo',sans-serif;flex:1;">
-                        <div style="font-size:1.1em;font-weight:700;color:#d4af37;">🕌 تثبيت التطبيق</div>
-                        <div style="font-size:0.85em;opacity:0.9;margin-top:4px;">أضف متتبع الصلاة إلى شاشتك الرئيسية</div>
-                    </div>
-                    <button onclick="installApp()" style="background:#d4af37;color:#0f4c3a;border:none;
-                        padding:10px 24px;border-radius:8px;font-weight:700;font-size:1em;cursor:pointer;
-                        font-family:'Cairo',sans-serif;white-space:nowrap;">تثبيت</button>
-                    <button onclick="dismissInstall()" style="background:none;border:none;color:rgba(255,255,255,0.7);
-                        font-size:1.5em;cursor:pointer;padding:5px 8px;">✕</button>
-                </div>
-            `;
-            document.body.appendChild(banner);
+            // Update active state
+            document.querySelectorAll('.theme-option').forEach(opt => {
+                opt.classList.toggle('active', opt.dataset.theme === theme);
+            });
+            
+            // Save preference
+            localStorage.setItem('salah_tracker_theme', theme);
+            
+            // Close menu
+            document.getElementById('themeOptions').classList.remove('show');
+            
+            // Rebuild charts if dashboard is visible
+            try {
+                if (document.getElementById(`${currentSection}DashboardView`).classList.contains('active')) {
+                    updateCharts(currentSection);
+                }
+            } catch(e) {}
         }
 
-        function installApp() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(choice => {
-                    if (choice.outcome === 'accepted') {
-                        console.log('User accepted install');
-                    }
-                    deferredPrompt = null;
-                    const banner = document.getElementById('installBanner');
-                    if (banner) banner.remove();
-                });
+        function loadTheme() {
+            const saved = localStorage.getItem('salah_tracker_theme');
+            if (saved && saved !== 'green') {
+                setTheme(saved);
             }
         }
 
-        function dismissInstall() {
-            const banner = document.getElementById('installBanner');
-            if (banner) banner.remove();
-            localStorage.setItem('pwa_install_dismissed', 'true');
+        // ==================== STREAK CALCULATOR ====================
+
+        function calculateStreak(type, prayerId) {
+            const dataObj = getDataObject(type);
+            const today = new Date();
+            let currentStreak = 0;
+            let bestStreak = 0;
+            let tempStreak = 0;
+            
+            // Go backwards from today to find current streak
+            let checkDate = new Date(today);
+            checkDate.setHours(0, 0, 0, 0);
+            
+            // Start from yesterday if today isn't over yet, or today if already checked
+            let startFromToday = false;
+            const todayMonth = today.getMonth() + 1;
+            const todayDay = today.getDate();
+            const todayYear = today.getFullYear();
+            
+            // Check if today is already marked
+            const todayKey = `salah_tracker_${type}_${todayYear}_${todayMonth}`;
+            const todayData = localStorage.getItem(todayKey);
+            if (todayData) {
+                const parsed = JSON.parse(todayData);
+                if (parsed[prayerId] && parsed[prayerId][todayDay]) {
+                    startFromToday = true;
+                }
+            }
+            
+            if (!startFromToday) {
+                checkDate.setDate(checkDate.getDate() - 1); // Start from yesterday
+            }
+            
+            // Calculate current streak (going backwards)
+            for (let i = 0; i < 730; i++) { // Max 2 years back
+                const cMonth = checkDate.getMonth() + 1;
+                const cDay = checkDate.getDate();
+                const cYear = checkDate.getFullYear();
+                
+                const key = `salah_tracker_${type}_${cYear}_${cMonth}`;
+                const stored = localStorage.getItem(key);
+                
+                let isChecked = false;
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (parsed[prayerId] && parsed[prayerId][cDay]) {
+                        isChecked = true;
+                    }
+                }
+                
+                if (isChecked) {
+                    currentStreak++;
+                    checkDate.setDate(checkDate.getDate() - 1);
+                } else {
+                    break;
+                }
+            }
+            
+            // Calculate best streak (scan all available data)
+            // Scan from Jan of current year to today
+            let scanDate = new Date(currentYear, 0, 1);
+            scanDate.setHours(0, 0, 0, 0);
+            
+            while (scanDate <= today) {
+                const sMonth = scanDate.getMonth() + 1;
+                const sDay = scanDate.getDate();
+                const sYear = scanDate.getFullYear();
+                
+                const key = `salah_tracker_${type}_${sYear}_${sMonth}`;
+                const stored = localStorage.getItem(key);
+                
+                let isChecked = false;
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (parsed[prayerId] && parsed[prayerId][sDay]) {
+                        isChecked = true;
+                    }
+                }
+                
+                if (isChecked) {
+                    tempStreak++;
+                    bestStreak = Math.max(bestStreak, tempStreak);
+                } else {
+                    tempStreak = 0;
+                }
+                
+                scanDate.setDate(scanDate.getDate() + 1);
+            }
+            
+            return { current: currentStreak, best: bestStreak };
         }
 
-        // Detect if running as installed app
-        window.addEventListener('appinstalled', () => {
-            console.log('App installed successfully!');
-            const banner = document.getElementById('installBanner');
-            if (banner) banner.remove();
+        function renderStreaks(type) {
+            const grid = document.getElementById(`${type}StreakGrid`);
+            if (!grid) return;
+            grid.innerHTML = '';
+            
+            const prayers = getPrayersArray(type);
+            
+            prayers.forEach(prayer => {
+                const streak = calculateStreak(type, prayer.id);
+                
+                const card = document.createElement('div');
+                card.className = 'streak-card';
+                
+                const fireEmoji = streak.current >= 7 ? '🔥' : 
+                                  streak.current >= 3 ? '⚡' : 
+                                  streak.current >= 1 ? '✨' : '💤';
+                
+                const isOnFire = streak.current >= 3;
+                
+                card.innerHTML = `
+                    <div class="streak-prayer-name">
+                        <span>${prayer.icon}</span>
+                        <span>${prayer.name}</span>
+                    </div>
+                    <div class="streak-value ${isOnFire ? 'fire' : ''}">${fireEmoji} ${streak.current}</div>
+                    <div class="streak-label">يوم متتالي</div>
+                    <div class="streak-best">🏆 أفضل سلسلة: ${streak.best} يوم</div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+
+        // Load theme on startup
+        loadTheme();
+
+        init();
+
+        // ==================== PWA Service Worker ====================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(reg => console.log('SW registered:', reg.scope))
+                    .catch(err => console.log('SW failed:', err));
+            });
+        }
+
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if (!localStorage.getItem('pwa_install_dismissed')) {
+                const banner = document.createElement('div');
+                banner.id = 'installBanner';
+                banner.innerHTML = `
+                    <div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,var(--primary-dark),var(--primary-medium));
+                        padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+                        z-index:10000;box-shadow:0 -4px 20px rgba(0,0,0,0.3);border-top:3px solid var(--accent);direction:rtl;">
+                        <div style="color:white;font-family:'Cairo',sans-serif;flex:1;">
+                            <div style="font-size:1.1em;font-weight:700;color:var(--accent);">🕌 تثبيت التطبيق</div>
+                            <div style="font-size:0.85em;opacity:0.9;margin-top:4px;">أضف متتبع الصلاة إلى شاشتك الرئيسية</div>
+                        </div>
+                        <button onclick="deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('installBanner').remove();})" 
+                            style="background:var(--accent);color:var(--primary-dark);border:none;padding:10px 24px;border-radius:8px;font-weight:700;font-size:1em;cursor:pointer;font-family:'Cairo',sans-serif;">تثبيت</button>
+                        <button onclick="document.getElementById('installBanner').remove();localStorage.setItem('pwa_install_dismissed','true');" 
+                            style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.5em;cursor:pointer;padding:5px 8px;">✕</button>
+                    </div>`;
+                document.body.appendChild(banner);
+            }
         });
     </script>
 </body>
