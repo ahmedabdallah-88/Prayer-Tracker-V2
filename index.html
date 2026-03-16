@@ -3170,18 +3170,81 @@
                 try {
                     const imported = JSON.parse(e.target.result);
                     
-                    if (confirm('سيتم استبدال جميع البيانات الحالية. هل تريد المتابعة؟')) {
+                    if (!activeProfile) {
+                        alert('الرجاء اختيار ملف شخصي أولاً قبل الاستيراد');
+                        return;
+                    }
+                    
+                    if (confirm('سيتم استبدال بيانات المستخدم الحالي. هل تريد المتابعة؟')) {
+                        const currentId = activeProfile.id;
+                        
+                        // Detect the old profile ID from exported data
+                        let oldProfileId = null;
+                        if (imported['_profile'] && imported['_profile'].id) {
+                            oldProfileId = imported['_profile'].id;
+                        } else {
+                            // Try to detect from keys
+                            for (const key of Object.keys(imported)) {
+                                if (key.startsWith('_')) continue;
+                                const match = key.match(/_(p_[^_]+)_/);
+                                if (match) { oldProfileId = match[1]; break; }
+                            }
+                        }
+                        
+                        let importCount = 0;
                         Object.keys(imported).forEach(key => {
-                            localStorage.setItem(key, JSON.stringify(imported[key]));
+                            // Skip special metadata keys
+                            if (key === '_profile' || key === '_theme') return;
+                            
+                            let newKey = key;
+                            
+                            if (oldProfileId && oldProfileId !== currentId) {
+                                // Remap old profile ID to current profile ID
+                                newKey = key.replace(oldProfileId, currentId);
+                            } else if (!key.includes('p_')) {
+                                // Old format without any profile prefix — add current prefix
+                                // e.g. salah_tracker_fard_2025_3 → salah_tracker_p_xxx_fard_2025_3
+                                newKey = key.replace('salah_tracker_', `salah_tracker_${currentId}_`);
+                                if (key.startsWith('salah_exempt_')) {
+                                    newKey = key.replace('salah_exempt_', `salah_exempt_${currentId}_`);
+                                }
+                                if (key.startsWith('salah_fasting_')) {
+                                    newKey = key.replace('salah_fasting_', `salah_fasting_${currentId}_`);
+                                }
+                                if (key.startsWith('salah_volfasting_')) {
+                                    newKey = key.replace('salah_volfasting_', `salah_volfasting_${currentId}_`);
+                                }
+                                if (key.startsWith('salah_periods_')) {
+                                    newKey = key.replace('salah_periods_', `salah_periods_${currentId}_`);
+                                }
+                            }
+                            
+                            localStorage.setItem(newKey, JSON.stringify(imported[key]));
+                            importCount++;
                         });
                         
+                        // Apply theme if present
+                        if (imported['_theme']) {
+                            localStorage.setItem('salah_tracker_theme', imported['_theme']);
+                            loadTheme();
+                        }
+                        
+                        // Reload everything
+                        const today = new Date();
+                        currentMonth = today.getMonth() + 1;
+                        currentYear = today.getFullYear();
                         loadAllData('fard');
                         loadAllData('sunnah');
-                        updateDashboard(currentSection);
-                        alert('تم استيراد البيانات بنجاح!');
+                        
+                        // Update visible view
+                        if (currentSection === 'fard' || currentSection === 'sunnah') {
+                            updateTrackerView(currentSection);
+                        }
+                        
+                        alert(`تم استيراد البيانات بنجاح! (${importCount} سجل)`);
                     }
                 } catch (error) {
-                    alert('خطأ في قراءة الملف!');
+                    alert('خطأ في قراءة الملف: ' + error.message);
                 }
             };
             reader.readAsText(file);
