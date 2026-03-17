@@ -125,6 +125,104 @@
             --shadow-color: rgba(142, 53, 100, 0.4);
         }
 
+        [data-theme="sky"] {
+            --primary-dark: #0369a1;
+            --primary-medium: #0284c7;
+            --primary-light: rgba(3, 105, 161, 0.1);
+            --primary-lighter: rgba(3, 105, 161, 0.05);
+            --accent: #bae6fd;
+            --accent-dark: #7dd3fc;
+            --accent-light: rgba(186, 230, 253, 0.5);
+            --accent-border: rgba(186, 230, 253, 0.3);
+            --accent-border-light: rgba(186, 230, 253, 0.4);
+            --bg-body-start: #0369a1;
+            --bg-body-mid: #0284c7;
+            --bg-body-end: #0369a1;
+            --bg-container-start: #f0f9ff;
+            --bg-container-end: #e0f2fe;
+            --bg-card: #fafeff;
+            --text-primary: #0c4a6e;
+            --text-on-primary: #e0f2fe;
+            --text-on-dark: #e0f2fe;
+            --text-muted: #64748b;
+            --text-body: #0c4a6e;
+            --chart-completed: #0284c7;
+            --pattern-opacity: 0.04;
+            --shadow-color: rgba(3, 105, 161, 0.4);
+        }
+
+        [data-theme="dark"] {
+            --primary-dark: #0a0a0a;
+            --primary-medium: #171717;
+            --primary-light: rgba(10, 10, 10, 0.2);
+            --primary-lighter: rgba(10, 10, 10, 0.1);
+            --accent: #d4af37;
+            --accent-dark: #b8941f;
+            --accent-light: rgba(212, 175, 55, 0.5);
+            --accent-border: rgba(212, 175, 55, 0.25);
+            --accent-border-light: rgba(212, 175, 55, 0.35);
+            --bg-body-start: #0a0a0a;
+            --bg-body-mid: #171717;
+            --bg-body-end: #0a0a0a;
+            --bg-container-start: #1e1e1e;
+            --bg-container-end: #141414;
+            --bg-card: #252525;
+            --text-primary: #d4af37;
+            --text-on-primary: #d4af37;
+            --text-on-dark: #e5e5e5;
+            --text-muted: #a3a3a3;
+            --text-body: #e5e5e5;
+            --chart-completed: #d4af37;
+            --pattern-opacity: 0.03;
+            --shadow-color: rgba(0,0,0,0.6);
+        }
+
+        /* Dark mode specific overrides */
+        [data-theme="dark"] .month-stat .label,
+        [data-theme="dark"] .stat-item .label { color: #a3a3a3; }
+        [data-theme="dark"] .month-stat .value { color: #d4af37; }
+        [data-theme="dark"] .stat-item .value { color: #d4af37; }
+        [data-theme="dark"] .month-card h3 { color: #d4af37; }
+        [data-theme="dark"] .chart-card h3 { color: #d4af37; }
+        [data-theme="dark"] .chart-card { background: #252525; }
+        [data-theme="dark"] .day-box { background: #333; color: #e5e5e5; }
+        [data-theme="dark"] .day-box.checked { color: #0a0a0a; }
+        [data-theme="dark"] .month-card { background: #252525; }
+        [data-theme="dark"] .prayer-section { background: linear-gradient(to bottom, #1e1e1e, #181818); }
+        [data-theme="dark"] .input-group select,
+        [data-theme="dark"] .input-group input { background: #333; color: #e5e5e5; }
+        [data-theme="dark"] .form-group input,
+        [data-theme="dark"] .form-group select { background: #333; color: #e5e5e5; }
+        [data-theme="dark"] .profile-card { background: #252525; }
+        [data-theme="dark"] .gender-option { background: #252525; color: #e5e5e5; }
+        [data-theme="dark"] .form-btn.cancel { background: #333; color: #e5e5e5; }
+
+        [data-theme="olive"] {
+            --primary-dark: #4a5529;
+            --primary-medium: #5c6b34;
+            --primary-light: rgba(74, 85, 41, 0.1);
+            --primary-lighter: rgba(74, 85, 41, 0.05);
+            --accent: #d4c5a0;
+            --accent-dark: #bfb08a;
+            --accent-light: rgba(212, 197, 160, 0.5);
+            --accent-border: rgba(212, 197, 160, 0.25);
+            --accent-border-light: rgba(212, 197, 160, 0.35);
+            --bg-body-start: #4a5529;
+            --bg-body-mid: #5c6b34;
+            --bg-body-end: #4a5529;
+            --bg-container-start: #fafaf5;
+            --bg-container-end: #f0efe5;
+            --bg-card: #fffef8;
+            --text-primary: #3d4725;
+            --text-on-primary: #f5f0dc;
+            --text-on-dark: #f5f0dc;
+            --text-muted: #7a7d60;
+            --text-body: #3d4725;
+            --chart-completed: #6b7f3a;
+            --pattern-opacity: 0.04;
+            --shadow-color: rgba(74, 85, 41, 0.4);
+        }
+
 
         /* Feminine theme floral Islamic pattern */
         [data-theme="feminine"] body::before {
@@ -167,7 +265,7 @@
         }
 
         [data-theme="feminine"] .day-box.checked::after {
-            content: '✿';
+            content: '✓';
             color: #fde4ec;
         }
 
@@ -1855,6 +1953,386 @@
             .exempt-toggle-bar { flex-wrap: wrap; justify-content: center; }
         }
 
+
+        /* Congregation Prayer Tracking */
+        .congregation-toggle-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(37, 99, 235, 0.04));
+            border: 2px solid rgba(37, 99, 235, 0.3);
+            border-radius: 12px;
+        }
+
+        .congregation-toggle-bar label {
+            font-weight: 700;
+            color: #1d4ed8;
+            font-size: 1em;
+        }
+
+        .congregation-toggle-bar .exempt-switch input:checked + .exempt-slider {
+            background: #2563eb;
+        }
+
+        .day-box.congregation {
+            background: currentColor !important;
+            color: white !important;
+        }
+
+        .day-box.congregation::after {
+            content: '🕌';
+            position: absolute;
+            font-size: 1.2em;
+        }
+
+        .day-box.checked:not(.congregation)::after {
+            content: '✓';
+        }
+
+        .congregation-stats {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 8px;
+            font-size: 0.85em;
+        }
+
+        .cong-stat {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-weight: 600;
+        }
+
+        .cong-stat.mosque { background: rgba(37,99,235,0.1); color: #1d4ed8; }
+        .cong-stat.alone { background: rgba(107,114,128,0.1); color: #4b5563; }
+
+        @media (max-width: 768px) {
+            .congregation-toggle-bar { flex-wrap: wrap; }
+        }
+
+
+        /* ==================== TOAST NOTIFICATIONS ==================== */
+        .toast-container {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 30000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+            width: 90%;
+            max-width: 420px;
+        }
+
+        .toast {
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 0.95em;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.35s ease;
+            pointer-events: auto;
+            text-align: center;
+            max-width: 100%;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success { background: #059669; color: white; }
+        .toast.error { background: #dc2626; color: white; }
+        .toast.info { background: var(--primary-dark, #0f4c3a); color: var(--text-on-dark, white); border: 2px solid var(--accent, #d4af37); }
+        .toast.warning { background: #f59e0b; color: #1a1a1a; }
+
+        /* Custom Confirm Dialog */
+        .confirm-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 30000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+
+        .confirm-overlay.show { opacity: 1; }
+
+        .confirm-box {
+            background: var(--bg-container-start, white);
+            border-radius: 16px;
+            border: 3px solid var(--accent, #d4af37);
+            padding: 30px 25px;
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            transform: scale(0.9);
+            transition: transform 0.25s;
+        }
+
+        .confirm-overlay.show .confirm-box { transform: scale(1); }
+
+        .confirm-msg {
+            font-size: 1.05em;
+            font-weight: 600;
+            color: var(--text-primary, #333);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .confirm-btn {
+            padding: 10px 28px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .confirm-btn:hover { transform: translateY(-2px); }
+        .confirm-btn.yes { background: var(--accent, #d4af37); color: var(--primary-dark, #0f4c3a); }
+        .confirm-btn.no { background: #e5e7eb; color: #374151; }
+
+        /* ==================== SECTION FADE TRANSITIONS ==================== */
+        .section, .view {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .section.active, .view.active {
+            animation: fadeSlideIn 0.3s ease forwards;
+        }
+
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==================== EMPTY STATE ==================== */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted, #999);
+        }
+
+        .empty-state .icon { font-size: 3em; margin-bottom: 12px; opacity: 0.5; }
+        .empty-state .msg { font-size: 1.05em; font-weight: 600; }
+
+        /* ==================== BATCH SELECT BUTTON ==================== */
+        .batch-btn {
+            padding: 6px 14px;
+            background: var(--accent, #d4af37);
+            color: var(--primary-dark, #0f4c3a);
+            border: none;
+            border-radius: 8px;
+            font-size: 0.8em;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.2s;
+            margin-right: 8px;
+        }
+
+        .batch-btn:hover { transform: scale(1.05); box-shadow: 0 3px 10px rgba(0,0,0,0.2); }
+
+
+        /* Swipe hint indicator */
+        .swipe-hint {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8em;
+            padding: 6px 0;
+            opacity: 0.6;
+        }
+
+        .swipe-hint span { font-size: 1.2em; }
+
+        /* Swipe transition */
+        .swipe-container {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .swipe-slide-left {
+            animation: slideLeft 0.3s ease;
+        }
+
+        .swipe-slide-right {
+            animation: slideRight 0.3s ease;
+        }
+
+        @keyframes slideLeft {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideRight {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Reminder badge */
+        .reminder-bar {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            animation: fadeSlideIn 0.5s ease;
+        }
+
+        .reminder-bar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .reminder-bar .icon { font-size: 1.5em; }
+        .reminder-bar .msg { font-weight: 700; color: #92400e; font-size: 0.95em; }
+        .reminder-bar .dismiss {
+            background: none; border: none; color: #92400e; font-size: 1.2em;
+            cursor: pointer; padding: 0 5px; opacity: 0.6;
+        }
+        .reminder-bar .dismiss:hover { opacity: 1; }
+
+
+        /* Day-box click animations */
+        .day-box.pop {
+            animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.7); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        .day-box.checked {
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+
+        .day-box.congregation {
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+
+        /* Ripple effect */
+        .day-box.ripple::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 0; height: 0;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.4);
+            transform: translate(-50%, -50%);
+            animation: rippleOut 0.5s ease-out;
+        }
+
+        @keyframes rippleOut {
+            to { width: 150%; height: 150%; opacity: 0; }
+        }
+
+        /* Streak card pulse when high streak */
+        .streak-card.high-streak {
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 0 5px rgba(230, 81, 0, 0.1); }
+            50% { box-shadow: 0 0 20px rgba(230, 81, 0, 0.3); }
+        }
+
+        /* Offline indicator */
+        .offline-bar {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            padding: 8px;
+            background: #dc2626;
+            color: white;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.85em;
+            z-index: 50000;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .offline-bar.show { display: block; }
+
+        /* Skip to content for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-dark);
+            color: var(--accent);
+            padding: 10px 20px;
+            border-radius: 0 0 8px 8px;
+            z-index: 60000;
+            font-weight: 700;
+            transition: top 0.3s;
+        }
+
+        .skip-link:focus { top: 0; }
+
+        /* Focus visible styles */
+        .day-box:focus-visible,
+        .main-toggle-btn:focus-visible,
+        .toggle-btn:focus-visible,
+        .nav-btn:focus-visible,
+        .action-btn:focus-visible,
+        .batch-btn:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+
+        /* Prevent ghost-hover on touch devices */
+        @media (hover: none) {
+            .day-box:hover { transform: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: auto; }
+            .month-card:hover { transform: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+            .stat-card:hover { transform: none; }
+            .stat-item:hover { transform: none; }
+            .prayer-section:hover { transform: none; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+            .main-toggle-btn:hover { transform: none; }
+            .toggle-btn:hover { transform: none; }
+            .nav-btn:hover { transform: none; }
+            .action-btn.reset:hover,
+            .action-btn.print:hover,
+            .action-btn.export:hover,
+            .action-btn.import:hover { transform: none; }
+            .back-btn:hover { transform: none; }
+            .profile-card:hover { transform: none; }
+            .streak-card:hover { transform: none; }
+            .batch-btn:hover { transform: none; }
+        }
+
         .hidden {
             display: none;
         }
@@ -1863,7 +2341,7 @@
 <body>
 
     <!-- Profile Selection Overlay -->
-    <div class="profile-overlay" id="profileOverlay">
+    <div class="profile-overlay" id="profileOverlay" role="dialog" aria-modal="true" aria-label="Profile selection">
         <div class="profile-screen">
             <h2>🕌 سجل قضاء الصلوات</h2>
             <p class="subtitle" data-t="choose_profile">اختر الملف الشخصي أو أنشئ واحداً جديداً</p>
@@ -1924,12 +2402,16 @@
 
     <!-- Language Switcher -->
     <div class="lang-switcher">
-        <button class="lang-toggle-btn" onclick="toggleLang()" id="langBtn" title="Switch Language">عر</button>
+        <button class="lang-toggle-btn" onclick="toggleLang()" id="langBtn" role="button" aria-label="Switch language" title="Switch Language">عر</button>
     </div>
+
+    <a href="#mainContent" class="skip-link" data-t="skip_to_content">تخطي إلى المحتوى</a>
+    <div class="offline-bar" id="offlineBar" role="alert" data-t="offline_msg">⚡ أنت غير متصل بالإنترنت — التطبيق يعمل بدون اتصال</div>
+    <div class="toast-container" id="toastContainer"></div>
 
     <!-- Theme Switcher -->
     <div class="theme-switcher">
-        <button class="theme-toggle-btn" onclick="toggleThemeMenu()" title="تغيير السمة">🎨</button>
+        <button class="theme-toggle-btn" onclick="toggleThemeMenu()" title="تغيير السمة" role="button" aria-label="Change theme" aria-haspopup="true">🎨</button>
         <div class="theme-options" id="themeOptions">
             <button class="theme-option active" data-theme="green" onclick="setTheme('green')">
                 <span class="theme-dot" style="background: linear-gradient(135deg, #0f4c3a, #d4af37);"></span>
@@ -1945,17 +2427,29 @@
             </button>
             <button class="theme-option" data-theme="feminine" onclick="setTheme('feminine')">
                 <span class="theme-dot" style="background: linear-gradient(135deg, #8e3564, #e8a4b8);"></span>
-                وردي 🌸
+                <span data-t="pink">وردي 🌸</span>
+            </button>
+            <button class="theme-option" data-theme="sky" onclick="setTheme('sky')">
+                <span class="theme-dot" style="background: linear-gradient(135deg, #0369a1, #bae6fd);"></span>
+                <span data-t="sky_blue">أزرق سماوي</span>
+            </button>
+            <button class="theme-option" data-theme="dark" onclick="setTheme('dark')">
+                <span class="theme-dot" style="background: linear-gradient(135deg, #0a0a0a, #d4af37);"></span>
+                <span data-t="dark_mode">دارك مود</span>
+            </button>
+            <button class="theme-option" data-theme="olive" onclick="setTheme('olive')">
+                <span class="theme-dot" style="background: linear-gradient(135deg, #4a5529, #d4c5a0);"></span>
+                <span data-t="olive_cream">زيتوني</span>
             </button>
         </div>
     </div>
 
-    <div class="container">
+    <div class="container" id="mainContent">
         <div class="header">
             <div class="islamic-pattern"></div>
             <h1 data-t="app_title">🕌 سجل قضاء الصلوات - الفرائض والسنن</h1>
-            <p class="quran-verse" data-t="quran_verse">إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا</p>
-            <p class="verse-ref" data-t="verse_ref">[سورة النساء: 103]</p>
+            <p class="quran-verse" style="direction:rtl;">إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا</p>
+            <p class="verse-ref" style="direction:rtl;">[سورة النساء: 103]</p>
 
             <div class="current-profile-badge" onclick="showProfileScreen()" id="profileBadge" style="display:none;">
                 <div class="badge-avatar male" id="badgeAvatar">👨</div>
@@ -1965,14 +2459,14 @@
         </div>
 
         <!-- Main Toggle between Fard and Sunnah -->
-        <div class="main-toggle">
+        <div class="main-toggle" role="tablist" aria-label="Main sections">
             <button class="main-toggle-btn active" onclick="switchSection('fard')" data-t="fard_prayers">🕌 الفرائض</button>
             <button class="main-toggle-btn" onclick="switchSection('sunnah')" data-t="sunnah_prayers">✨ السنن والرواتب</button>
             <button class="main-toggle-btn" onclick="switchSection('fasting')" id="fastingToggleBtn" data-t="fasting_section">🌙 الصيام</button>
         </div>
 
         <!-- ==================== FARD SECTION ==================== -->
-        <div id="fardSection" class="section active">
+        <div id="fardSection" class="section active" role="tabpanel" aria-label="Obligatory prayers">
             <div class="view-toggle">
                 <button class="toggle-btn active" onclick="switchView('fard', 'tracker')" data-t="monthly_tracker">📝 المتتبع الشهري</button>
                 <button class="toggle-btn" onclick="switchView('fard', 'yearly')" data-t="yearly_view">📅 نظرة السنة</button>
@@ -1983,12 +2477,12 @@
             <div id="fardTrackerView" class="view active">
                 <div class="controls">
                     <div class="nav-buttons">
-                        <button class="nav-btn" onclick="changeTrackerMonth('fard', -1)">◄ الشهر السابق</button>
-                        <button class="nav-btn" onclick="changeTrackerMonth('fard', 1)">الشهر التالي ►</button>
+                        <button class="nav-btn" onclick="changeTrackerMonth('fard', -1)" data-t="prev_month">◄ الشهر السابق</button>
+                        <button class="nav-btn" onclick="changeTrackerMonth('fard', 1)" data-t="next_month">الشهر التالي ►</button>
                     </div>
                     
                     <div class="input-group">
-                        <label>الشهر:</label>
+                        <label data-t="month">الشهر:</label>
                         <select id="fardTrackerMonthSelect" onchange="updateTrackerView('fard')">
                             <option value="1">يناير</option>
                             <option value="2">فبراير</option>
@@ -2006,22 +2500,22 @@
                     </div>
 
                     <div class="input-group">
-                        <label>السنة:</label>
+                        <label data-t="year">السنة:</label>
                         <input type="number" id="fardTrackerYearInput" min="2000" max="2100" onchange="updateTrackerView('fard')">
                     </div>
                 </div>
 
                 <div class="stats">
                     <div class="stat-item">
-                        <div class="label">إجمالي الصلوات المقضية</div>
+                        <div class="label" data-t="total_completed">إجمالي الصلوات المقضية</div>
                         <div class="value" id="fardTrackerTotalCompleted">0</div>
                     </div>
                     <div class="stat-item">
-                        <div class="label">إجمالي الصلوات المتبقية</div>
+                        <div class="label" data-t="total_remaining">إجمالي الصلوات المتبقية</div>
                         <div class="value" id="fardTrackerTotalRemaining">0</div>
                     </div>
                     <div class="stat-item">
-                        <div class="label">نسبة الإنجاز</div>
+                        <div class="label" data-t="completion_rate">نسبة الإنجاز</div>
                         <div class="value" id="fardTrackerCompletionRate">0%</div>
                     </div>
                 </div>
@@ -2031,25 +2525,44 @@
                 <!-- Exempt Days Toggle (Females Only) -->
                 <div class="exempt-toggle-bar" id="fardExemptBar" style="display:none;">
                     <span>🩸</span>
-                    <label>وضع تحديد الإعفاء (حيض/نفاس) — لكل صلاة على حدة</label>
+                    <label data-t="exempt_mode">وضع تحديد الإعفاء (حيض/نفاس) — لكل صلاة على حدة</label>
                     <label class="exempt-switch">
                         <input type="checkbox" id="fardExemptMode" onchange="toggleExemptMode('fard')">
                         <span class="exempt-slider"></span>
                     </label>
                     <div class="exempt-info" id="fardExemptInfo"></div>
                 </div>
+
+
+                <!-- Smart Reminder -->
+                <div class="reminder-bar" id="prayerReminder" onclick="scrollToUnmarkedPrayer()">
+                    <span class="icon">⏰</span>
+                    <span class="msg" id="reminderMsg"></span>
+                    <button class="dismiss" onclick="event.stopPropagation();dismissReminder()">✕</button>
+                </div>
+                <!-- Congregation Toggle (Fard Only) -->
+                <div class="congregation-toggle-bar" id="fardCongregationBar">
+                    <span>🕌</span>
+                    <label data-t="congregation_mode">وضع تحديد صلاة الجماعة</label>
+                    <label class="exempt-switch">
+                        <input type="checkbox" id="fardCongregationMode" onchange="congregationMode=this.checked;renderTrackerMonth('fard')">
+                        <span class="exempt-slider"></span>
+                    </label>
+                    <div class="congregation-stats" id="fardCongStats"></div>
+                </div>
+
                 <div class="prayers-container" id="fardTrackerPrayersContainer"></div>
 
                 <div class="action-buttons">
-                    <button class="action-btn reset" onclick="resetTrackerMonth('fard')">🔄 مسح بيانات الشهر</button>
-                    <button class="action-btn print" onclick="window.print()">🖨️ طباعة</button>
+                    <button class="action-btn reset" onclick="resetTrackerMonth('fard')" data-t="clear_month">🔄 مسح بيانات الشهر</button>
+                    <button class="action-btn print" onclick="window.print()" data-t="print">🖨️ طباعة</button>
                 </div>
             </div>
 
             <!-- Fard Yearly Overview -->
             <div id="fardYearlyView" class="view">
                 <div class="year-controls">
-                    <label>السنة:</label>
+                    <label data-t="year">السنة:</label>
                     <input type="number" id="fardYearlyYear" min="2000" max="2100" onchange="updateYearlyView('fard')">
                 </div>
                 <div class="months-grid" id="fardMonthsGrid"></div>
@@ -2058,7 +2571,7 @@
             <!-- Fard Dashboard View -->
             <div id="fardDashboardView" class="view">
                 <div class="year-controls">
-                    <label>السنة:</label>
+                    <label data-t="year">السنة:</label>
                     <input type="number" id="fardDashboardYear" min="2000" max="2100" onchange="updateDashboard('fard')">
                 </div>
 
@@ -2079,42 +2592,65 @@
                         <div class="sublabel" id="fardBestMonthRate">0%</div>
                     </div>
                     <div class="stat-card">
-                        <div class="label">الصلاة الأكثر انتظاماً</div>
+                        <div class="label" data-t="best_prayer">الصلاة الأكثر انتظاماً</div>
                         <div class="value" id="fardBestPrayer">-</div>
                         <div class="sublabel" id="fardBestPrayerRate">0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label" data-t="cong_rate">نسبة صلاة الجماعة</div>
+                        <div class="value" id="fardYearCongRate">0%</div>
+                        <div class="sublabel" id="fardYearCongCount">0</div>
                     </div>
                 </div>
 
                 <div class="charts-container">
                     <div class="chart-card">
-                        <h3>📈 التقدم الشهري</h3>
+                        <h3 data-t="monthly_progress">📈 التقدم الشهري</h3>
                         <div class="chart-wrapper">
-                            <canvas id="fardMonthlyProgressChart"></canvas>
+                            <canvas id="fardMonthlyProgressChart" role="img" aria-label="Monthly progress chart"></canvas>
                         </div>
                     </div>
                     <div class="chart-card">
-                        <h3>📊 الصلوات حسب النوع</h3>
+                        <h3 data-t="by_type">📊 الصلوات حسب النوع</h3>
                         <div class="chart-wrapper">
-                            <canvas id="fardPrayerTypeChart"></canvas>
+                            <canvas id="fardPrayerTypeChart" role="img" aria-label="Prayer type chart"></canvas>
                         </div>
                     </div>
                     <div class="chart-card">
-                        <h3>🎯 نسبة الإنجاز</h3>
+                        <h3 data-t="completion_pie">🎯 نسبة الإنجاز</h3>
                         <div class="chart-wrapper">
-                            <canvas id="fardCompletionPieChart"></canvas>
+                            <canvas id="fardCompletionPieChart" role="img" aria-label="Completion chart"></canvas>
                         </div>
                     </div>
                     <div class="chart-card">
-                        <h3>📉 مقارنة الصلوات</h3>
+                        <h3 data-t="comparison">📉 مقارنة الصلوات</h3>
                         <div class="chart-wrapper">
-                            <canvas id="fardPrayerComparisonChart"></canvas>
+                            <canvas id="fardPrayerComparisonChart" role="img" aria-label="Prayer comparison chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3 data-t="cong_chart_title">🕌 صلاة الجماعة الشهرية</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="fardCongregationChart" role="img" aria-label="Congregation chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3 data-t="weekly_pattern">📊 نمط الصلاة الأسبوعي</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="fardWeeklyPatternChart" role="img" aria-label="Weekly pattern chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3 data-t="prayer_heatmap">🗓️ خريطة الالتزام السنوية</h3>
+                        <div class="chart-wrapper" style="height:200px;">
+                            <canvas id="fardHeatmapChart" role="img" aria-label="Yearly heatmap"></canvas>
                         </div>
                     </div>
                 </div>
 
                 <!-- Streaks in Dashboard -->
                 <div class="streak-section" id="fardStreakSection">
-                    <div class="streak-title" data-t="fard_streaks">🔥 سلاسل المواظبة على الفرائض</div>
+                    <div class="streak-title" data-t="fard_streaks">🔥 سلاسل المواظبة على صلاة الجماعة</div>
                     <div class="streak-grid" id="fardStreakGrid"></div>
                 </div>
 
@@ -2136,18 +2672,18 @@
             <div id="fardMonthlyView" class="view">
                 <div class="month-detail-header">
                     <h2 id="fardCurrentMonthTitle"></h2>
-                    <button class="back-btn" onclick="backToYearly('fard')">← العودة للسنة</button>
+                    <button class="back-btn" onclick="backToYearly('fard')" data-t="back_to_year">← العودة للسنة</button>
                 </div>
                 <div class="prayers-container" id="fardPrayersContainer"></div>
                 <div class="action-buttons">
-                    <button class="action-btn reset" onclick="resetMonth('fard')">🔄 مسح بيانات الشهر</button>
-                    <button class="action-btn print" onclick="window.print()">🖨️ طباعة</button>
+                    <button class="action-btn reset" onclick="resetMonth('fard')" data-t="clear_month">🔄 مسح بيانات الشهر</button>
+                    <button class="action-btn print" onclick="window.print()" data-t="print">🖨️ طباعة</button>
                 </div>
             </div>
         </div>
 
         <!-- ==================== SUNNAH SECTION ==================== -->
-        <div id="sunnahSection" class="section">
+        <div id="sunnahSection" class="section" role="tabpanel" aria-label="Sunnah prayers">
             <div class="view-toggle">
                 <button class="toggle-btn active" onclick="switchView('sunnah', 'tracker')" data-t="monthly_tracker">📝 المتتبع الشهري</button>
                 <button class="toggle-btn" onclick="switchView('sunnah', 'yearly')" data-t="yearly_view">📅 نظرة السنة</button>
@@ -2158,12 +2694,12 @@
             <div id="sunnahTrackerView" class="view active">
                 <div class="controls">
                     <div class="nav-buttons">
-                        <button class="nav-btn" onclick="changeTrackerMonth('sunnah', -1)">◄ الشهر السابق</button>
-                        <button class="nav-btn" onclick="changeTrackerMonth('sunnah', 1)">الشهر التالي ►</button>
+                        <button class="nav-btn" onclick="changeTrackerMonth('sunnah', -1)" data-t="prev_month">◄ الشهر السابق</button>
+                        <button class="nav-btn" onclick="changeTrackerMonth('sunnah', 1)" data-t="next_month">الشهر التالي ►</button>
                     </div>
                     
                     <div class="input-group">
-                        <label>الشهر:</label>
+                        <label data-t="month">الشهر:</label>
                         <select id="sunnahTrackerMonthSelect" onchange="updateTrackerView('sunnah')">
                             <option value="1">يناير</option>
                             <option value="2">فبراير</option>
@@ -2181,22 +2717,22 @@
                     </div>
 
                     <div class="input-group">
-                        <label>السنة:</label>
+                        <label data-t="year">السنة:</label>
                         <input type="number" id="sunnahTrackerYearInput" min="2000" max="2100" onchange="updateTrackerView('sunnah')">
                     </div>
                 </div>
 
                 <div class="stats">
                     <div class="stat-item">
-                        <div class="label">إجمالي السنن المؤداة</div>
+                        <div class="label" data-t="sunnah_completed">إجمالي السنن المؤداة</div>
                         <div class="value" id="sunnahTrackerTotalCompleted">0</div>
                     </div>
                     <div class="stat-item">
-                        <div class="label">إجمالي السنن المتبقية</div>
+                        <div class="label" data-t="sunnah_remaining">إجمالي السنن المتبقية</div>
                         <div class="value" id="sunnahTrackerTotalRemaining">0</div>
                     </div>
                     <div class="stat-item">
-                        <div class="label">نسبة الإنجاز</div>
+                        <div class="label" data-t="completion_rate">نسبة الإنجاز</div>
                         <div class="value" id="sunnahTrackerCompletionRate">0%</div>
                     </div>
                 </div>
@@ -2206,7 +2742,7 @@
                 <!-- Exempt Days Toggle (Females Only) -->
                 <div class="exempt-toggle-bar" id="sunnahExemptBar" style="display:none;">
                     <span>🩸</span>
-                    <label>وضع تحديد الإعفاء (حيض/نفاس) — لكل صلاة على حدة</label>
+                    <label data-t="exempt_mode">وضع تحديد الإعفاء (حيض/نفاس) — لكل صلاة على حدة</label>
                     <label class="exempt-switch">
                         <input type="checkbox" id="sunnahExemptMode" onchange="toggleExemptMode('sunnah')">
                         <span class="exempt-slider"></span>
@@ -2216,15 +2752,15 @@
                 <div class="prayers-container" id="sunnahTrackerPrayersContainer"></div>
 
                 <div class="action-buttons">
-                    <button class="action-btn reset" onclick="resetTrackerMonth('sunnah')">🔄 مسح بيانات الشهر</button>
-                    <button class="action-btn print" onclick="window.print()">🖨️ طباعة</button>
+                    <button class="action-btn reset" onclick="resetTrackerMonth('sunnah')" data-t="clear_month">🔄 مسح بيانات الشهر</button>
+                    <button class="action-btn print" onclick="window.print()" data-t="print">🖨️ طباعة</button>
                 </div>
             </div>
 
             <!-- Sunnah Yearly Overview -->
             <div id="sunnahYearlyView" class="view">
                 <div class="year-controls">
-                    <label>السنة:</label>
+                    <label data-t="year">السنة:</label>
                     <input type="number" id="sunnahYearlyYear" min="2000" max="2100" onchange="updateYearlyView('sunnah')">
                 </div>
                 <div class="months-grid" id="sunnahMonthsGrid"></div>
@@ -2233,13 +2769,13 @@
             <!-- Sunnah Dashboard View -->
             <div id="sunnahDashboardView" class="view">
                 <div class="year-controls">
-                    <label>السنة:</label>
+                    <label data-t="year">السنة:</label>
                     <input type="number" id="sunnahDashboardYear" min="2000" max="2100" onchange="updateDashboard('sunnah')">
                 </div>
 
                 <div class="dashboard-grid">
                     <div class="stat-card">
-                        <div class="label">إجمالي السنن المؤداة</div>
+                        <div class="label" data-t="sunnah_completed">إجمالي السنن المؤداة</div>
                         <div class="value" id="sunnahYearTotalCompleted">0</div>
                         <div class="sublabel">من أصل <span id="sunnahYearTotalPossible">0</span> سنة</div>
                     </div>
@@ -2262,25 +2798,25 @@
 
                 <div class="charts-container">
                     <div class="chart-card">
-                        <h3>📈 التقدم الشهري</h3>
+                        <h3 data-t="monthly_progress">📈 التقدم الشهري</h3>
                         <div class="chart-wrapper">
                             <canvas id="sunnahMonthlyProgressChart"></canvas>
                         </div>
                     </div>
                     <div class="chart-card">
-                        <h3>📊 السنن حسب النوع</h3>
+                        <h3 data-t="by_type">📊 السنن حسب النوع</h3>
                         <div class="chart-wrapper">
                             <canvas id="sunnahPrayerTypeChart"></canvas>
                         </div>
                     </div>
                     <div class="chart-card">
-                        <h3>🎯 نسبة الإنجاز</h3>
+                        <h3 data-t="completion_pie">🎯 نسبة الإنجاز</h3>
                         <div class="chart-wrapper">
                             <canvas id="sunnahCompletionPieChart"></canvas>
                         </div>
                     </div>
                     <div class="chart-card">
-                        <h3>📉 مقارنة السنن</h3>
+                        <h3 data-t="comparison">📉 مقارنة السنن</h3>
                         <div class="chart-wrapper">
                             <canvas id="sunnahPrayerComparisonChart"></canvas>
                         </div>
@@ -2299,19 +2835,19 @@
             <div id="sunnahMonthlyView" class="view">
                 <div class="month-detail-header">
                     <h2 id="sunnahCurrentMonthTitle"></h2>
-                    <button class="back-btn" onclick="backToYearly('sunnah')">← العودة للسنة</button>
+                    <button class="back-btn" onclick="backToYearly('sunnah')" data-t="back_to_year">← العودة للسنة</button>
                 </div>
                 <div class="prayers-container" id="sunnahPrayersContainer"></div>
                 <div class="action-buttons">
-                    <button class="action-btn reset" onclick="resetMonth('sunnah')">🔄 مسح بيانات الشهر</button>
-                    <button class="action-btn print" onclick="window.print()">🖨️ طباعة</button>
+                    <button class="action-btn reset" onclick="resetMonth('sunnah')" data-t="clear_month">🔄 مسح بيانات الشهر</button>
+                    <button class="action-btn print" onclick="window.print()" data-t="print">🖨️ طباعة</button>
                 </div>
             </div>
         </div>
 
 
         <!-- ==================== FASTING SECTION (All Users) ==================== -->
-        <div id="fastingSection" class="section">
+        <div id="fastingSection" class="section" role="tabpanel" aria-label="Fasting">
             <div class="view-toggle">
                 <button class="toggle-btn active" onclick="switchFastingView('voluntary')" data-t="voluntary_fasting">📝 صيام التطوع</button>
                 <button class="toggle-btn" onclick="switchFastingView('ramadan')" id="ramadanViewBtn" data-t="ramadan_fasting">🌙 صيام رمضان</button>
@@ -2322,11 +2858,11 @@
             <div id="fastingVoluntaryView" class="view active">
                 <div class="controls">
                     <div class="nav-buttons">
-                        <button class="nav-btn" onclick="changeFastingMonth(-1)">◄ الشهر السابق</button>
-                        <button class="nav-btn" onclick="changeFastingMonth(1)">الشهر التالي ►</button>
+                        <button class="nav-btn" onclick="changeFastingMonth(-1)" data-t="prev_month">◄ الشهر السابق</button>
+                        <button class="nav-btn" onclick="changeFastingMonth(1)" data-t="next_month">الشهر التالي ►</button>
                     </div>
                     <div class="input-group">
-                        <label>الشهر:</label>
+                        <label data-t="month">الشهر:</label>
                         <select id="fastingMonthSelect" onchange="updateVoluntaryFasting()">
                             <option value="1">يناير</option>
                             <option value="2">فبراير</option>
@@ -2343,7 +2879,7 @@
                         </select>
                     </div>
                     <div class="input-group">
-                        <label>السنة:</label>
+                        <label data-t="year">السنة:</label>
                         <input type="number" id="fastingYearVoluntary" min="2000" max="2100" onchange="updateVoluntaryFasting()">
                     </div>
                 </div>
@@ -2360,15 +2896,15 @@
 
                 <div class="stats">
                     <div class="stat-item">
-                        <div class="label">أيام الصيام</div>
+                        <div class="label" data-t="fasting_days">أيام الصيام</div>
                         <div class="value" id="volFastedCount">0</div>
                     </div>
                     <div class="stat-item">
-                        <div class="label">أيام الإعفاء</div>
+                        <div class="label" data-t="exempt_days">أيام الإعفاء</div>
                         <div class="value" id="volExemptCount">0</div>
                     </div>
                     <div class="stat-item">
-                        <div class="label">نسبة الصيام</div>
+                        <div class="label" data-t="fasting_rate">نسبة الصيام</div>
                         <div class="value" id="volFastRate">0%</div>
                     </div>
                 </div>
@@ -2385,7 +2921,7 @@
                 </div>
 
                 <div class="action-buttons">
-                    <button class="action-btn reset" onclick="resetVoluntaryFasting()">🔄 مسح بيانات الشهر</button>
+                    <button class="action-btn reset" onclick="resetVoluntaryFasting()" data-t="clear_month">🔄 مسح بيانات الشهر</button>
                 </div>
             </div>
 
@@ -2393,7 +2929,7 @@
             <div id="fastingRamadanView" class="view">
                 <div class="controls">
                     <div class="input-group">
-                        <label>السنة:</label>
+                        <label data-t="year">السنة:</label>
                         <input type="number" id="fastingYearInput" min="2000" max="2100" onchange="updateFastingView()">
                     </div>
                 </div>
@@ -2401,37 +2937,37 @@
                 <div class="fasting-legend">
                     <div class="legend-item">
                         <div class="legend-dot" style="background:#059669;border-color:#047857;"></div>
-                        <span>صامت ✓</span>
+                        <span data-t="fasted">صامت ✓</span>
                     </div>
                     <div class="legend-item" id="fastingExemptLegend" style="display:none;">
                         <div class="legend-dot" style="background:repeating-linear-gradient(45deg,#fce7f3,#fce7f3 3px,#fbcfe8 3px,#fbcfe8 6px);border-color:#ec4899;"></div>
-                        <span>حيض 🩸</span>
+                        <span data-t="period_mark">حيض 🩸</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-dot" style="background:#fee2e2;border-color:#f87171;"></div>
-                        <span>أفطرت ✗</span>
+                        <span data-t="broke_fast">أفطرت ✗</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-dot" style="background:white;border-color:#d4af37;"></div>
-                        <span>لم يُحدد</span>
+                        <span data-t="not_set">لم يُحدد</span>
                     </div>
                 </div>
 
                 <div class="stats">
                     <div class="stat-item">
-                        <div class="label">أيام الصيام</div>
+                        <div class="label" data-t="fasting_days">أيام الصيام</div>
                         <div class="value" id="fastingDaysFasted">0</div>
                     </div>
                     <div class="stat-item" id="fastingExemptStat" style="display:none;">
-                        <div class="label">أيام الحيض</div>
+                        <div class="label" data-t="period_days">أيام الحيض</div>
                         <div class="value" id="fastingDaysExempt">0</div>
                     </div>
                     <div class="stat-item">
-                        <div class="label">أيام الإفطار</div>
+                        <div class="label" data-t="missed_days">أيام الإفطار</div>
                         <div class="value" id="fastingDaysMissed">0</div>
                     </div>
                     <div class="stat-item">
-                        <div class="label">أيام للقضاء</div>
+                        <div class="label" data-t="owed_days">أيام للقضاء</div>
                         <div class="value" id="fastingDaysOwed">0</div>
                     </div>
                 </div>
@@ -2448,14 +2984,14 @@
                 </div>
 
                 <div class="action-buttons">
-                    <button class="action-btn reset" onclick="resetFasting()">🔄 مسح بيانات الصيام</button>
+                    <button class="action-btn reset" onclick="resetFasting()" data-t="clear_fasting">🔄 مسح بيانات الصيام</button>
                 </div>
             </div>
 
             <!-- Fasting Dashboard -->
             <div id="fastingDashboardView" class="view">
                 <div class="year-controls">
-                    <label>السنة:</label>
+                    <label data-t="year">السنة:</label>
                     <input type="number" id="fastingDashboardYear" min="2000" max="2100" onchange="updateFastingDashboard()">
                 </div>
 
@@ -2530,7 +3066,7 @@
         let currentYear, currentMonth;
         let fardData = {};
         let sunnahData = {};
-        let charts = { fard: {}, sunnah: {}, fasting: null };
+        let charts = { fard: {}, sunnah: {}, fasting: null, fardCong: null, fardWeekly: null, fardHeatmap: null };
         let currentSection = 'fard';
 
         function init() {
@@ -2559,17 +3095,17 @@
         }
 
         function isFutureDate(day, month, year) {
-            const today = new Date();
-            today.setHours(0, 0, 0, 0); // Reset time to midnight for accurate comparison
+            const now = new Date();
+            const todayYear = now.getFullYear();
+            const todayMonth = now.getMonth() + 1;
+            const todayDay = now.getDate();
             
-            const checkDate = new Date(year, month - 1, day);
-            checkDate.setHours(0, 0, 0, 0);
-            
-            return checkDate > today;
-        }
-
-        function getStorageKey(type, month, year) {
-            return `salah_tracker_${type}_${year}_${month}`;
+            // Pure numeric comparison — no timezone/DST issues
+            if (year > todayYear) return true;
+            if (year < todayYear) return false;
+            if (month > todayMonth) return true;
+            if (month < todayMonth) return false;
+            return day > todayDay;
         }
 
         function getPrayersArray(type) {
@@ -2601,23 +3137,30 @@
         function saveMonthData(type, month) {
             const dataObj = getDataObject(type);
             const key = getStorageKey(type, month, currentYear);
-            localStorage.setItem(key, JSON.stringify(dataObj[month]));
+            try {
+                localStorage.setItem(key, JSON.stringify(dataObj[month]));
+            } catch(e) {
+                showToast(t('storage_full'), 'error');
+                console.error('Storage full:', e);
+            }
         }
 
         function getMonthStats(type, month, year) {
             const dataObj = getDataObject(type);
             const prayers = getPrayersArray(type);
             const daysInMonth = getDaysInMonth(month, year);
+            const isFemale = activeProfile && activeProfile.gender === 'female' && activeProfile.age >= 12;
+            const exemptData = isFemale ? getExemptDays(year, month) : {};
             let completed = 0;
-            let total = daysInMonth * prayers.length;
+            let total = 0;
             
-            if (dataObj[month]) {
-                prayers.forEach(prayer => {
-                    if (dataObj[month][prayer.id]) {
-                        completed += Object.values(dataObj[month][prayer.id]).filter(v => v).length;
-                    }
-                });
-            }
+            prayers.forEach(prayer => {
+                const exemptCount = isFemale ? getExemptCountForPrayer(year, month, prayer.id) : 0;
+                total += daysInMonth - exemptCount;
+                if (dataObj[month] && dataObj[month][prayer.id]) {
+                    completed += Object.values(dataObj[month][prayer.id]).filter(v => v).length;
+                }
+            });
             
             return {
                 completed,
@@ -2732,7 +3275,7 @@
                     }
                 }
                 prayerStats[prayer.id] = {
-                    name: prayer.name,
+                    name: getPrayerName(prayer.id),
                     percentage: total > 0 ? Math.round((completed / total) * 100) : 0
                 };
             });
@@ -2746,6 +3289,64 @@
             
             updateCharts(type);
             renderStreaks(type);
+            
+            // Congregation yearly stats (fard only)
+            if (type === 'fard') {
+                let yearCong = 0, yearCompleted = 0;
+                const congMonthlyData = [];
+                
+                for (let month = 1; month <= 12; month++) {
+                    const congData = getCongregationData(currentYear, month);
+                    const prayers = getPrayersArray('fard');
+                    const dataObj = getDataObject('fard');
+                    let monthCong = 0, monthCompleted = 0;
+                    
+                    prayers.forEach(prayer => {
+                        if (dataObj[month] && dataObj[month][prayer.id]) {
+                            const completedDays = Object.keys(dataObj[month][prayer.id]).filter(d => dataObj[month][prayer.id][d]);
+                            monthCompleted += completedDays.length;
+                            completedDays.forEach(d => {
+                                if (isCongregation(congData, prayer.id, parseInt(d))) monthCong++;
+                            });
+                        }
+                    });
+                    
+                    yearCong += monthCong;
+                    yearCompleted += monthCompleted;
+                    congMonthlyData.push(monthCompleted > 0 ? Math.round((monthCong / monthCompleted) * 100) : 0);
+                }
+                
+                const congRate = yearCompleted > 0 ? Math.round((yearCong / yearCompleted) * 100) : 0;
+                document.getElementById('fardYearCongRate').textContent = congRate + '%';
+                document.getElementById('fardYearCongCount').textContent = `${yearCong} ${t('congregation')} / ${yearCompleted}`;
+                
+                // Congregation chart
+                if (charts.fardCong) charts.fardCong.destroy();
+                const congCtx = document.getElementById('fardCongregationChart');
+                renderAdvancedCharts();
+                if (congCtx) {
+                    charts.fardCong = new Chart(congCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: getMonthNames(),
+                            datasets: [{
+                                label: t('cong_rate'),
+                                data: congMonthlyData,
+                                backgroundColor: 'rgba(37, 99, 235, 0.6)',
+                                borderColor: '#2563eb',
+                                borderWidth: 2,
+                                borderRadius: 6
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { display: false } },
+                            scales: { y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } } }
+                        }
+                    });
+                }
+            }
             
             // Render period history in fard dashboard for females
             if (type === 'fard' && activeProfile && activeProfile.gender === 'female' && activeProfile.age >= 12) {
@@ -2839,7 +3440,7 @@
             charts[type].prayerType = new Chart(document.getElementById(`${type}PrayerTypeChart`), {
                 type: 'bar',
                 data: {
-                    labels: prayers.map(p => p.name),
+                    labels: prayers.map(p => getPrayerName(p.id)),
                     datasets: [{
                         label: type === 'fard' ? 'عدد الصلوات' : 'عدد السنن',
                         data: prayerTypeData,
@@ -2903,7 +3504,7 @@
             charts[type].prayerComparison = new Chart(document.getElementById(`${type}PrayerComparisonChart`), {
                 type: 'radar',
                 data: {
-                    labels: prayers.map(p => p.name),
+                    labels: prayers.map(p => getPrayerName(p.id)),
                     datasets: [{
                         label: 'نسبة الإنجاز %',
                         data: comparisonData,
@@ -2996,23 +3597,27 @@
             const prayers = getPrayersArray(type);
             const dataObj = getDataObject(type);
             const daysInMonth = getDaysInMonth(currentMonth, currentYear);
+            const isFemale = activeProfile && activeProfile.gender === 'female' && activeProfile.age >= 12;
+            const exemptData = isFemale ? getExemptDays(currentYear, currentMonth) : {};
             
             prayers.forEach(prayer => {
                 const section = document.createElement('div');
                 section.className = `prayer-section ${prayer.class}`;
                 
                 let completed = 0;
+                const exemptCount = isFemale ? getExemptCountForPrayer(currentYear, currentMonth, prayer.id) : 0;
                 if (dataObj[currentMonth] && dataObj[currentMonth][prayer.id]) {
                     completed = Object.values(dataObj[currentMonth][prayer.id]).filter(v => v).length;
                 }
+                const adjustedTotal = daysInMonth - exemptCount;
                 
                 section.innerHTML = `
                     <div class="prayer-header">
                         <div class="prayer-name">
                             <span>${prayer.icon}</span>
-                            <span>${prayer.name}</span>
+                            <span>${getPrayerName(prayer.id)}</span>
                         </div>
-                        <div class="prayer-counter">${completed} / ${daysInMonth}</div>
+                        <div class="prayer-counter">${completed} / ${adjustedTotal}</div>
                     </div>
                     <div class="days-grid" id="${type}-grid-${prayer.id}"></div>
                 `;
@@ -3026,15 +3631,19 @@
                     
                     if (day > daysInMonth) {
                         dayBox.classList.add('disabled');
+                    } else if (isPrayerExempt(exemptData, prayer.id, day)) {
+                        const dayNum = document.createElement('span');
+                        dayNum.className = 'day-number';
+                        dayNum.textContent = day;
+                        dayBox.appendChild(dayNum);
+                        dayBox.classList.add('exempt');
                     } else if (isFutureDate(day, currentMonth, currentYear)) {
-                        // Future date - disable it
                         const dayNum = document.createElement('span');
                         dayNum.className = 'day-number';
                         dayNum.textContent = day;
                         dayBox.appendChild(dayNum);
                         dayBox.classList.add('disabled');
                         dayBox.style.opacity = '0.3';
-                        dayBox.title = 'لا يمكن تعليم صلاة في المستقبل';
                     } else {
                         const dayNum = document.createElement('span');
                         dayNum.className = 'day-number';
@@ -3043,6 +3652,14 @@
                         
                         if (dataObj[currentMonth][prayer.id] && dataObj[currentMonth][prayer.id][day]) {
                             dayBox.classList.add('checked');
+                            // Show congregation for fard
+                            if (type === 'fard') {
+                                const congData = getCongregationData(currentYear, currentMonth);
+                                if (isCongregation(congData, prayer.id, day)) {
+                                    dayBox.classList.add('congregation');
+                                    dayBox.classList.remove('checked');
+                                }
+                            }
                         }
                         
                         dayBox.onclick = () => toggleDay(type, prayer.id, day);
@@ -3056,7 +3673,7 @@
         function toggleDay(type, prayerId, day) {
             // Validate that the date is not in the future
             if (isFutureDate(day, currentMonth, currentYear)) {
-                alert('⚠️ لا يمكن تعليم صلاة في تاريخ مستقبلي!\nيمكنك فقط تعليم الصلوات حتى تاريخ اليوم.');
+                showToast(t('future_date'), 'warning');
                 return;
             }
             
@@ -3071,8 +3688,8 @@
             renderMonthDetail(type);
         }
 
-        function resetMonth(type) {
-            if (confirm(t('confirm_clear'))) {
+        async function resetMonth(type) {
+            if (await showConfirm(t('confirm_clear'))) {
                 const dataObj = getDataObject(type);
                 const prayers = getPrayersArray(type);
                 
@@ -3117,7 +3734,7 @@
                 
                 const nameDiv = document.createElement('div');
                 nameDiv.className = 'prayer-name';
-                nameDiv.innerHTML = `<span>${prayer.icon}</span><span>${prayer.name}</span>`;
+                nameDiv.innerHTML = `<span>${prayer.icon}</span><span>${getPrayerName(prayer.id)}</span>`;
                 
                 const counter = document.createElement('div');
                 counter.className = 'prayer-counter';
@@ -3143,7 +3760,7 @@
                         dayBox.appendChild(dayNum);
                         dayBox.classList.add('disabled');
                         dayBox.style.opacity = '0.3';
-                        dayBox.title = 'لا يمكن تعليم صلاة في المستقبل';
+                        dayBox.title = t('future_date_short');
                     } else {
                         const dayNum = document.createElement('span');
                         dayNum.className = 'day-number';
@@ -3169,7 +3786,7 @@
         function toggleTrackerDay(type, prayerId, day) {
             // Validate that the date is not in the future
             if (isFutureDate(day, currentMonth, currentYear)) {
-                alert('⚠️ لا يمكن تعليم صلاة في تاريخ مستقبلي!\nيمكنك فقط تعليم الصلوات حتى تاريخ اليوم.');
+                showToast(t('future_date'), 'warning');
                 return;
             }
             
@@ -3184,6 +3801,7 @@
             renderTrackerMonth(type);
             updateTrackerStats(type);
             renderStreaks(type);
+            if (type === 'fard') { updateCongregationStats(); checkPrayerReminders(); }
         }
 
         function updateTrackerStats(type) {
@@ -3224,8 +3842,8 @@
             updateTrackerView(type);
         }
 
-        function resetTrackerMonth(type) {
-            if (confirm(t('confirm_clear'))) {
+        async function resetTrackerMonth(type) {
+            if (await showConfirm(t('confirm_clear'))) {
                 const dataObj = getDataObject(type);
                 const prayers = getPrayersArray(type);
                 
@@ -3268,16 +3886,16 @@
             if (!file) return;
             
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 try {
                     const imported = JSON.parse(e.target.result);
                     
                     if (!activeProfile) {
-                        alert('الرجاء اختيار ملف شخصي أولاً قبل الاستيراد');
+                        showToast(t('select_profile_first'), 'warning');
                         return;
                     }
                     
-                    if (confirm('سيتم استبدال بيانات المستخدم الحالي. هل تريد المتابعة؟')) {
+                    if (await showConfirm(t('import_replace'))) {
                         const currentId = activeProfile.id;
                         
                         // Detect the old profile ID from exported data
@@ -3343,10 +3961,10 @@
                             updateTrackerView(currentSection);
                         }
                         
-                        alert(`تم استيراد البيانات بنجاح! (${importCount} سجل)`);
+                        showToast(`${t('import_success')} (${importCount})`, 'success');
                     }
                 } catch (error) {
-                    alert('خطأ في قراءة الملف: ' + error.message);
+                    showToast(t('file_error'), 'error');
                 }
             };
             reader.readAsText(file);
@@ -3403,50 +4021,69 @@
         // ==================== STREAK CALCULATOR ====================
 
         function calculateStreak(type, prayerId) {
-            const dataObj = getDataObject(type);
             const today = new Date();
             let currentStreak = 0;
             let bestStreak = 0;
             let tempStreak = 0;
             
-            // Go backwards from today to find current streak
+            // For fard: streak is based on CONGREGATION only
+            // For sunnah: streak is based on prayer completion
+            const isCongStreak = (type === 'fard');
+            
             let checkDate = new Date(today);
             checkDate.setHours(0, 0, 0, 0);
             
-            // Start from yesterday if today isn't over yet, or today if already checked
-            let startFromToday = false;
             const todayMonth = today.getMonth() + 1;
             const todayDay = today.getDate();
             const todayYear = today.getFullYear();
             
             // Check if today is already marked
-            const todayKey = `salah_tracker_${type}_${todayYear}_${todayMonth}`;
-            const todayData = localStorage.getItem(todayKey);
-            if (todayData) {
-                const parsed = JSON.parse(todayData);
-                if (parsed[prayerId] && parsed[prayerId][todayDay]) {
-                    startFromToday = true;
+            let startFromToday = false;
+            if (isCongStreak) {
+                const congKey = getCongregationKey(todayYear, todayMonth);
+                const congData = localStorage.getItem(congKey);
+                if (congData) {
+                    const parsed = JSON.parse(congData);
+                    if (parsed[prayerId] && parsed[prayerId][todayDay]) {
+                        startFromToday = true;
+                    }
+                }
+            } else {
+                const todayKey = `salah_tracker_${getProfilePrefix()}${type}_${todayYear}_${todayMonth}`;
+                const todayData = localStorage.getItem(todayKey);
+                if (todayData) {
+                    const parsed = JSON.parse(todayData);
+                    if (parsed[prayerId] && parsed[prayerId][todayDay]) {
+                        startFromToday = true;
+                    }
                 }
             }
             
             if (!startFromToday) {
-                checkDate.setDate(checkDate.getDate() - 1); // Start from yesterday
+                checkDate.setDate(checkDate.getDate() - 1);
             }
             
             // Calculate current streak (going backwards)
-            for (let i = 0; i < 730; i++) { // Max 2 years back
+            for (let i = 0; i < 730; i++) {
                 const cMonth = checkDate.getMonth() + 1;
                 const cDay = checkDate.getDate();
                 const cYear = checkDate.getFullYear();
                 
-                const key = `salah_tracker_${type}_${cYear}_${cMonth}`;
-                const stored = localStorage.getItem(key);
-                
                 let isChecked = false;
-                if (stored) {
-                    const parsed = JSON.parse(stored);
-                    if (parsed[prayerId] && parsed[prayerId][cDay]) {
-                        isChecked = true;
+                
+                if (isCongStreak) {
+                    const congKey = getCongregationKey(cYear, cMonth);
+                    const stored = localStorage.getItem(congKey);
+                    if (stored) {
+                        const parsed = JSON.parse(stored);
+                        if (parsed[prayerId] && parsed[prayerId][cDay]) isChecked = true;
+                    }
+                } else {
+                    const key = `salah_tracker_${getProfilePrefix()}${type}_${cYear}_${cMonth}`;
+                    const stored = localStorage.getItem(key);
+                    if (stored) {
+                        const parsed = JSON.parse(stored);
+                        if (parsed[prayerId] && parsed[prayerId][cDay]) isChecked = true;
                     }
                 }
                 
@@ -3458,8 +4095,7 @@
                 }
             }
             
-            // Calculate best streak (scan all available data)
-            // Scan from Jan of current year to today
+            // Calculate best streak (scan from Jan of current year)
             let scanDate = new Date(currentYear, 0, 1);
             scanDate.setHours(0, 0, 0, 0);
             
@@ -3468,14 +4104,21 @@
                 const sDay = scanDate.getDate();
                 const sYear = scanDate.getFullYear();
                 
-                const key = `salah_tracker_${type}_${sYear}_${sMonth}`;
-                const stored = localStorage.getItem(key);
-                
                 let isChecked = false;
-                if (stored) {
-                    const parsed = JSON.parse(stored);
-                    if (parsed[prayerId] && parsed[prayerId][sDay]) {
-                        isChecked = true;
+                
+                if (isCongStreak) {
+                    const congKey = getCongregationKey(sYear, sMonth);
+                    const stored = localStorage.getItem(congKey);
+                    if (stored) {
+                        const parsed = JSON.parse(stored);
+                        if (parsed[prayerId] && parsed[prayerId][sDay]) isChecked = true;
+                    }
+                } else {
+                    const key = `salah_tracker_${getProfilePrefix()}${type}_${sYear}_${sMonth}`;
+                    const stored = localStorage.getItem(key);
+                    if (stored) {
+                        const parsed = JSON.parse(stored);
+                        if (parsed[prayerId] && parsed[prayerId][sDay]) isChecked = true;
                     }
                 }
                 
@@ -3503,7 +4146,7 @@
                 const streak = calculateStreak(type, prayer.id);
                 
                 const card = document.createElement('div');
-                card.className = 'streak-card';
+                card.className = 'streak-card' + (streak.current >= 7 ? ' high-streak' : '');
                 
                 const fireEmoji = streak.current >= 7 ? '🔥' : 
                                   streak.current >= 3 ? '⚡' : 
@@ -3530,7 +4173,7 @@
         // ==================== PROFILE SYSTEM ====================
         
         let activeProfile = null;
-        let exemptMode = { fard: false, sunnah: false };
+        var exemptMode = { fard: false, sunnah: false };
 
         function getProfiles() {
             return JSON.parse(localStorage.getItem('salah_profiles') || '[]');
@@ -3661,9 +4304,16 @@
             const gender = selectedGender;
             const editId = document.getElementById('editProfileId').value;
 
-            if (!name) { alert(t('enter_valid_name')); return; }
-            if (!age || age < 5) { alert(t('enter_valid_age')); return; }
-            if (!gender) { alert(t('select_gender')); return; }
+            if (!name) { showToast(t('enter_valid_name'), 'warning'); return; }
+            if (!age || age < 5) { showToast(t('enter_valid_age'), 'warning'); return; }
+            if (!gender) { showToast(t('select_gender'), 'warning'); return; }
+            
+            // Check duplicate name (except when editing same profile)
+            const existing = profiles.find(p => p.name === name && p.id !== editId);
+            if (existing) { showToast(t('duplicate_name'), 'warning'); return; }
+            
+            // Profile limit
+            if (!editId && profiles.length >= 10) { showToast(t('profile_limit'), 'warning'); return; }
 
             let profiles = getProfiles();
 
@@ -3757,8 +4407,8 @@
             showProfileForm(id);
         }
 
-        function deleteProfile(id) {
-            if (!confirm(t('confirm_delete_profile'))) return;
+        async function deleteProfile(id) {
+            if (!await showConfirm(t('confirm_delete_profile'))) return;
             
             let profiles = getProfiles();
             profiles = profiles.filter(p => p.id !== id);
@@ -3865,6 +4515,378 @@
             updateExemptInfo('sunnah');
         }
 
+
+
+        // ==================== TOAST NOTIFICATIONS ====================
+        
+        function showToast(msg, type = 'info', duration = 2500) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = msg;
+            container.appendChild(toast);
+            
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => toast.classList.add('show'));
+            });
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 350);
+            }, duration);
+        }
+
+        function showConfirm(msg) {
+            return new Promise(resolve => {
+                // Prevent stacking
+                const existing = document.querySelector('.confirm-overlay');
+                if (existing) { resolve(false); return; }
+                const overlay = document.createElement('div');
+                overlay.className = 'confirm-overlay';
+                overlay.innerHTML = `
+                    <div class="confirm-box">
+                        <div class="confirm-msg">${msg}</div>
+                        <div class="confirm-buttons">
+                            <button class="confirm-btn yes" id="_cfYes">${t('yes')}</button>
+                            <button class="confirm-btn no" id="_cfNo">${t('no_word')}</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+                
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => overlay.classList.add('show'));
+                });
+                
+                const cleanup = (result) => {
+                    overlay.classList.remove('show');
+                    setTimeout(() => overlay.remove(), 250);
+                    resolve(result);
+                };
+                
+                overlay.querySelector('#_cfYes').onclick = () => cleanup(true);
+                overlay.querySelector('#_cfNo').onclick = () => cleanup(false);
+                overlay.onclick = (e) => { if (e.target === overlay) cleanup(false); };
+            });
+        }
+
+
+
+
+        // ==================== SMART PRAYER REMINDERS ====================
+
+        const PRAYER_REMINDER_TIMES = {
+            'fajr':    { start: 4, end: 7, name_key: 'prayer_fajr' },
+            'dhuhr':   { start: 12, end: 14, name_key: 'prayer_dhuhr' },
+            'asr':     { start: 15, end: 17, name_key: 'prayer_asr' },
+            'maghrib': { start: 18, end: 20, name_key: 'prayer_maghrib' },
+            'isha':    { start: 21, end: 23, name_key: 'prayer_isha' }
+        };
+
+        let reminderDismissed = {};
+
+        function checkPrayerReminders() {
+            if (!activeProfile) return;
+            if (currentSection !== 'fard') return;
+            
+            const now = new Date();
+            const hour = now.getHours();
+            const todayDay = now.getDate();
+            const todayMonth = now.getMonth() + 1;
+            const todayYear = now.getFullYear();
+            
+            // Only check if we're viewing the current month
+            if (currentMonth !== todayMonth || currentYear !== todayYear) {
+                hideReminder();
+                return;
+            }
+            
+            const dataObj = getDataObject('fard');
+            if (!dataObj[todayMonth]) return;
+            
+            // Find unmarked prayers that should have been done by now
+            const unmarked = [];
+            for (const [id, times] of Object.entries(PRAYER_REMINDER_TIMES)) {
+                if (hour >= times.end) {
+                    // Past the expected time
+                    const isMarked = dataObj[todayMonth][id] && dataObj[todayMonth][id][todayDay];
+                    if (!isMarked && !reminderDismissed[`${id}_${todayDay}`]) {
+                        unmarked.push({ id, name: t(times.name_key) });
+                    }
+                }
+            }
+            
+            const bar = document.getElementById('prayerReminder');
+            const msgEl = document.getElementById('reminderMsg');
+            
+            if (unmarked.length > 0) {
+                const names = unmarked.map(p => p.name).join('، ');
+                const msg = currentLang === 'ar' 
+                    ? `لم تُسجّل بعد: ${names}` 
+                    : `Not yet logged: ${names}`;
+                msgEl.textContent = msg;
+                bar.style.display = 'flex';
+            } else {
+                hideReminder();
+            }
+        }
+
+        function hideReminder() {
+            const bar = document.getElementById('prayerReminder');
+            if (bar) bar.style.display = 'none';
+        }
+
+        function dismissReminder() {
+            const now = new Date();
+            const todayDay = now.getDate();
+            // Dismiss all current reminders for today
+            for (const id of Object.keys(PRAYER_REMINDER_TIMES)) {
+                reminderDismissed[`${id}_${todayDay}`] = true;
+            }
+            hideReminder();
+        }
+
+        function scrollToUnmarkedPrayer() {
+            // Scroll to the first unmarked prayer section
+            const containers = document.querySelectorAll('#fardTrackerPrayersContainer .prayer-section');
+            const now = new Date();
+            const todayDay = now.getDate();
+            const dataObj = getDataObject('fard');
+            
+            for (const [id, times] of Object.entries(PRAYER_REMINDER_TIMES)) {
+                if (now.getHours() >= times.end) {
+                    const isMarked = dataObj[currentMonth][id] && dataObj[currentMonth][id][todayDay];
+                    if (!isMarked) {
+                        // Find and scroll to this prayer section
+                        const sections = document.querySelectorAll('#fardTrackerPrayersContainer .prayer-section');
+                        const prayers = getPrayersArray('fard');
+                        const idx = prayers.findIndex(p => p.id === id);
+                        if (idx >= 0 && sections[idx]) {
+                            sections[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            sections[idx].style.transition = 'box-shadow 0.3s';
+                            sections[idx].style.boxShadow = '0 0 20px rgba(245,158,11,0.5)';
+                            setTimeout(() => { sections[idx].style.boxShadow = ''; }, 2000);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Check reminders every 5 minutes + on section switch
+        setInterval(checkPrayerReminders, 5 * 60 * 1000);
+
+        // ==================== SWIPE NAVIGATION ====================
+
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const SWIPE_THRESHOLD = 60;
+
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const diff = touchStartX - touchEndX;
+            
+            // Ignore small movements
+            if (Math.abs(diff) < SWIPE_THRESHOLD) return;
+            
+            // Don't swipe if user is interacting with inputs/selects
+            const active = document.activeElement;
+            if (active && (active.tagName === 'INPUT' || active.tagName === 'SELECT' || active.tagName === 'TEXTAREA')) return;
+            
+            // Determine which section/view is active
+            if (currentSection === 'fard' || currentSection === 'sunnah') {
+                const trackerView = document.getElementById(`${currentSection}TrackerView`);
+                if (trackerView && trackerView.classList.contains('active')) {
+                    if (diff > 0) {
+                        // Swipe left → next month
+                        swipeMonth(currentSection, 1);
+                    } else {
+                        // Swipe right → prev month
+                        swipeMonth(currentSection, -1);
+                    }
+                }
+            } else if (currentSection === 'fasting') {
+                const volView = document.getElementById('fastingVoluntaryView');
+                if (volView && volView.classList.contains('active')) {
+                    if (diff > 0) {
+                        changeFastingMonth(1);
+                        animateSwipe('left');
+                    } else {
+                        changeFastingMonth(-1);
+                        animateSwipe('right');
+                    }
+                }
+            }
+        }
+
+        function swipeMonth(type, delta) {
+            // Same as changeTrackerMonth but with animation
+            changeTrackerMonth(type, delta);
+            animateSwipe(delta > 0 ? 'left' : 'right');
+        }
+
+        function animateSwipe(direction) {
+            // Find the active prayers container
+            const containers = document.querySelectorAll('.prayers-container, #voluntaryFastingGrid');
+            containers.forEach(c => {
+                if (c.offsetParent !== null) { // visible
+                    c.classList.remove('swipe-slide-left', 'swipe-slide-right');
+                    void c.offsetWidth; // force reflow
+                    c.classList.add(direction === 'left' ? 'swipe-slide-left' : 'swipe-slide-right');
+                    setTimeout(() => c.classList.remove('swipe-slide-left', 'swipe-slide-right'), 300);
+                }
+            });
+        }
+
+
+
+        // ==================== OFFLINE DETECTION ====================
+        
+        function updateOnlineStatus() {
+            const bar = document.getElementById('offlineBar');
+            if (bar) {
+                bar.classList.toggle('show', !navigator.onLine);
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
+
+        // ==================== DAY-BOX CLICK ANIMATION ====================
+        
+        function animateDayBox(element) {
+            element.classList.remove('pop', 'ripple');
+            void element.offsetWidth; // force reflow
+            element.classList.add('pop', 'ripple');
+            setTimeout(() => element.classList.remove('pop', 'ripple'), 500);
+        }
+
+        // Wrap day-box clicks with animation
+        document.addEventListener('click', function(e) {
+            const dayBox = e.target.closest('.day-box:not(.disabled)');
+            if (dayBox) {
+                animateDayBox(dayBox);
+            }
+        });
+
+        // ==================== BATCH SELECTION ====================
+        
+        function batchMarkPrayer(type, prayerId) {
+            const dataObj = getDataObject(type);
+            const daysInMonth = getDaysInMonth(currentMonth, currentYear);
+            const isFemaleUser = activeProfile && activeProfile.gender === 'female' && activeProfile.age >= 12;
+            const exemptData = isFemaleUser ? getExemptDays(currentYear, currentMonth) : {};
+            
+            if (!dataObj[currentMonth][prayerId]) dataObj[currentMonth][prayerId] = {};
+            
+            // Count current state
+            let markedCount = 0;
+            for (let day = 1; day <= daysInMonth; day++) {
+                if (isFutureDate(day, currentMonth, currentYear)) continue;
+                if (isPrayerExempt(exemptData, prayerId, day)) continue;
+                if (dataObj[currentMonth][prayerId][day]) markedCount++;
+            }
+            
+            // Count available days
+            let availableDays = 0;
+            for (let day = 1; day <= daysInMonth; day++) {
+                if (isFutureDate(day, currentMonth, currentYear)) continue;
+                if (isPrayerExempt(exemptData, prayerId, day)) continue;
+                availableDays++;
+            }
+            
+            // Toggle: if most are marked, unmark all. Otherwise mark all.
+            const shouldMark = markedCount < availableDays / 2;
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                if (isFutureDate(day, currentMonth, currentYear)) continue;
+                if (isPrayerExempt(exemptData, prayerId, day)) continue;
+                dataObj[currentMonth][prayerId][day] = shouldMark;
+            }
+            
+            saveMonthData(type, currentMonth);
+            renderTrackerMonth(type);
+            updateTrackerStats(type);
+            renderStreaks(type);
+            if (type === 'fard') updateCongregationStats();
+            
+            const pName = getPrayerName(prayerId);
+            showToast(`${pName}: ${shouldMark ? '✅' : '↩️'} ${availableDays}`, 'success', 1500);
+        }
+
+        // ==================== CONGREGATION TRACKING ====================
+        
+        var congregationMode = false;
+
+        function getCongregationKey(year, month) {
+            return `salah_cong_${getProfilePrefix()}${year}_${month}`;
+        }
+
+        function getCongregationData(year, month) {
+            const stored = localStorage.getItem(getCongregationKey(year, month));
+            return stored ? JSON.parse(stored) : {};
+        }
+
+        function saveCongregationData(year, month, data) {
+            try { localStorage.setItem(getCongregationKey(year, month), JSON.stringify(data)); }
+            catch(e) { showToast(t('storage_full'), 'error'); }
+        }
+
+        function toggleCongregation(prayerId, day) {
+            const data = getCongregationData(currentYear, currentMonth);
+            if (!data[prayerId]) data[prayerId] = {};
+            data[prayerId][day] = !data[prayerId][day];
+            if (!data[prayerId][day]) delete data[prayerId][day];
+            // Clean up empty prayer entries
+            if (Object.keys(data[prayerId]).length === 0) delete data[prayerId];
+            saveCongregationData(currentYear, currentMonth, data);
+            renderTrackerMonth('fard');
+            updateCongregationStats();
+            renderStreaks('fard');
+        }
+
+        function isCongregation(congData, prayerId, day) {
+            return congData[prayerId] && congData[prayerId][day];
+        }
+
+        function updateCongregationStats() {
+            const container = document.getElementById('fardCongStats');
+            if (!container) return;
+            
+            const congData = getCongregationData(currentYear, currentMonth);
+            const dataObj = getDataObject('fard');
+            const prayers = getPrayersArray('fard');
+            
+            let totalCompleted = 0, totalCong = 0;
+            prayers.forEach(prayer => {
+                if (dataObj[currentMonth] && dataObj[currentMonth][prayer.id]) {
+                    const completedDays = Object.keys(dataObj[currentMonth][prayer.id]).filter(d => dataObj[currentMonth][prayer.id][d]);
+                    totalCompleted += completedDays.length;
+                    completedDays.forEach(d => {
+                        if (isCongregation(congData, prayer.id, parseInt(d))) totalCong++;
+                    });
+                }
+            });
+            
+            const totalAlone = totalCompleted - totalCong;
+            const congRate = totalCompleted > 0 ? Math.round((totalCong / totalCompleted) * 100) : 0;
+            
+            container.innerHTML = `
+                <span class="cong-stat mosque">🕌 ${t('congregation')}: ${totalCong} (${congRate}%)</span>
+                <span class="cong-stat alone">👤 ${t('individual')}: ${totalAlone}</span>
+            `;
+        }
+
+
         // ==================== EXEMPT DAYS (PER PRAYER PER DAY) ====================
 
         function getExemptKey(year, month) {
@@ -3893,7 +4915,8 @@
         }
 
         function saveExemptDays(year, month, data) {
-            localStorage.setItem(getExemptKey(year, month), JSON.stringify(data));
+            try { localStorage.setItem(getExemptKey(year, month), JSON.stringify(data)); }
+            catch(e) { showToast(t('storage_full'), 'error'); }
         }
 
         function toggleExemptMode(type) {
@@ -4032,10 +5055,11 @@
         }
 
         function saveFastingData(year, data) {
-            localStorage.setItem(getFastingKey(year), JSON.stringify(data));
+            try { localStorage.setItem(getFastingKey(year), JSON.stringify(data)); }
+            catch(e) { showToast(t('storage_full'), 'error'); }
         }
 
-        let fastingExemptModeOn = false;
+        var fastingExemptModeOn = false;
         let fastingMonth, fastingYear;
 
         function switchFastingView(view) {
@@ -4070,7 +5094,8 @@
         }
 
         function saveVolFastingData(year, month, data) {
-            localStorage.setItem(getVolFastingKey(year, month), JSON.stringify(data));
+            try { localStorage.setItem(getVolFastingKey(year, month), JSON.stringify(data)); }
+            catch(e) { showToast(t('storage_full'), 'error'); }
         }
 
         function updateVoluntaryFasting() {
@@ -4112,7 +5137,7 @@
                         exemptCount++;
                     }
                     dayBox.style.cursor = 'default';
-                    dayBox.title = 'أيام الإعفاء مربوطة ببيانات الصلاة';
+                    dayBox.title = t('exempt_linked_prayer');
                 } else {
                     const dayNum = document.createElement('span');
                     dayNum.className = 'day-number';
@@ -4162,8 +5187,8 @@
             updateVoluntaryFasting();
         }
 
-        function resetVoluntaryFasting() {
-            if (!confirm('هل أنت متأكد من مسح بيانات صيام هذا الشهر؟')) return;
+        async function resetVoluntaryFasting() {
+            if (!await showConfirm(t('confirm_clear'))) return;
             fastingMonth = parseInt(document.getElementById('fastingMonthSelect').value);
             fastingYear = parseInt(document.getElementById('fastingYearVoluntary').value);
             localStorage.removeItem(getVolFastingKey(fastingYear, fastingMonth));
@@ -4281,8 +5306,8 @@
             updateFastingView();
         }
 
-        function resetFasting() {
-            if (!confirm('هل أنت متأكد من مسح بيانات الصيام لهذه السنة؟')) return;
+        async function resetFasting() {
+            if (!await showConfirm(t('confirm_clear_fasting'))) return;
             const year = parseInt(document.getElementById('fastingYearInput').value) || currentYear;
             localStorage.removeItem(getFastingKey(year));
             updateFastingView();
@@ -4309,6 +5334,7 @@
             } else {
                 _origSwitchSection(section);
             }
+            if (section === 'fard') setTimeout(checkPrayerReminders, 300);
         }
 
         // ==================== OVERRIDE TRACKER TO SUPPORT EXEMPT DAYS ====================
@@ -4342,14 +5368,28 @@
                 
                 const nameDiv = document.createElement('div');
                 nameDiv.className = 'prayer-name';
-                nameDiv.innerHTML = `<span>${prayer.icon}</span><span>${prayer.name}</span>`;
+                nameDiv.innerHTML = `<span>${prayer.icon}</span><span>${getPrayerName(prayer.id)}</span>`;
                 
                 const counter = document.createElement('div');
                 counter.className = 'prayer-counter';
                 counter.textContent = `${completed} / ${adjustedTotal}`;
                 
-                header.appendChild(nameDiv);
-                header.appendChild(counter);
+                // Batch select button
+                if (!isExemptModeOn && !(type === 'fard' && congregationMode)) {
+                    const batchBtn = document.createElement('button');
+                    batchBtn.className = 'batch-btn';
+                    batchBtn.textContent = t('mark_all');
+                    batchBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        batchMarkPrayer(type, prayer.id);
+                    };
+                    header.appendChild(nameDiv);
+                    header.appendChild(batchBtn);
+                    header.appendChild(counter);
+                } else {
+                    header.appendChild(nameDiv);
+                    header.appendChild(counter);
+                }
                 
                 const grid = document.createElement('div');
                 grid.className = 'days-grid';
@@ -4370,7 +5410,7 @@
                         
                         if (isExemptModeOn) {
                             dayBox.onclick = () => toggleExemptPrayer(prayer.id, day);
-                            dayBox.title = 'اضغط لإلغاء الإعفاء لهذه الصلاة';
+                            dayBox.title = t('click_remove_exempt');
                         }
                     } else if (isFutureDate(day, currentMonth, currentYear)) {
                         const dayNum = document.createElement('span');
@@ -4388,11 +5428,60 @@
                         if (isExemptModeOn) {
                             // In exempt mode, clicking marks THIS prayer on THIS day as exempt
                             dayBox.onclick = () => toggleExemptPrayer(prayer.id, day);
-                            dayBox.title = 'اضغط لتحديد كإعفاء لهذه الصلاة';
+                            dayBox.title = t('click_mark_exempt');
                             dayBox.style.cursor = 'crosshair';
+                        } else if (type === 'fard' && congregationMode) {
+                            // Congregation mode: click cycles through states
+                            const isChecked = dataObj[currentMonth][prayer.id] && dataObj[currentMonth][prayer.id][day];
+                            const congData = getCongregationData(currentYear, currentMonth);
+                            const isCong = isCongregation(congData, prayer.id, day);
+                            
+                            if (isCong) {
+                                dayBox.classList.add('congregation');
+                            } else if (isChecked) {
+                                dayBox.classList.add('checked');
+                            }
+                            
+                            dayBox.onclick = () => {
+                                const d = getDataObject('fard');
+                                const c = getCongregationData(currentYear, currentMonth);
+                                const checked = d[currentMonth][prayer.id] && d[currentMonth][prayer.id][day];
+                                const cong = isCongregation(c, prayer.id, day);
+                                
+                                if (!checked) {
+                                    // Not marked → mark as prayed + congregation
+                                    if (!d[currentMonth][prayer.id]) d[currentMonth][prayer.id] = {};
+                                    d[currentMonth][prayer.id][day] = true;
+                                    if (!c[prayer.id]) c[prayer.id] = {};
+                                    c[prayer.id][day] = true;
+                                } else if (cong) {
+                                    // Congregation → remove congregation (keep prayer)
+                                    if (c[prayer.id]) { delete c[prayer.id][day]; if (Object.keys(c[prayer.id]).length === 0) delete c[prayer.id]; }
+                                } else {
+                                    // Prayed alone → add congregation
+                                    if (!c[prayer.id]) c[prayer.id] = {};
+                                    c[prayer.id][day] = true;
+                                }
+                                
+                                saveMonthData('fard', currentMonth);
+                                saveCongregationData(currentYear, currentMonth, c);
+                                renderTrackerMonth('fard');
+                                updateTrackerStats('fard');
+                                updateCongregationStats();
+                                renderStreaks('fard');
+                            };
+                            dayBox.style.cursor = 'pointer';
                         } else {
                             if (dataObj[currentMonth][prayer.id] && dataObj[currentMonth][prayer.id][day]) {
                                 dayBox.classList.add('checked');
+                                // Show congregation icon if marked
+                                if (type === 'fard') {
+                                    const congData = getCongregationData(currentYear, currentMonth);
+                                    if (isCongregation(congData, prayer.id, day)) {
+                                        dayBox.classList.add('congregation');
+                                        dayBox.classList.remove('checked');
+                                    }
+                                }
                             }
                             dayBox.onclick = () => toggleTrackerDay(type, prayer.id, day);
                         }
@@ -4474,7 +5563,7 @@
             if (theme) allData['_theme'] = theme;
             
             if (Object.keys(allData).length === 0) {
-                alert('لا توجد بيانات للتصدير');
+                showToast(t('no_data'), 'warning');
                 return;
             }
             
@@ -4517,6 +5606,7 @@
             }
             
             _origInit();
+            setTimeout(checkPrayerReminders, 1000);
         };
 
         // ==================== DATA MIGRATION ====================
@@ -4557,7 +5647,7 @@
             }
             
             if (Object.keys(allData).length === 0) {
-                alert('لا توجد بيانات للتصدير');
+                showToast(t('no_data'), 'warning');
                 return;
             }
             
@@ -4572,7 +5662,7 @@
             a.download = `نسخة_احتياطية_${dateStr}_${timeStr}.json`;
             a.click();
             URL.revokeObjectURL(url);
-            alert('تم تصدير البيانات بنجاح! الآن أنشئ ملفاً شخصياً ثم استورد البيانات.');
+            showToast(t('export_success'), 'success');
         }
 
         // Import data directly from profile screen (before profile exists)
@@ -4585,13 +5675,14 @@
                 try {
                     const imported = JSON.parse(e.target.result);
                     
-                    if (confirm('سيتم استيراد البيانات. أنشئ ملفاً شخصياً أولاً ثم ستُربط البيانات به تلقائياً.')) {
+                    // Store pending import data
+                        {
                         // Store temporarily — will be remapped when profile is created
                         localStorage.setItem('_pending_import', e.target.result);
-                        alert('تم حفظ البيانات مؤقتاً. الآن أنشئ ملفاً شخصياً وسيتم ربط البيانات به تلقائياً.');
+                        showToast(t('pending_import_saved'), 'success');
                     }
                 } catch (error) {
-                    alert('خطأ في قراءة الملف: ' + error.message);
+                    showToast(t('file_error'), 'error');
                 }
             };
             reader.readAsText(file);
@@ -4668,7 +5759,7 @@
             'comparison': { ar: '📉 مقارنة الصلوات', en: '📉 Prayer Comparison' },
             
             // Streaks
-            'fard_streaks': { ar: '🔥 سلاسل المواظبة على الفرائض', en: '🔥 Obligatory Prayer Streaks' },
+            'fard_streaks': { ar: '🔥 سلاسل المواظبة على صلاة الجماعة', en: '🔥 Congregation Prayer Streaks' },
             'sunnah_streaks': { ar: '🔥 سلاسل المواظبة على السنن', en: '🔥 Sunnah Prayer Streaks' },
             'consecutive_days': { ar: 'يوم متتالي', en: 'consecutive days' },
             'best_streak': { ar: '🏆 أفضل سلسلة:', en: '🏆 Best streak:' },
@@ -4713,10 +5804,13 @@
             'vol_monthly_chart': { ar: '📈 صيام التطوع الشهري', en: '📈 Monthly Voluntary Fasting' },
             
             // Themes
-            'green_gold': { ar: '<span data-t="green_gold">أخضر وذهبي</span>', en: 'Green & Gold' },
-            'navy_silver': { ar: '<span data-t="navy_silver">كحلي وفضي</span>', en: 'Navy & Silver' },
-            'purple_gold': { ar: '<span data-t="purple_gold">بنفسجي وذهبي</span>', en: 'Purple & Gold' },
+            'green_gold': { ar: 'أخضر وذهبي', en: 'Green & Gold' },
+            'navy_silver': { ar: 'كحلي وفضي', en: 'Navy & Silver' },
+            'purple_gold': { ar: 'بنفسجي وذهبي', en: 'Purple & Gold' },
             'pink': { ar: 'وردي 🌸', en: 'Pink 🌸' },
+            'sky_blue': { ar: 'أزرق سماوي', en: 'Sky Blue' },
+            'dark_mode': { ar: 'دارك مود', en: 'Dark Mode' },
+            'olive_cream': { ar: 'زيتوني', en: 'Olive' },
             
             // Months
             'months': {
@@ -4739,6 +5833,10 @@
             'prayer_sunnah_isha': { ar: 'سنة العشاء', en: 'Isha Sunnah' },
             'prayer_witr': { ar: 'الوتر', en: 'Witr' },
             
+            'day_names': {
+                ar: ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'],
+                en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+            },
             // Misc
             'completed_word': { ar: 'مقضية', en: 'Completed' },
             'remaining_word': { ar: 'متبقية', en: 'Remaining' },
@@ -4751,6 +5849,35 @@
             'no_data': { ar: 'لا توجد بيانات للتصدير', en: 'No data to export' },
             'import_success': { ar: 'تم استيراد البيانات بنجاح!', en: 'Data imported successfully!' },
             'import_replace': { ar: 'سيتم استبدال بيانات المستخدم الحالي. هل تريد المتابعة؟', en: 'Current user data will be replaced. Continue?' },
+            'congregation_mode': { ar: 'وضع تحديد صلاة الجماعة', en: 'Congregation mode' },
+            'congregation': { ar: 'جماعة', en: 'Congregation' },
+            'individual': { ar: 'منفرد', en: 'Individual' },
+            'cong_rate': { ar: 'نسبة صلاة الجماعة', en: 'Congregation Rate' },
+            'weekly_pattern': { ar: '📊 نمط الصلاة الأسبوعي', en: '📊 Weekly Prayer Pattern' },
+            'prayer_heatmap': { ar: '🗓️ خريطة الالتزام السنوية', en: '🗓️ Yearly Commitment Heatmap' },
+            'cong_chart_title': { ar: '🕌 صلاة الجماعة الشهرية', en: '🕌 Monthly Congregation Rate' },
+
+            'select_profile_first': { ar: 'الرجاء اختيار ملف شخصي أولاً', en: 'Please select a profile first' },
+            'export_success': { ar: 'تم تصدير البيانات بنجاح!', en: 'Data exported successfully!' },
+            'pending_import_saved': { ar: 'تم حفظ البيانات. أنشئ ملفاً شخصياً لربطها.', en: 'Data saved. Create a profile to link it.' },
+            'file_error': { ar: 'خطأ في قراءة الملف', en: 'Error reading file' },
+            'confirm_clear_fasting': { ar: 'هل أنت متأكد من مسح بيانات الصيام؟', en: 'Are you sure you want to clear fasting data?' },
+            'not_logged_yet': { ar: 'لم تُسجّل بعد:', en: 'Not yet logged:' },
+            'skip_to_content': { ar: 'تخطي إلى المحتوى', en: 'Skip to content' },
+            'offline_msg': { ar: '⚡ أنت غير متصل — التطبيق يعمل بدون اتصال', en: '⚡ You are offline — app works without connection' },
+            'swipe_hint': { ar: '⟵ اسحب للتنقل بين الأشهر ⟶', en: '⟵ Swipe to navigate months ⟶' },
+            'ready_to_track': { ar: 'جاهز لتتبع هذا الشهر!', en: 'Ready to track this month!' },
+            'select_all_day': { ar: 'تحديد اليوم', en: 'Select Day' },
+            'mark_all': { ar: 'تحديد الكل', en: 'Mark All' },
+            'yes': { ar: 'نعم', en: 'Yes' },
+            'no_word': { ar: 'لا', en: 'No' },
+            'duplicate_name': { ar: 'هذا الاسم مستخدم بالفعل', en: 'This name is already taken' },
+            'profile_limit': { ar: 'الحد الأقصى ١٠ ملفات شخصية', en: 'Maximum 10 profiles allowed' },
+            'storage_full': { ar: 'مساحة التخزين ممتلئة! صدّر بياناتك.', en: 'Storage full! Export your data.' },
+            'future_date_short': { ar: 'لا يمكن التعليم في المستقبل', en: 'Cannot mark future dates' },
+            'exempt_linked_prayer': { ar: 'أيام الإعفاء مربوطة ببيانات الصلاة', en: 'Exempt days linked to prayer data' },
+            'click_remove_exempt': { ar: 'اضغط لإلغاء الإعفاء', en: 'Click to remove exemption' },
+            'click_mark_exempt': { ar: 'اضغط لتحديد كإعفاء', en: 'Click to mark as exempt' },
             'future_date': { ar: '⚠️ لا يمكن تعليم صلاة في تاريخ مستقبلي!\nيمكنك فقط تعليم الصلوات حتى تاريخ اليوم.', en: '⚠️ Cannot mark a prayer on a future date!\nYou can only mark prayers up to today.' },
             'chart_percentage': { ar: 'نسبة الإنجاز %', en: 'Completion %' },
             'chart_prayers_count': { ar: 'عدد الصلوات', en: 'Prayer Count' },
@@ -4834,14 +5961,168 @@
             try {
                 if (activeProfile) {
                     if (currentSection === 'fard' || currentSection === 'sunnah') {
-                        renderTrackerMonth(currentSection);
-                        updateTrackerStats(currentSection);
+                        // Check which view is active
+                        const trackerActive = document.getElementById(`${currentSection}TrackerView`);
+                        const dashActive = document.getElementById(`${currentSection}DashboardView`);
+                        const yearlyActive = document.getElementById(`${currentSection}YearlyView`);
+                        
+                        if (trackerActive && trackerActive.classList.contains('active')) {
+                            renderTrackerMonth(currentSection);
+                            updateTrackerStats(currentSection);
+                            if (currentSection === 'fard') updateCongregationStats();
+                        }
+                        if (dashActive && dashActive.classList.contains('active')) {
+                            updateDashboard(currentSection);
+                        }
+                        if (yearlyActive && yearlyActive.classList.contains('active')) {
+                            updateYearlyView(currentSection);
+                        }
                         renderStreaks(currentSection);
+                    } else if (currentSection === 'fasting') {
+                        const volView = document.getElementById('fastingVoluntaryView');
+                        if (volView && volView.classList.contains('active')) updateVoluntaryFasting();
+                        const dashView = document.getElementById('fastingDashboardView');
+                        if (dashView && dashView.classList.contains('active')) updateFastingDashboard();
                     }
                 }
-            } catch(e) {}
+            } catch(e) { console.log('Lang re-render:', e); }
         }
 
+
+
+        // ==================== ADVANCED VISUALIZATIONS ====================
+
+        function renderAdvancedCharts() {
+            renderWeeklyPattern();
+            renderYearlyHeatmap();
+        }
+
+        function renderWeeklyPattern() {
+            const ctx = document.getElementById('fardWeeklyPatternChart');
+            if (!ctx) return;
+            
+            const prayers = getPrayersArray('fard');
+            const dataObj = getDataObject('fard');
+            const dayNames = T['day_names'][currentLang];
+            
+            // Count completions by day of week for each prayer
+            const weekData = {};
+            prayers.forEach(p => { weekData[p.id] = [0,0,0,0,0,0,0]; });
+            const weekTotals = [0,0,0,0,0,0,0];
+            
+            for (let month = 1; month <= 12; month++) {
+                if (!dataObj[month]) continue;
+                const daysInMonth = getDaysInMonth(month, currentYear);
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const date = new Date(currentYear, month - 1, day);
+                    const dow = date.getDay(); // 0=Sun
+                    weekTotals[dow]++;
+                    prayers.forEach(p => {
+                        if (dataObj[month][p.id] && dataObj[month][p.id][day]) {
+                            weekData[p.id][dow]++;
+                        }
+                    });
+                }
+            }
+            
+            // Calculate rates per day of week
+            const datasets = prayers.map(p => ({
+                label: getPrayerName(p.id),
+                data: weekData[p.id].map((count, i) => weekTotals[i] > 0 ? Math.round((count / weekTotals[i]) * 100) : 0),
+                backgroundColor: p.color + '88',
+                borderColor: p.color,
+                borderWidth: 2
+            }));
+            
+            if (charts.fardWeekly) charts.fardWeekly.destroy();
+            charts.fardWeekly = new Chart(ctx, {
+                type: 'bar',
+                data: { labels: dayNames, datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 10 } } }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } },
+                        x: { stacked: false }
+                    }
+                }
+            });
+        }
+
+        function renderYearlyHeatmap() {
+            const ctx = document.getElementById('fardHeatmapChart');
+            if (!ctx) return;
+            
+            const prayers = getPrayersArray('fard');
+            const dataObj = getDataObject('fard');
+            const monthNames = getMonthNames();
+            
+            // Build monthly completion rates
+            const heatData = [];
+            const labels = [];
+            
+            for (let month = 1; month <= 12; month++) {
+                const daysInMonth = getDaysInMonth(month, currentYear);
+                let total = 0, completed = 0;
+                
+                prayers.forEach(p => {
+                    total += daysInMonth;
+                    if (dataObj[month] && dataObj[month][p.id]) {
+                        completed += Object.values(dataObj[month][p.id]).filter(v => v).length;
+                    }
+                });
+                
+                heatData.push(total > 0 ? Math.round((completed / total) * 100) : 0);
+                labels.push(monthNames[month - 1]);
+            }
+            
+            // Color scale based on percentage
+            const colors = heatData.map(v => {
+                if (v >= 80) return '#059669';
+                if (v >= 60) return '#10b981';
+                if (v >= 40) return '#fbbf24';
+                if (v >= 20) return '#f97316';
+                if (v > 0) return '#ef4444';
+                return '#e5e7eb';
+            });
+            
+            if (charts.fardHeatmap) charts.fardHeatmap.destroy();
+            charts.fardHeatmap = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: t('completion_rate'),
+                        data: heatData,
+                        backgroundColor: colors,
+                        borderColor: colors.map(c => c === '#e5e7eb' ? '#d1d5db' : c),
+                        borderWidth: 2,
+                        borderRadius: 4,
+                        barPercentage: 0.9
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `${ctx.parsed.x}%`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+        }
 
         // Migrate existing data before anything
         migrateExistingData();
