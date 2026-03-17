@@ -2382,7 +2382,7 @@
             
             <div class="profiles-list" id="profilesList"></div>
             
-            <button class="add-profile-btn" onclick="showProfileForm()" id="addProfileBtn" data-t="add_profile">
+            <button type="button" class="add-profile-btn" onclick="showProfileForm()" id="addProfileBtn" data-t="add_profile">
                 ➕ إضافة ملف شخصي جديد
             </button>
 
@@ -2426,8 +2426,8 @@
                     </div>
                 </div>
                 <div class="form-buttons">
-                    <button class="form-btn save" onclick="saveProfile()" data-t="save">💾 حفظ</button>
-                    <button class="form-btn cancel" onclick="hideProfileForm()" data-t="cancel">إلغاء</button>
+                    <button type="button" class="form-btn save" onclick="saveProfile()" data-t="save">💾 حفظ</button>
+                    <button type="button" class="form-btn cancel" onclick="hideProfileForm()" data-t="cancel">إلغاء</button>
                 </div>
             </div>
         </div>
@@ -2579,7 +2579,7 @@
                     <span>🕌</span>
                     <label data-t="congregation_mode">وضع تحديد صلاة الجماعة</label>
                     <label class="exempt-switch">
-                        <input type="checkbox" id="fardCongregationMode" onchange="congregationMode=this.checked;renderTrackerMonth('fard')">
+                        <input type="checkbox" id="fardCongregationMode" onchange="window.congregationMode=this.checked;window.renderTrackerMonth('fard')">
                         <span class="exempt-slider"></span>
                     </label>
                     <div class="congregation-stats" id="fardCongStats"></div>
@@ -2923,7 +2923,7 @@
                     <span>🩸</span>
                     <label>وضع تحديد أيام الحيض</label>
                     <label class="exempt-switch">
-                        <input type="checkbox" id="fastingExemptMode" onchange="fastingExemptModeOn=this.checked;updateVoluntaryFasting()">
+                        <input type="checkbox" id="fastingExemptMode" onchange="window.fastingExemptModeOn=this.checked;window.updateVoluntaryFasting()">
                         <span class="exempt-slider"></span>
                     </label>
                 </div>
@@ -4357,7 +4357,7 @@
             });
         }
 
-        let selectedGender = '';
+        var selectedGender = '';
 
         function selectGender(gender) {
             selectedGender = gender;
@@ -4395,20 +4395,21 @@
         }
 
         function saveProfile() {
-            const name = document.getElementById('profileName').value.trim();
-            const age = parseInt(document.getElementById('profileAge').value);
-            const gender = selectedGender;
-            const editId = document.getElementById('editProfileId').value;
+            try {
+                const name = document.getElementById('profileName').value.trim();
+                const age = parseInt(document.getElementById('profileAge').value);
+                const gender = selectedGender;
+                const editId = document.getElementById('editProfileId').value;
 
-            if (!name) { showToast(t('enter_valid_name'), 'warning'); return; }
-            if (!age || age < 5) { showToast(t('enter_valid_age'), 'warning'); return; }
-            if (!gender) { showToast(t('select_gender'), 'warning'); return; }
-            
-            let profiles = getProfiles();
-            
-            // Check duplicate name (except when editing same profile)
-            const existing = profiles.find(p => p.name === name && p.id !== editId);
-            if (existing) { showToast(t('duplicate_name'), 'warning'); return; }
+                if (!name) { showToast(t('enter_valid_name'), 'warning'); return; }
+                if (!age || age < 5) { showToast(t('enter_valid_age'), 'warning'); return; }
+                if (!gender) { showToast(t('select_gender'), 'warning'); return; }
+                
+                let profiles = getProfiles();
+                
+                // Check duplicate name
+                const existing = profiles.find(p => p.name === name && p.id !== editId);
+                if (existing) { showToast(t('duplicate_name'), 'warning'); return; }
             
             // Profile limit
             if (!editId && profiles.length >= 10) { showToast(t('profile_limit'), 'warning'); return; }
@@ -4497,6 +4498,10 @@
             saveProfiles(profiles);
             hideProfileForm();
             renderProfilesList();
+            } catch(err) {
+                console.error('saveProfile error:', err);
+                showToast('Error: ' + err.message, 'error');
+            }
         }
 
         function editProfile(id) {
@@ -6243,6 +6248,48 @@
         // Load theme on startup
         loadTheme();
         applyLang();
+
+        // Expose functions to window for iOS Safari inline onclick compatibility
+        window.saveProfile = saveProfile;
+        window.hideProfileForm = hideProfileForm;
+        window.showProfileForm = showProfileForm;
+        window.selectGender = selectGender;
+        window.selectProfile = selectProfile;
+        window.editProfile = editProfile;
+        window.deleteProfile = deleteProfile;
+        window.showProfileScreen = showProfileScreen;
+        window.switchSection = switchSection;
+        window.switchView = switchView;
+        window.changeTrackerMonth = changeTrackerMonth;
+        window.updateTrackerView = updateTrackerView;
+        window.resetTrackerMonth = resetTrackerMonth;
+        window.resetMonth = resetMonth;
+        window.updateYearlyView = updateYearlyView;
+        window.updateDashboard = updateDashboard;
+        window.exportData = exportData;
+        window.importData = importData;
+        window.handleImport = handleImport;
+        window.setTheme = setTheme;
+        window.toggleThemeMenu = toggleThemeMenu;
+        window.toggleLang = toggleLang;
+        window.switchFastingView = switchFastingView;
+        window.updateVoluntaryFasting = updateVoluntaryFasting;
+        window.changeFastingMonth = changeFastingMonth;
+        window.resetVoluntaryFasting = resetVoluntaryFasting;
+        window.updateFastingView = updateFastingView;
+        window.resetFasting = resetFasting;
+        window.exportOldData = exportOldData;
+        window.handleImportOnProfile = handleImportOnProfile;
+        window.scrollToUnmarkedPrayer = scrollToUnmarkedPrayer;
+        window.dismissReminder = dismissReminder;
+        window.backToYearly = backToYearly;
+        window.toggleExemptMode = toggleExemptMode;
+        window.updateFastingDashboard = updateFastingDashboard;
+        window.renderTrackerMonth = renderTrackerMonth;
+        
+        // Expose global vars for inline handlers
+        window.congregationMode = congregationMode;
+        window.fastingExemptModeOn = fastingExemptModeOn;
 
         init();
 
