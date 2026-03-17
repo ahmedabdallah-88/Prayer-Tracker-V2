@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>سجل قضاء الصلوات - الفرائض والسنن</title>
     
     <!-- PWA Meta Tags -->
@@ -556,8 +556,12 @@
             background-attachment: fixed;
             min-height: 100vh;
             padding: 20px;
+            padding-top: max(20px, env(safe-area-inset-top));
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
             direction: rtl;
             position: relative;
+            -webkit-touch-callout: none;
+            touch-action: manipulation;
         }
 
         body::before {
@@ -1523,6 +1527,10 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            padding-top: max(20px, env(safe-area-inset-top));
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
         .profile-overlay.hidden { display: none; }
 
@@ -1533,8 +1541,9 @@
             padding: 40px 30px;
             max-width: 500px;
             width: 100%;
-            max-height: 90vh;
+            max-height: 85vh;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             box-shadow: 0 20px 60px rgba(0,0,0,0.4);
         }
 
@@ -1679,6 +1688,10 @@
             cursor: pointer;
             transition: all 0.3s;
             background: var(--bg-card);
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+            -webkit-appearance: none;
+            appearance: none;
+            font-family: 'Cairo', sans-serif;
         }
 
         .gender-option:hover { border-color: var(--accent); }
@@ -2333,6 +2346,24 @@
             .batch-btn:hover { transform: none; }
         }
 
+        /* iOS Safari fixes */
+        .profile-card,
+        .month-card,
+        .day-box,
+        .gender-option,
+        .theme-option,
+        .add-profile-btn,
+        .form-btn,
+        .streak-card {
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+            touch-action: manipulation;
+        }
+
+        /* Ensure inputs work on iOS */
+        input, select, button {
+            font-size: 16px; /* Prevents iOS zoom on focus */
+        }
+
         .hidden {
             display: none;
         }
@@ -2376,19 +2407,19 @@
                 </div>
                 <div class="form-group">
                     <label data-t="age">العمر</label>
-                    <input type="number" id="profileAge" placeholder="5" min="5" max="120">
+                    <input type="number" id="profileAge" placeholder="5" min="5" max="120" inputmode="numeric" pattern="[0-9]*">
                 </div>
                 <div class="form-group">
                     <label data-t="gender">الجنس</label>
                     <div class="gender-select">
-                        <div class="gender-option" data-gender="male" onclick="selectGender('male')">
+                        <button type="button" class="gender-option" data-gender="male" onclick="selectGender('male')">
                             <div class="icon">👨</div>
                             <div class="label" data-t="male">ذكر</div>
-                        </div>
-                        <div class="gender-option" data-gender="female" onclick="selectGender('female')">
+                        </button>
+                        <button type="button" class="gender-option" data-gender="female" onclick="selectGender('female')">
                             <div class="icon">👩</div>
                             <div class="label" data-t="female">أنثى</div>
-                        </div>
+                        </button>
                     </div>
                 </div>
                 <div class="form-buttons">
@@ -3567,6 +3598,8 @@
                 const stats = getMonthStats(type, month, currentYear);
                 const card = document.createElement('div');
                 card.className = 'month-card';
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
                 card.onclick = () => openMonth(type, month);
                 
                 // Calculate congregation stats for fard
@@ -4293,6 +4326,8 @@
 
                 const card = document.createElement('div');
                 card.className = 'profile-card';
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
                 card.innerHTML = `
                     <div class="profile-avatar ${avatarClass}">${avatarIcon}</div>
                     <div class="profile-info">
@@ -4797,6 +4832,17 @@
 
 
         // ==================== OFFLINE DETECTION ====================
+
+        // iOS Safari fix: ensure click events fire on all interactive elements
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+            document.addEventListener('touchend', function(e) {
+                const target = e.target.closest('[role="button"], .profile-card, .gender-option, .day-box, .month-card, .theme-option, .add-profile-btn, .form-btn');
+                if (target && !target.disabled) {
+                    // Allow the native click to fire — just ensure iOS treats this as interactive
+                    target.style.cursor = 'pointer';
+                }
+            }, { passive: true });
+        }
         
         function updateOnlineStatus() {
             const bar = document.getElementById('offlineBar');
