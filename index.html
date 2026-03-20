@@ -17,34 +17,36 @@
     <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192x192.png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap');
 
         /* ==================== THEME SYSTEM ==================== */
         :root {
-            /* Default: Green & Gold Islamic */
-            --primary-dark: #0f4c3a;
-            --primary-medium: #1a5f4a;
-            --primary-light: rgba(15, 76, 58, 0.1);
-            --primary-lighter: rgba(15, 76, 58, 0.05);
-            --accent: #d4af37;
-            --accent-dark: #b8941f;
-            --accent-light: rgba(212, 175, 55, 0.5);
-            --accent-border: rgba(212, 175, 55, 0.2);
-            --accent-border-light: rgba(212, 175, 55, 0.3);
-            --bg-body-start: #0f4c3a;
-            --bg-body-mid: #1a5f4a;
-            --bg-body-end: #0f4c3a;
-            --bg-container-start: #fefdfb;
-            --bg-container-end: #f5f3ed;
-            --bg-card: white;
-            --text-primary: #0f4c3a;
-            --text-on-primary: #d4af37;
-            --text-on-dark: white;
-            --text-muted: #666;
-            --text-body: #333;
-            --chart-completed: #2d7a4f;
+            /* Sacred Interval: Cream + Dark Green + Gold */
+            --primary-dark: #1a3c34;
+            --primary-medium: #2a5448;
+            --primary-light: rgba(26, 60, 52, 0.08);
+            --primary-lighter: rgba(26, 60, 52, 0.04);
+            --accent: #c9a227;
+            --accent-dark: #a8871f;
+            --accent-light: rgba(201, 162, 39, 0.3);
+            --accent-border: rgba(26, 60, 52, 0.12);
+            --accent-border-light: rgba(26, 60, 52, 0.06);
+            --bg-body-start: #f5f0e8;
+            --bg-body-mid: #f5f0e8;
+            --bg-body-end: #f5f0e8;
+            --bg-container-start: transparent;
+            --bg-container-end: transparent;
+            --bg-card: #ffffff;
+            --text-primary: #1a3c34;
+            --text-on-primary: #f5f0e8;
+            --text-on-dark: #f5f0e8;
+            --text-muted: #8a8275;
+            --text-body: #2d2a24;
+            --chart-completed: #1a3c34;
             --pattern-opacity: 0.03;
-            --shadow-color: rgba(0,0,0,0.4);
+            --shadow-color: rgba(0,0,0,0.06);
+            --card-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            --card-radius: 20px;
         }
 
         [data-theme="navy"] {
@@ -559,19 +561,31 @@
             box-sizing: border-box;
         }
 
+
         body {
-            font-family: 'Cairo', 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, var(--bg-body-start) 0%, var(--bg-body-mid) 50%, var(--bg-body-end) 100%);
-            background-attachment: fixed;
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg-body-start);
             min-height: 100vh;
             padding: 20px;
-            padding-top: max(20px, env(safe-area-inset-top));
-            padding-bottom: max(20px, env(safe-area-inset-bottom));
+            padding-top: calc(56px + env(safe-area-inset-top, 0px) + 12px) !important;
+            padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px) + 12px) !important;
             direction: rtl;
             position: relative;
             -webkit-touch-callout: none;
             touch-action: manipulation;
+            color: var(--text-body);
         }
+
+        /* Subtle Islamic pattern background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5L35 15L45 15L37 22L40 32L30 26L20 32L23 22L15 15L25 15Z' fill='%231a3c34' fill-opacity='0.025'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
 
         body::before {
             content: '';
@@ -587,18 +601,29 @@
             z-index: 0;
         }
 
+
         .container {
-            max-width: 1400px;
+            max-width: 600px;
             margin: 0 auto;
-            background: linear-gradient(to bottom, var(--bg-container-start) 0%, var(--bg-container-end) 100%);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4), 
-                        inset 0 1px 0 rgba(255,255,255,0.8);
-            padding: 40px;
-            border: 3px solid var(--accent);
             position: relative;
             z-index: 1;
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
         }
+
+        .container::before, .container::after { display: none !important; }
+        
+        /* Hide old decorative elements */
+        [data-theme="feminine"] body::before { display: none !important; }
+        [data-theme="feminine"] .container::before,
+        [data-theme="feminine"] .container::after { display: none !important; }
+        [data-theme="feminine"] .prayer-section::before { display: none !important; }
+        [data-theme="feminine"] .header::before,
+        [data-theme="feminine"] .header::after { display: none !important; }
+
+
 
         .container::before,
         .container::after {
@@ -2359,6 +2384,581 @@
             .batch-btn:hover { transform: none; }
         }
 
+
+        /* ==================== FIORI LAYOUT ==================== */
+
+        /* Shell Bar - Fixed Top */
+        .shell-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 52px;
+            padding-top: env(safe-area-inset-top, 0px);
+            background: var(--bg-body-start);
+            border-bottom: 1px solid var(--accent-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-left: max(16px, env(safe-area-inset-left));
+            padding-right: max(16px, env(safe-area-inset-right));
+            z-index: 10000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .shell-bar-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-dark);
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.1em;
+            font-style: italic;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .shell-bar-title .app-icon { font-size: 1.3em; }
+
+        .shell-bar-profile {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: background 0.2s;
+            color: var(--text-primary);
+            font-size: 0.9em;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .shell-bar-profile:hover,
+        .shell-bar-profile:active { background: rgba(255,255,255,0.1); }
+
+        .shell-bar-profile .avatar { font-size: 1.3em; }
+        .shell-bar-profile .name { font-weight: 600; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .shell-bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .shell-btn {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: var(--primary-dark);
+            font-size: 1.15em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+        }
+
+        .shell-btn:hover,
+        .shell-btn:active { background: rgba(255,255,255,0.12); }
+
+        /* Tab Bar - Fixed Bottom */
+        .tab-bar {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: 66px;
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+            background: var(--bg-card);
+            display: flex;
+            align-items: stretch;
+            z-index: 10000;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+            border-top: none;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            cursor: pointer;
+            color: var(--text-muted, #999);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.7em;
+            font-weight: 600;
+            transition: color 0.2s;
+            border: none;
+            background: transparent;
+            padding: 4px 0;
+            -webkit-tap-highlight-color: transparent;
+            position: relative;
+        }
+
+        .tab-item .tab-icon { font-size: 1.8em; }
+        .tab-item .tab-label { line-height: 1; }
+
+        .tab-item.active {
+            color: var(--primary-dark);
+        }
+
+        .tab-item.active .tab-icon {
+            background: var(--primary-dark);
+            color: white;
+            width: 44px; height: 44px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            margin-top: -12px;
+            box-shadow: 0 4px 12px rgba(26,60,52,0.25);
+        }
+
+        /* Sub-tabs inside each section (tracker/yearly/dashboard) */
+        .sub-tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-card);
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: none;
+            padding: 4px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .sub-tab {
+            flex: 1;
+            padding: 12px 8px;
+            text-align: center;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 0.85em;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .sub-tab.active {
+            background: var(--primary-dark);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(26,60,52,0.2);
+        }
+
+        /* Body adjustments for shell bar + tab bar */
+        body {
+            padding-top: calc(56px + env(safe-area-inset-top, 0px) + 12px) !important;
+            padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px) + 12px) !important;
+        }
+
+        /* KPI Cards row */
+        .kpi-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 4px;
+        }
+
+        .kpi-card {
+            flex: 1;
+            min-width: 100px;
+            background: var(--bg-card, white);
+            border-radius: 12px;
+            padding: 14px 12px;
+            text-align: center;
+            border: 1px solid var(--accent-border, #e0e0e0);
+            border-left: 4px solid var(--accent);
+            transition: all 0.2s;
+        }
+
+        [dir="ltr"] .kpi-card {
+            border-left: none;
+            border-right: 4px solid var(--accent);
+        }
+
+        .kpi-card .kpi-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+
+        .kpi-card .kpi-label {
+            font-size: 0.75em;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        .kpi-card .kpi-sub {
+            font-size: 0.65em;
+            color: var(--accent-dark);
+            margin-top: 2px;
+        }
+
+        /* Fiori page header - compact Islamic header */
+        .page-header {
+            text-align: center;
+            padding: 16px 12px;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium));
+            border-radius: 12px;
+            border: 1px solid var(--accent-border);
+        }
+
+        .page-header .verse {
+            font-family: 'Amiri', serif;
+            color: var(--text-on-dark);
+            font-size: 1.1em;
+            line-height: 1.6;
+            direction: rtl;
+        }
+
+        .page-header .verse-ref {
+            color: var(--accent);
+            font-size: 0.8em;
+            margin-top: 4px;
+            direction: rtl;
+        }
+
+        /* Hide old elements replaced by Fiori layout */
+        .main-toggle { display: none !important; }
+        .view-toggle { display: none !important; }
+        .header h1 { display: none !important; }
+        .current-profile-badge { display: none !important; }
+
+        /* Old header becomes compact verse card */
+        .header {
+            padding: 16px 12px !important;
+            margin-bottom: 16px !important;
+            border-width: 1px !important;
+        }
+
+        .header::before, .header::after { display: none !important; }
+
+        /* Container adjustments */
+        .container {
+            border-radius: 16px;
+            padding: 16px !important;
+            border-width: 1px !important;
+        }
+
+        .container::before, .container::after { display: none !important; }
+        
+        /* Hide old decorative elements */
+        [data-theme="feminine"] body::before { display: none !important; }
+        [data-theme="feminine"] .container::before,
+        [data-theme="feminine"] .container::after { display: none !important; }
+        [data-theme="feminine"] .prayer-section::before { display: none !important; }
+        [data-theme="feminine"] .header::before,
+        [data-theme="feminine"] .header::after { display: none !important; }
+
+
+        /* Fiori Quartz Theme */
+        [data-theme="fiori"] {
+            --primary-dark: #354a5f;
+            --primary-medium: #475e75;
+            --primary-light: rgba(53, 74, 95, 0.1);
+            --primary-lighter: rgba(53, 74, 95, 0.05);
+            --accent: #0a6ed1;
+            --accent-dark: #0854a0;
+            --accent-light: rgba(10, 110, 209, 0.3);
+            --accent-border: rgba(10, 110, 209, 0.2);
+            --accent-border-light: rgba(10, 110, 209, 0.15);
+            --bg-body-start: #edeff0;
+            --bg-body-mid: #f5f6f7;
+            --bg-body-end: #edeff0;
+            --bg-container-start: #ffffff;
+            --bg-container-end: #fafafa;
+            --bg-card: #ffffff;
+            --text-primary: #32363a;
+            --text-on-primary: #ffffff;
+            --text-on-dark: #ffffff;
+            --text-muted: #6a6d70;
+            --text-body: #32363a;
+            --chart-completed: #0a6ed1;
+            --pattern-opacity: 0;
+            --shadow-color: rgba(0,0,0,0.15);
+        }
+
+        [data-theme="fiori"] .shell-bar { background: #354a5f; }
+        [data-theme="fiori"] .shell-bar-title { color: white; }
+        [data-theme="fiori"] .shell-btn { color: white; }
+        [data-theme="fiori"] .header { background: linear-gradient(135deg, #354a5f, #475e75) !important; }
+        [data-theme="fiori"] .tab-item.active { color: #0a6ed1; }
+        [data-theme="fiori"] .tab-item.active::before { background: #0a6ed1; }
+        [data-theme="fiori"] .kpi-card { border-left-color: #0a6ed1; }
+        [dir="ltr"][data-theme="fiori"] .kpi-card { border-right-color: #0a6ed1; }
+        [data-theme="fiori"] .islamic-pattern { display: none; }
+        [data-theme="fiori"] body::before { display: none; }
+        [data-theme="fiori"] .container { border-color: #e4e4e4; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+        [data-theme="fiori"] .prayer-section { border-color: #e4e4e4; border-width: 1px; background: white; }
+        [data-theme="fiori"] .prayer-counter { background: #0a6ed1; color: white; border-color: #0854a0; }
+        [data-theme="fiori"] .day-box.checked::after { color: white; }
+        [data-theme="fiori"] .sub-tab.active { background: #0a6ed1; color: white; }
+
+        /* Remove old fixed switchers — moved to shell bar */
+        .lang-switcher { display: none !important; }
+
+        /* Mobile adjustments */
+        @media (max-width: 480px) {
+            .shell-bar { height: 48px; }
+            .shell-bar-title { font-size: 0.9em; }
+            .shell-btn { width: 36px; height: 36px; font-size: 1em; }
+            body { padding-top: calc(48px + env(safe-area-inset-top, 0px) + 8px) !important; }
+            .kpi-card .kpi-value { font-size: 1.5em; }
+            .kpi-card { padding: 10px 8px; min-width: 85px; }
+            .tab-item .tab-icon { font-size: 1.5em; }
+            .tab-item { font-size: 0.65em; }
+        }
+
+
+
+
+        /* Sacred stat cards */
+        .stat-card, .month-stat {
+            background: var(--bg-card) !important;
+            border-radius: 16px !important;
+            border: none !important;
+            box-shadow: var(--card-shadow) !important;
+        }
+
+        .chart-card {
+            background: var(--bg-card) !important;
+            border-radius: var(--card-radius) !important;
+            border: none !important;
+            box-shadow: var(--card-shadow) !important;
+            padding: 20px !important;
+        }
+
+        .month-card {
+            background: var(--bg-card) !important;
+            border-radius: var(--card-radius) !important;
+            border: none !important;
+            box-shadow: var(--card-shadow) !important;
+            cursor: pointer !important;
+        }
+
+        .month-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .progress-fill {
+            border-radius: 20px !important;
+        }
+
+        .progress-bar {
+            border-radius: 20px !important;
+            background: #e8e3da !important;
+        }
+
+        /* Sacred streak cards */
+        .streak-card {
+            background: var(--bg-card) !important;
+            border-radius: 16px !important;
+            border: none !important;
+            box-shadow: var(--card-shadow) !important;
+        }
+
+        /* Sacred KPI cards */
+        .kpi-card {
+            background: var(--bg-card) !important;
+            border-radius: var(--card-radius) !important;
+            border: none !important;
+            border-left: none !important;
+            border-right: none !important;
+            box-shadow: var(--card-shadow) !important;
+        }
+
+        /* Sacred action buttons */
+        .action-btn, .nav-btn, .back-btn, .batch-btn {
+            border-radius: 12px !important;
+            border: none !important;
+            box-shadow: var(--card-shadow) !important;
+        }
+
+        /* Sacred Header — Momentum card style */
+        .header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium)) !important;
+            border-radius: var(--card-radius) !important;
+            border: none !important;
+            padding: 24px 20px !important;
+            margin-bottom: 20px !important;
+            box-shadow: 0 4px 20px rgba(26,60,52,0.2) !important;
+            position: relative !important;
+            overflow: hidden !important;
+        }
+
+        .header .islamic-pattern {
+            opacity: 0.05 !important;
+        }
+
+        .quran-verse {
+            font-family: 'Amiri', serif !important;
+            color: var(--text-on-dark) !important;
+            font-size: 1.1em !important;
+        }
+
+        .verse-ref {
+            color: var(--accent) !important;
+        }
+
+        /* Sacred controls */
+        .controls {
+            background: var(--bg-card) !important;
+            border-radius: var(--card-radius) !important;
+            border: none !important;
+            box-shadow: var(--card-shadow) !important;
+            padding: 16px !important;
+        }
+
+        /* Sacred exempt bar */
+        .exempt-toggle-bar, .congregation-toggle-bar, .reminder-bar {
+            border-radius: var(--card-radius) !important;
+            border: none !important;
+            box-shadow: var(--card-shadow) !important;
+        }
+
+        /* Sacred confirm dialog */
+        .confirm-box {
+            border-radius: var(--card-radius) !important;
+            border: none !important;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15) !important;
+        }
+
+        /* Sacred toast */
+        .toast {
+            border-radius: 16px !important;
+        }
+
+        /* Sacred profile cards */
+        .profile-card {
+            border-radius: 16px !important;
+            border: none !important;
+            box-shadow: var(--card-shadow) !important;
+        }
+
+        .profile-screen {
+            border-radius: 24px !important;
+            border: none !important;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12) !important;
+        }
+
+
+        /* Sacred Interval Prayer Section Style */
+        .prayer-section {
+            background: var(--bg-card) !important;
+            border-radius: var(--card-radius) !important;
+            padding: 20px !important;
+            margin-bottom: 14px !important;
+            border: none !important;
+            box-shadow: var(--card-shadow) !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .prayer-section:hover { 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important; 
+        }
+
+        .prayer-header {
+            border-bottom: none !important;
+            padding-bottom: 12px !important;
+            margin-bottom: 12px !important;
+        }
+
+        .prayer-name {
+            font-size: 1.05em !important;
+            font-weight: 700 !important;
+        }
+
+        .prayer-counter {
+            background: var(--primary-dark) !important;
+            color: white !important;
+            border-radius: 20px !important;
+            padding: 4px 14px !important;
+            font-size: 0.85em !important;
+            border: none !important;
+        }
+
+        /* Sacred day boxes - circles */
+        .day-box {
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 50% !important;
+            border: 2px solid #e8e3da !important;
+            background: #f8f5ef !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 0.7em !important;
+            transition: all 0.25s ease !important;
+            position: relative !important;
+            margin: 3px !important;
+        }
+
+        .day-box .day-number {
+            position: static !important;
+            font-size: 0.85em !important;
+            color: var(--text-muted) !important;
+        }
+
+        .day-box.checked {
+            background: var(--primary-dark) !important;
+            border-color: var(--primary-dark) !important;
+        }
+
+        .day-box.checked .day-number { color: transparent !important; }
+
+        .day-box.checked::after {
+            content: '✓' !important;
+            color: white !important;
+            font-size: 1em !important;
+            font-weight: 700 !important;
+        }
+
+        .day-box.congregation {
+            background: var(--primary-dark) !important;
+            border-color: var(--accent) !important;
+            border-width: 3px !important;
+        }
+
+        .day-box.congregation::after {
+            content: '🕌' !important;
+            font-size: 0.9em !important;
+        }
+
+        .day-box.exempt {
+            background: #f5e6ea !important;
+            border-color: #dbb5c0 !important;
+        }
+
+        .day-box.disabled {
+            opacity: 0.25 !important;
+            border-color: #e0dbd3 !important;
+        }
+
+        .days-grid {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 4px !important;
+            justify-content: center !important;
+        }
+
+
         /* iOS Safari fixes */
         .profile-card,
         .month-card,
@@ -2383,6 +2983,59 @@
     </style>
 </head>
 <body>
+
+    <!-- Fiori Shell Bar -->
+    <div class="shell-bar" id="shellBar">
+        <div class="shell-bar-title">
+            <span class="app-icon">🕌</span>
+            <span data-t="app_title_short" id="shellTitle">متتبع الصلاة</span>
+        </div>
+        <div class="shell-bar-profile" onclick="showProfileScreen()" id="shellProfile" style="display:none;">
+            <span class="avatar" id="shellAvatar">👨</span>
+            <span class="name" id="shellName">الاسم</span>
+        </div>
+        <div class="shell-bar-actions">
+            <button class="shell-btn" onclick="toggleThemeMenu()" id="shellThemeBtn" title="Theme">🎨</button>
+            <button class="shell-btn" onclick="toggleLang()" id="langBtn" role="button" aria-label="Switch language">EN</button>
+        </div>
+    </div>
+
+    <!-- Theme dropdown (absolute positioned from shell bar) -->
+    <div class="theme-options" id="themeOptions" style="position:fixed;top:calc(56px + env(safe-area-inset-top, 0px));right:60px;z-index:10001;">
+        <button class="theme-option active" data-theme="green" onclick="setTheme('green')">
+            <span class="theme-dot" style="background: linear-gradient(135deg, #0f4c3a, #d4af37);"></span>
+            <span data-t="green_gold">أخضر وذهبي</span>
+        </button>
+        <button class="theme-option" data-theme="navy" onclick="setTheme('navy')">
+            <span class="theme-dot" style="background: linear-gradient(135deg, #0d1b2a, #c0c0c0);"></span>
+            <span data-t="navy_silver">كحلي وفضي</span>
+        </button>
+        <button class="theme-option" data-theme="purple" onclick="setTheme('purple')">
+            <span class="theme-dot" style="background: linear-gradient(135deg, #2d1b4e, #d4af37);"></span>
+            <span data-t="purple_gold">بنفسجي وذهبي</span>
+        </button>
+        <button class="theme-option" data-theme="feminine" onclick="setTheme('feminine')">
+            <span class="theme-dot" style="background: linear-gradient(135deg, #8e3564, #e8a4b8);"></span>
+            <span data-t="pink">وردي 🌸</span>
+        </button>
+        <button class="theme-option" data-theme="sky" onclick="setTheme('sky')">
+            <span class="theme-dot" style="background: linear-gradient(135deg, #0369a1, #bae6fd);"></span>
+            <span data-t="sky_blue">أزرق سماوي</span>
+        </button>
+        <button class="theme-option" data-theme="dark" onclick="setTheme('dark')">
+            <span class="theme-dot" style="background: linear-gradient(135deg, #0a0a0a, #d4af37);"></span>
+            <span data-t="dark_mode">دارك مود</span>
+        </button>
+        <button class="theme-option" data-theme="olive" onclick="setTheme('olive')">
+            <span class="theme-dot" style="background: linear-gradient(135deg, #4a5529, #d4c5a0);"></span>
+            <span data-t="olive_cream">زيتوني</span>
+        </button>
+        <button class="theme-option" data-theme="fiori" onclick="setTheme('fiori')">
+            <span class="theme-dot" style="background: linear-gradient(135deg, #354a5f, #0a6ed1);"></span>
+            <span data-t="fiori_theme">كوارتز</span>
+        </button>
+    </div>
+
 
     <!-- Profile Selection Overlay -->
     <div class="profile-overlay" id="profileOverlay" role="dialog" aria-modal="true" aria-label="Profile selection">
@@ -2444,44 +3097,6 @@
     </div>
 
 
-    <!-- Controls Bar (Language + Theme) -->
-    <div class="lang-switcher">
-        <button class="lang-toggle-btn" onclick="toggleLang()" id="langBtn" role="button" aria-label="Switch language" title="Switch Language">عر</button>
-        <div class="theme-switcher">
-            <button class="theme-toggle-btn" onclick="toggleThemeMenu()" title="تغيير السمة" role="button" aria-label="Change theme" aria-haspopup="true">🎨</button>
-            <div class="theme-options" id="themeOptions">
-                <button class="theme-option active" data-theme="green" onclick="setTheme('green')">
-                    <span class="theme-dot" style="background: linear-gradient(135deg, #0f4c3a, #d4af37);"></span>
-                    <span data-t="green_gold">أخضر وذهبي</span>
-                </button>
-                <button class="theme-option" data-theme="navy" onclick="setTheme('navy')">
-                    <span class="theme-dot" style="background: linear-gradient(135deg, #0d1b2a, #c0c0c0);"></span>
-                    <span data-t="navy_silver">كحلي وفضي</span>
-                </button>
-                <button class="theme-option" data-theme="purple" onclick="setTheme('purple')">
-                    <span class="theme-dot" style="background: linear-gradient(135deg, #2d1b4e, #d4af37);"></span>
-                    <span data-t="purple_gold">بنفسجي وذهبي</span>
-                </button>
-                <button class="theme-option" data-theme="feminine" onclick="setTheme('feminine')">
-                    <span class="theme-dot" style="background: linear-gradient(135deg, #8e3564, #e8a4b8);"></span>
-                    <span data-t="pink">وردي 🌸</span>
-                </button>
-                <button class="theme-option" data-theme="sky" onclick="setTheme('sky')">
-                    <span class="theme-dot" style="background: linear-gradient(135deg, #0369a1, #bae6fd);"></span>
-                    <span data-t="sky_blue">أزرق سماوي</span>
-                </button>
-                <button class="theme-option" data-theme="dark" onclick="setTheme('dark')">
-                    <span class="theme-dot" style="background: linear-gradient(135deg, #0a0a0a, #d4af37);"></span>
-                    <span data-t="dark_mode">دارك مود</span>
-                </button>
-                <button class="theme-option" data-theme="olive" onclick="setTheme('olive')">
-                    <span class="theme-dot" style="background: linear-gradient(135deg, #4a5529, #d4c5a0);"></span>
-                    <span data-t="olive_cream">زيتوني</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
     <a href="#mainContent" class="skip-link" data-t="skip_to_content">تخطي إلى المحتوى</a>
     <div class="offline-bar" id="offlineBar" role="alert" data-t="offline_msg">⚡ أنت غير متصل بالإنترنت — التطبيق يعمل بدون اتصال</div>
     <div class="toast-container" id="toastContainer"></div>
@@ -2515,6 +3130,12 @@
                 <button class="toggle-btn" onclick="switchView('fard', 'dashboard')" data-t="dashboard">📊 لوحة التحكم</button>
             </div>
 
+
+            <div class="sub-tabs" id="fardSubTabs">
+                <button class="sub-tab active" onclick="switchView('fard','tracker')" data-t="monthly_tracker">📝 المتتبع</button>
+                <button class="sub-tab" onclick="switchView('fard','yearly')" data-t="yearly_view">📅 السنة</button>
+                <button class="sub-tab" onclick="switchView('fard','dashboard')" data-t="dashboard_short">📊 إحصائيات</button>
+            </div>
             <!-- Fard Tracker View (Active by default) -->
             <div id="fardTrackerView" class="view active">
                 <div class="controls">
@@ -2732,6 +3353,12 @@
                 <button class="toggle-btn" onclick="switchView('sunnah', 'dashboard')" data-t="dashboard">📊 لوحة التحكم</button>
             </div>
 
+
+            <div class="sub-tabs" id="sunnahSubTabs">
+                <button class="sub-tab active" onclick="switchView('sunnah','tracker')" data-t="monthly_tracker">📝 المتتبع</button>
+                <button class="sub-tab" onclick="switchView('sunnah','yearly')" data-t="yearly_view">📅 السنة</button>
+                <button class="sub-tab" onclick="switchView('sunnah','dashboard')" data-t="dashboard_short">📊 إحصائيات</button>
+            </div>
             <!-- Sunnah Tracker View (Active by default) -->
             <div id="sunnahTrackerView" class="view active">
                 <div class="controls">
@@ -2896,6 +3523,12 @@
                 <button class="toggle-btn" onclick="switchFastingView('dashboard')" data-t="dashboard">📊 لوحة التحكم</button>
             </div>
 
+
+            <div class="sub-tabs" id="fastingSubTabs">
+                <button class="sub-tab active" onclick="switchFastingView('voluntary')" data-t="voluntary_fasting">📝 تطوع</button>
+                <button class="sub-tab" onclick="switchFastingView('ramadan')" data-t="ramadan_fasting">🌙 رمضان</button>
+                <button class="sub-tab" onclick="switchFastingView('dashboard')" data-t="dashboard_short">📊 إحصائيات</button>
+            </div>
             <!-- Voluntary Fasting Tracker -->
             <div id="fastingVoluntaryView" class="view active">
                 <div class="controls">
@@ -3235,7 +3868,7 @@
             
             if (section === 'fard') {
                 document.getElementById('fardSection').classList.add('active');
-                document.querySelector('.main-toggle-btn:nth-child(1)').classList.add('active');
+                try { document.querySelector('.main-toggle-btn:nth-child(1)').classList.add('active'); } catch(e) {}
                 const today = new Date();
                 currentMonth = parseInt(document.getElementById('fardTrackerMonthSelect').value) || (today.getMonth() + 1);
                 currentYear = parseInt(document.getElementById('fardTrackerYearInput').value) || today.getFullYear();
@@ -3243,7 +3876,7 @@
                 updateTrackerView('fard');
             } else {
                 document.getElementById('sunnahSection').classList.add('active');
-                document.querySelector('.main-toggle-btn:nth-child(2)').classList.add('active');
+                try { document.querySelector('.main-toggle-btn:nth-child(2)').classList.add('active'); } catch(e) {}
                 const today = new Date();
                 currentMonth = parseInt(document.getElementById('sunnahTrackerMonthSelect').value) || (today.getMonth() + 1);
                 currentYear = parseInt(document.getElementById('sunnahTrackerYearInput').value) || today.getFullYear();
@@ -3259,7 +3892,7 @@
             
             if (view === 'tracker') {
                 document.getElementById(`${prefix}TrackerView`).classList.add('active');
-                document.querySelector(`#${prefix}Section .toggle-btn:nth-child(1)`).classList.add('active');
+                try { document.querySelector(`#${prefix}Section .toggle-btn:nth-child(1)`).classList.add('active'); } catch(e) {}
                 const today = new Date();
                 currentMonth = parseInt(document.getElementById(`${prefix}TrackerMonthSelect`).value) || (today.getMonth() + 1);
                 currentYear = parseInt(document.getElementById(`${prefix}TrackerYearInput`).value) || today.getFullYear();
@@ -3269,13 +3902,13 @@
                 updateTrackerView(type);
             } else if (view === 'yearly') {
                 document.getElementById(`${prefix}YearlyView`).classList.add('active');
-                document.querySelector(`#${prefix}Section .toggle-btn:nth-child(2)`).classList.add('active');
+                try { document.querySelector(`#${prefix}Section .toggle-btn:nth-child(2)`).classList.add('active'); } catch(e) {}
                 currentYear = parseInt(document.getElementById(`${prefix}YearlyYear`).value);
                 loadAllData(type);
                 updateYearlyView(type);
             } else if (view === 'dashboard') {
                 document.getElementById(`${prefix}DashboardView`).classList.add('active');
-                document.querySelector(`#${prefix}Section .toggle-btn:nth-child(3)`).classList.add('active');
+                try { document.querySelector(`#${prefix}Section .toggle-btn:nth-child(3)`).classList.add('active'); } catch(e) {}
                 currentYear = parseInt(document.getElementById(`${prefix}DashboardYear`).value);
                 loadAllData(type);
                 updateDashboard(type);
@@ -4072,7 +4705,7 @@
 
         // Close theme menu on outside click
         document.addEventListener('click', function(e) {
-            if (!e.target.closest('.theme-switcher')) {
+            if (!e.target.closest('.theme-options') && !e.target.closest('.shell-btn') && !e.target.closest('.theme-toggle-btn')) {
                 document.getElementById('themeOptions').classList.remove('show');
             }
         });
@@ -4303,6 +4936,11 @@
             document.body.style.position = 'fixed';
             document.body.style.width = '100%';
             document.body.style.top = `-${window.scrollY}px`;
+            // Hide shell bar and tab bar behind overlay
+            const shellBar = document.getElementById('shellBar');
+            const tabBar = document.getElementById('tabBar');
+            if (shellBar) shellBar.style.zIndex = '1';
+            if (tabBar) tabBar.style.zIndex = '1';
             renderProfilesList();
             hideProfileForm();
             
@@ -4324,6 +4962,11 @@
             document.body.style.width = '';
             document.body.style.top = '';
             window.scrollTo(0, parseInt(scrollY || '0') * -1);
+            // Restore shell bar and tab bar
+            const shellBar = document.getElementById('shellBar');
+            const tabBar = document.getElementById('tabBar');
+            if (shellBar) shellBar.style.zIndex = '10000';
+            if (tabBar) tabBar.style.zIndex = '10000';
         }
 
         function renderProfilesList() {
@@ -5192,15 +5835,15 @@
             
             if (view === 'voluntary') {
                 document.getElementById('fastingVoluntaryView').classList.add('active');
-                document.querySelector('#fastingSection .toggle-btn:nth-child(1)').classList.add('active');
+                try { document.querySelector('#fastingSection .toggle-btn:nth-child(1)').classList.add('active'); } catch(e) {}
                 updateVoluntaryFasting();
             } else if (view === 'ramadan') {
                 document.getElementById('fastingRamadanView').classList.add('active');
-                document.querySelector('#fastingSection .toggle-btn:nth-child(2)').classList.add('active');
+                try { document.querySelector('#fastingSection .toggle-btn:nth-child(2)').classList.add('active'); } catch(e) {}
                 updateFastingView();
             } else if (view === 'dashboard') {
                 document.getElementById('fastingDashboardView').classList.add('active');
-                document.querySelector('#fastingSection .toggle-btn:nth-child(3)').classList.add('active');
+                try { document.querySelector('#fastingSection .toggle-btn:nth-child(3)').classList.add('active'); } catch(e) {}
                 document.getElementById('fastingDashboardYear').value = currentYear;
                 updateFastingDashboard();
             }
@@ -5988,6 +6631,12 @@
             'file_error': { ar: 'خطأ في قراءة الملف', en: 'Error reading file' },
             'confirm_clear_fasting': { ar: 'هل أنت متأكد من مسح بيانات الصيام؟', en: 'Are you sure you want to clear fasting data?' },
             'not_logged_yet': { ar: 'لم تُسجّل بعد:', en: 'Not yet logged:' },
+            'app_title_short': { ar: 'متتبع الصلاة', en: 'Prayer Tracker' },
+            'fard_short': { ar: 'الفرائض', en: 'Fard' },
+            'sunnah_short': { ar: 'السنن', en: 'Sunnah' },
+            'fasting_short': { ar: 'الصيام', en: 'Fasting' },
+            'dashboard_short': { ar: 'لوحة التحكم', en: 'Dashboard' },
+            'fiori_theme': { ar: 'كوارتز', en: 'Quartz' },
             'skip_to_content': { ar: 'تخطي إلى المحتوى', en: 'Skip to content' },
             'offline_msg': { ar: '⚡ أنت غير متصل — التطبيق يعمل بدون اتصال', en: '⚡ You are offline — app works without connection' },
             'swipe_hint': { ar: '⟵ اسحب للتنقل بين الأشهر ⟶', en: '⟵ Swipe to navigate months ⟶' },
@@ -6111,6 +6760,7 @@
                     }
                 }
             } catch(e) { console.log('Lang re-render:', e); }
+            updateShellBar();
         }
 
 
@@ -6250,6 +6900,81 @@
             });
         }
 
+
+        // ==================== FIORI LAYOUT JS ====================
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+            switchSection(tab);
+        }
+
+        // Update shell bar profile info
+        function updateShellBar() {
+            if (!activeProfile) {
+                document.getElementById('shellProfile').style.display = 'none';
+                return;
+            }
+            const shell = document.getElementById('shellProfile');
+            shell.style.display = 'flex';
+            
+            const isChild = activeProfile.age < 12;
+            let avatarIcon;
+            if (activeProfile.gender === 'female') {
+                avatarIcon = isChild ? '👧' : '👩';
+            } else {
+                avatarIcon = isChild ? '👦' : '👨';
+            }
+            
+            document.getElementById('shellAvatar').textContent = avatarIcon;
+            document.getElementById('shellName').textContent = activeProfile.name;
+        }
+
+        // Override applyProfileUI to also update shell bar
+        const _origApplyProfileUI = applyProfileUI;
+        applyProfileUI = function() {
+            _origApplyProfileUI();
+            updateShellBar();
+        };
+
+        // Override switchView to update sub-tabs
+        const _origSwitchView = switchView;
+        switchView = function(type, view) {
+            _origSwitchView(type, view);
+            // Update sub-tab active state
+            const subTabs = document.getElementById(`${type}SubTabs`);
+            if (subTabs) {
+                subTabs.querySelectorAll('.sub-tab').forEach((t, i) => {
+                    t.classList.remove('active');
+                    if ((view === 'tracker' && i === 0) || (view === 'yearly' && i === 1) || (view === 'dashboard' && i === 2)) {
+                        t.classList.add('active');
+                    }
+                });
+            }
+        };
+
+        // Override switchFastingView to update sub-tabs
+        const _origSwitchFastingViewFiori = switchFastingView;
+        switchFastingView = function(view) {
+            _origSwitchFastingViewFiori(view);
+            const subTabs = document.getElementById('fastingSubTabs');
+            if (subTabs) {
+                subTabs.querySelectorAll('.sub-tab').forEach((t, i) => {
+                    t.classList.remove('active');
+                    if ((view === 'voluntary' && i === 0) || (view === 'ramadan' && i === 1) || (view === 'dashboard' && i === 2)) {
+                        t.classList.add('active');
+                    }
+                });
+            }
+        };
+
+        // Window bindings for new functions
+        window.switchTab = switchTab;
+        window.updateShellBar = updateShellBar;
+        // Re-bind after Fiori overrides
+        window.switchView = switchView;
+        window.switchFastingView = switchFastingView;
+
         // Migrate existing data before anything
         migrateExistingData();
 
@@ -6334,5 +7059,22 @@
             }
         });
     </script>
+
+    <!-- Fiori Tab Bar -->
+    <div class="tab-bar" id="tabBar">
+        <button class="tab-item active" onclick="switchTab('fard')" id="tabFard">
+            <span class="tab-icon">🕌</span>
+            <span class="tab-label" data-t="fard_short">الفرائض</span>
+        </button>
+        <button class="tab-item" onclick="switchTab('sunnah')" id="tabSunnah">
+            <span class="tab-icon">✨</span>
+            <span class="tab-label" data-t="sunnah_short">السنن</span>
+        </button>
+        <button class="tab-item" onclick="switchTab('fasting')" id="tabFasting">
+            <span class="tab-icon">🌙</span>
+            <span class="tab-label" data-t="fasting_short">الصيام</span>
+        </button>
+    </div>
+
 </body>
 </html>
