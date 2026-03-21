@@ -2126,7 +2126,7 @@
         .confirm-overlay.show { opacity: 1; }
 
         .confirm-box {
-            background: var(--bg-container-start, white);
+            background: #ffffff !important;
             border-radius: 16px;
             border: 3px solid var(--accent, #d4af37);
             padding: 30px 25px;
@@ -2143,9 +2143,11 @@
         .confirm-msg {
             font-size: 1.05em;
             font-weight: 600;
-            color: var(--text-primary, #333);
+            color: #1a1a1a !important;
             margin-bottom: 20px;
             line-height: 1.6;
+            white-space: pre-line;
+            direction: rtl;
         }
 
         .confirm-buttons {
@@ -5187,6 +5189,9 @@
             
             var importCount = 0;
             
+            // Extract old profile ID from imported data for exact matching
+            var oldProfileId = imported['_profile'] ? imported['_profile'].id : null;
+            
             Object.keys(imported).forEach(function(key) {
                 if (key === '_profile' || key === '_theme') return;
                 var value = imported[key];
@@ -5326,13 +5331,21 @@
                 
                 // ---- ALREADY HIJRI or OTHER KEYS — store directly with profile remap ----
                 var remappedKey = key;
-                // Remap profile ID if needed
-                var oldPMatch = key.match(/_(p_[a-z0-9]+)_/);
-                if (oldPMatch && oldPMatch[1] !== profileId) {
-                    remappedKey = key.replace(oldPMatch[1], profileId);
-                } else if (!key.includes('p_') && key.startsWith('salah_')) {
-                    // Old format without profile prefix
-                    remappedKey = key.replace(/^(salah_\w+_)/, '$1' + profileId + '_');
+                // Remap profile ID using exact match from _profile data
+                if (oldProfileId && oldProfileId !== profileId && key.includes(oldProfileId)) {
+                    remappedKey = key.replace(oldProfileId, profileId);
+                } else if (!oldProfileId) {
+                    // Fallback: try regex for unknown profile ID format
+                    var oldPMatch = key.match(/_p_(\d+_[a-z0-9]+)_/);
+                    if (oldPMatch) {
+                        var detectedOldId = 'p_' + oldPMatch[1];
+                        if (detectedOldId !== profileId) {
+                            remappedKey = key.replace(detectedOldId, profileId);
+                        }
+                    } else if (!key.includes('p_') && key.startsWith('salah_')) {
+                        // Old format without profile prefix
+                        remappedKey = key.replace(/^(salah_\w+_)/, '$1' + profileId + '_');
+                    }
                 }
                 directKeys[remappedKey] = value;
                 importCount++;
@@ -7326,46 +7339,74 @@
             if (!file) return;
             
             const reader = new FileReader();
-            reader.onload = async function(e) {
+            reader.onload = function(e) {
                 try {
                     const imported = JSON.parse(e.target.result);
                     
                     // Check if imported data contains a profile
                     if (imported['_profile']) {
                         var ip = imported['_profile'];
-                        if (await showConfirm(
-                            (currentLang === 'ar'
-                                ? 'تم العثور على ملف شخصي:\n\n👤 ' + ip.name + '\n' + (ip.gender === 'female' ? '👩 أنثى' : '👨 ذكر') + ' · ' + ip.age + ' سنة\n\nهل تريد استخدامه مباشرة؟'
-                                : 'Profile found:\n\n👤 ' + ip.name + '\n' + ip.gender + ' · ' + ip.age + ' yrs\n\nAdopt this profile?')
-                        )) {
-                            // Create the profile
-                            var newId = 'p_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-                            var newProfile = { id: newId, name: ip.name, age: ip.age, gender: ip.gender };
-                            var profiles = getProfiles();
-                            profiles.push(newProfile);
-                            saveProfiles(profiles);
-                            
-                            // Import all data under new profile ID
-                            importAndConvertToHijri(imported, newId);
-                            
-                            if (imported['_theme']) {
-                                localStorage.setItem('salah_tracker_theme', imported['_theme']);
-                                loadTheme();
-                            }
-                            
-                            // Select and activate profile
-                            selectProfile(newId);
-                            showToast(currentLang === 'ar' 
-                                ? '✅ تم استيراد البيانات وتفعيل الملف الشخصي: ' + ip.name 
-                                : '✅ Data imported & profile activated: ' + ip.name, 'success', 4000);
-                            return;
+                        
+                        // Create the profile directly (user already chose to import)
+                        var newId = 'p_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+                        var newProfile = { id: newId, name: ip.name, age: ip.age, gender: ip.gender };
+                        var profiles = getProfiles();
+                        profiles.push(newProfile);
+                        saveProfiles(profiles);
+                        
+                        // Import all data under new profile ID
+                        var count = importAndConvertToHijri(imported, newId);
+                        
+                        if (imported['_theme']) {
+                            localStorage.setItem('salah_tracker_theme', imported['_theme']);
+                            loadTheme();
                         }
+                        
+                        // Close profile screen
+                        hideProfileScreen();
+                        
+                        // Activate profile manually (not via selectProfile to control timing)
+                        activeProfile = newProfile;
+                        setActiveProfileId(newId);
+                        applyProfileUI();
+                        
+                        var todayH = getTodayHijri();
+                        currentHijriMonth = todayH.month;
+                        currentHijriYear = todayH.year;
+                        currentMonth = currentHijriMonth;
+                        currentYear = currentHijriYear;
+                        
+                        document.getElementById('fardTrackerMonthSelect').value = currentHijriMonth;
+                        document.getElementById('fardTrackerYearInput').value = currentHijriYear;
+                        document.getElementById('sunnahTrackerMonthSelect').value = currentHijriMonth;
+                        document.getElementById('sunnahTrackerYearInput').value = currentHijriYear;
+                        document.getElementById('fardDashboardYear').value = currentHijriYear;
+                        document.getElementById('fardYearlyYear').value = currentHijriYear;
+                        document.getElementById('sunnahDashboardYear').value = currentHijriYear;
+                        document.getElementById('sunnahYearlyYear').value = currentHijriYear;
+                        
+                        loadAllData('fard');
+                        loadAllData('sunnah');
+                        
+                        // Delayed full UI rebuild
+                        setTimeout(function() {
+                            switchSection('fard');
+                            renderStreaks('fard');
+                            updateShellBar();
+                            startPrayerTimesMonitor();
+                            showToast(
+                                (currentLang === 'ar' 
+                                    ? '✅ تم استيراد ' + count + ' سجل وتفعيل: ' + ip.name 
+                                    : '✅ Imported ' + count + ' records. Profile: ' + ip.name),
+                                'success', 4000
+                            );
+                        }, 300);
+                        return;
                     }
                     
-                    // No profile or user declined — store as pending import
+                    // No profile found — store as pending import
                     localStorage.setItem('_pending_import', e.target.result);
                     showToast(t('pending_import_saved'), 'success');
-                    // Refresh profile list to show create button
                     renderProfilesList();
                 } catch (error) {
                     showToast(t('file_error'), 'error');
@@ -8384,6 +8425,9 @@
                 tag = 'prayer-after-' + prayerName;
             }
 
+            // Play notification sound (pleasant chime)
+            playNotificationSound(type);
+
             try {
                 // Try Service Worker notification first (works on mobile PWA)
                 if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
@@ -8413,6 +8457,47 @@
                 // Last resort: in-app toast
                 showToast(title + ': ' + body, 'info', 5000);
             }
+        }
+
+        // Play a pleasant notification chime using AudioContext
+        function playNotificationSound(type) {
+            try {
+                var ctx = new (window.AudioContext || window.webkitAudioContext)();
+                var now = ctx.currentTime;
+                
+                if (type === 'before') {
+                    // Rising two-tone chime (prayer approaching)
+                    playTone(ctx, 523, now, 0.15, 0.08);        // C5
+                    playTone(ctx, 659, now + 0.18, 0.2, 0.08);  // E5
+                    playTone(ctx, 784, now + 0.4, 0.3, 0.06);   // G5
+                } else if (type === 'after') {
+                    // Gentle descending reminder
+                    playTone(ctx, 784, now, 0.15, 0.07);        // G5
+                    playTone(ctx, 659, now + 0.2, 0.15, 0.07);  // E5
+                    playTone(ctx, 523, now + 0.4, 0.25, 0.05);  // C5
+                } else {
+                    // Test: single pleasant tone
+                    playTone(ctx, 659, now, 0.2, 0.06);          // E5
+                }
+                
+                // Close context after sounds finish
+                setTimeout(function() { ctx.close(); }, 1500);
+            } catch(e) {
+                // AudioContext not available — silent fallback
+            }
+        }
+        
+        function playTone(ctx, freq, startTime, duration, volume) {
+            var osc = ctx.createOscillator();
+            var gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(volume, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+            osc.start(startTime);
+            osc.stop(startTime + duration + 0.05);
         }
 
         function checkPrayerTimeNotifications() {
@@ -8932,6 +9017,19 @@
         window.fastingExemptModeOn = fastingExemptModeOn;
 
         init();
+        
+        // Clamp year inputs to valid Hijri range (1400-1500)
+        document.addEventListener('input', function(e) {
+            var el = e.target;
+            if (el.type === 'number' && (el.id.includes('Year') || el.id.includes('year'))) {
+                var val = parseInt(el.value);
+                if (isNaN(val)) return;
+                var minVal = parseInt(el.min) || 1400;
+                var maxVal = parseInt(el.max) || 1500;
+                if (val > maxVal) { el.value = maxVal; }
+                if (val < minVal && el.value.length >= 4) { el.value = minVal; }
+            }
+        });
         
         // Start prayer times monitor
         setTimeout(function() {
