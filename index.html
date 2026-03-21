@@ -6997,7 +6997,8 @@
                 for (let i = 0; i < localStorage.length; i++) {
                     const key = localStorage.key(i);
                     if (key && key.includes(profileId)) {
-                        allData[key] = JSON.parse(localStorage.getItem(key));
+                        try { allData[key] = JSON.parse(localStorage.getItem(key)); }
+                        catch(e) { allData[key] = localStorage.getItem(key); }
                     }
                 }
                 allData['_profile'] = activeProfile;
@@ -7017,20 +7018,54 @@
             const theme = localStorage.getItem('salah_tracker_theme');
             if (theme) allData['_theme'] = theme;
             
-            if (Object.keys(allData).length === 0) {
+            if (Object.keys(allData).length <= 1) {
                 showToast(t('no_data'), 'warning');
                 return;
             }
             
             const dataStr = JSON.stringify(allData, null, 2);
             const blob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
+            
+            // Method 1: Try Web Share API (best for mobile)
+            if (navigator.share && navigator.canShare) {
+                var file = new File([blob], fileName, { type: 'application/json' });
+                if (navigator.canShare({ files: [file] })) {
+                    navigator.share({
+                        files: [file],
+                        title: currentLang === 'ar' ? 'نسخة احتياطية — متتبع الصلاة' : 'Prayer Tracker Backup'
+                    }).then(function() {
+                        showToast(t('export_success'), 'success');
+                    }).catch(function(err) {
+                        if (err.name !== 'AbortError') {
+                            // Share failed — fallback to download
+                            downloadFallback(blob, fileName);
+                        }
+                    });
+                    return;
+                }
+            }
+            
+            // Method 2: Download link fallback
+            downloadFallback(blob, fileName);
+        };
+        
+        function downloadFallback(blob, fileName) {
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
             a.href = url;
             a.download = fileName;
+            a.style.display = 'none';
+            document.body.appendChild(a);
             a.click();
-            URL.revokeObjectURL(url);
-        };
+            
+            // Delay cleanup to let download start
+            setTimeout(function() {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 3000);
+            
+            showToast(t('export_success'), 'success');
+        }
 
         // ==================== MODIFIED INIT ====================
 
