@@ -5473,6 +5473,13 @@
                         loadAllData('fard');
                         loadAllData('sunnah');
                         
+                        // Clean ghost days (day 30/31 in 29-day months)
+                        cleanAllGhostDays();
+                        
+                        // Reload again after cleanup
+                        loadAllData('fard');
+                        loadAllData('sunnah');
+                        
                         // Force re-render of ALL views
                         updateTrackerView('fard');
                         updateTrackerView('sunnah');
@@ -5565,6 +5572,10 @@
             
             // Helper: check if a Hijri date has prayer data (checked/congregation/qada all count)
             function isDayChecked(hYear, hMonth, hDay) {
+                // Validate day is within month bounds — reject ghost days
+                var maxDays = getHijriDaysInMonth(hYear, hMonth);
+                if (hDay > maxDays || hDay < 1) return false;
+                
                 var key = getStorageKey(type, hMonth, hYear);
                 var stored = localStorage.getItem(key);
                 if (stored) {
@@ -7388,6 +7399,11 @@
                         loadAllData('fard');
                         loadAllData('sunnah');
                         
+                        // Clean ghost days (day 30/31 in 29-day months)
+                        cleanAllGhostDays();
+                        loadAllData('fard');
+                        loadAllData('sunnah');
+                        
                         // Delayed full UI rebuild
                         setTimeout(function() {
                             switchSection('fard');
@@ -8718,24 +8734,9 @@
             
             localStorage.setItem(daysKey, String(newDays));
             
-            // Clear day 30 data if switching to 29
+            // Clear day 30 and 31 data if switching to 29
             if (newDays === 29) {
-                // Remove any prayer data marked on day 30
-                ['fard', 'sunnah'].forEach(function(type) {
-                    var key = getStorageKey(type, hMonth, hYear);
-                    var stored = localStorage.getItem(key);
-                    if (stored) {
-                        var data = JSON.parse(stored);
-                        var changed = false;
-                        Object.keys(data).forEach(function(prayerId) {
-                            if (data[prayerId] && data[prayerId]['30']) {
-                                delete data[prayerId]['30'];
-                                changed = true;
-                            }
-                        });
-                        if (changed) localStorage.setItem(key, JSON.stringify(data));
-                    }
-                });
+                cleanGhostDaysForMonth(hYear, hMonth, 29);
             }
             
             // Refresh views
@@ -8744,6 +8745,95 @@
             
             var monthName = getHijriMonthName(hMonth - 1);
             showToast(monthName + ' ' + hYear + ': ' + newDays + ' ' + (currentLang === 'ar' ? 'يوم' : 'days'), 'success');
+        }
+        
+        // Clean ghost day entries (day 30/31) from ALL data types for a specific month
+        function cleanGhostDaysForMonth(hYear, hMonth, maxDay) {
+            var ghostDays = ['30', '31'];
+            if (maxDay >= 30) ghostDays = ['31'];
+            
+            // Clean tracker data (fard + sunnah)
+            ['fard', 'sunnah'].forEach(function(type) {
+                var key = getStorageKey(type, hMonth, hYear);
+                var stored = localStorage.getItem(key);
+                if (stored) {
+                    var data = JSON.parse(stored);
+                    var changed = false;
+                    Object.keys(data).forEach(function(prayerId) {
+                        if (data[prayerId] && typeof data[prayerId] === 'object') {
+                            ghostDays.forEach(function(d) {
+                                if (data[prayerId][d] !== undefined) {
+                                    delete data[prayerId][d];
+                                    changed = true;
+                                }
+                            });
+                        }
+                    });
+                    if (changed) localStorage.setItem(key, JSON.stringify(data));
+                }
+            });
+            
+            // Clean congregation data
+            var congKey = getCongregationKey(hYear, hMonth);
+            var congStored = localStorage.getItem(congKey);
+            if (congStored) {
+                var congData = JSON.parse(congStored);
+                var changed = false;
+                Object.keys(congData).forEach(function(prayerId) {
+                    if (congData[prayerId] && typeof congData[prayerId] === 'object') {
+                        ghostDays.forEach(function(d) {
+                            if (congData[prayerId][d] !== undefined) { delete congData[prayerId][d]; changed = true; }
+                        });
+                    }
+                });
+                if (changed) localStorage.setItem(congKey, JSON.stringify(congData));
+            }
+            
+            // Clean qada data
+            var qadaKey = getQadaKey(hYear, hMonth);
+            var qadaStored = localStorage.getItem(qadaKey);
+            if (qadaStored) {
+                var qadaData = JSON.parse(qadaStored);
+                var changed = false;
+                Object.keys(qadaData).forEach(function(prayerId) {
+                    if (qadaData[prayerId] && typeof qadaData[prayerId] === 'object') {
+                        ghostDays.forEach(function(d) {
+                            if (qadaData[prayerId][d] !== undefined) { delete qadaData[prayerId][d]; changed = true; }
+                        });
+                    }
+                });
+                if (changed) localStorage.setItem(qadaKey, JSON.stringify(qadaData));
+            }
+            
+            // Clean exempt data
+            var exemptKey = getExemptKey(hYear, hMonth);
+            var exemptStored = localStorage.getItem(exemptKey);
+            if (exemptStored) {
+                var exemptData = JSON.parse(exemptStored);
+                var changed = false;
+                ghostDays.forEach(function(d) {
+                    if (exemptData[d]) { delete exemptData[d]; changed = true; }
+                });
+                if (changed) localStorage.setItem(exemptKey, JSON.stringify(exemptData));
+            }
+        }
+        
+        // Clean ALL ghost days across all months for the current profile
+        function cleanAllGhostDays() {
+            if (!activeProfile) return;
+            var cleaned = 0;
+            for (var hMonth = 1; hMonth <= 12; hMonth++) {
+                var actualDays = getHijriDaysInMonth(currentHijriYear, hMonth);
+                if (actualDays <= 29) {
+                    // 29-day month: remove day 30 and 31
+                    cleanGhostDaysForMonth(currentHijriYear, hMonth, 29);
+                    cleaned++;
+                } else {
+                    // 30-day month: remove day 31
+                    cleanGhostDaysForMonth(currentHijriYear, hMonth, 30);
+                }
+            }
+            return cleaned;
         }
 
         function updateMonthDaysButton() {
