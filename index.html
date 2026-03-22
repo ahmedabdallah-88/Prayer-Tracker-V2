@@ -2309,33 +2309,6 @@
             .pt-item .pt-time { font-size: 0.75em; }
         }
 
-        /* Weekly View */
-        .week-toggle-btn.active {
-            background: var(--primary-dark) !important;
-            color: var(--text-on-dark) !important;
-            border-color: var(--primary-dark) !important;
-        }
-        .week-day-header {
-            display: flex;
-            justify-content: center;
-            gap: 4px;
-            margin-bottom: 6px;
-        }
-        .week-day-label {
-            width: 42px;
-            text-align: center;
-            font-size: 0.65em;
-            font-weight: 700;
-            color: var(--accent-dark);
-            font-family: 'Cairo', sans-serif;
-        }
-        .week-day-label.today {
-            color: var(--primary-dark);
-            background: rgba(201,162,39,0.2);
-            border-radius: 6px;
-            padding: 1px 0;
-        }
-
         /* Qada Report */
         .qada-month-row {
             display: flex;
@@ -3453,15 +3426,6 @@
                     <button type="button" onclick="showHijriOverrideDialog()" style="background:none;border:1px solid var(--accent-border);border-radius:8px;padding:2px 8px;font-size:0.7em;cursor:pointer;color:var(--text-muted);" title="تعديل بداية الشهر الهجري">⚙️</button>
                 </div>
 
-                <!-- Weekly/Monthly Toggle -->
-                <div style="display:flex;justify-content:center;margin:6px 0 10px;gap:4px;">
-                    <button type="button" id="weekViewBtn" class="week-toggle-btn" onclick="setTrackerViewMode('week')" style="padding:5px 14px;border-radius:8px 0 0 8px;border:1.5px solid var(--accent-border);background:var(--bg-card);font-family:'Cairo',sans-serif;font-size:0.8em;font-weight:700;cursor:pointer;color:var(--text-body);">📆 أسبوعي</button>
-                    <button type="button" id="monthViewBtn" class="week-toggle-btn active" onclick="setTrackerViewMode('month')" style="padding:5px 14px;border-radius:0 8px 8px 0;border:1.5px solid var(--accent-border);background:var(--primary-dark);color:var(--text-on-dark);font-family:'Cairo',sans-serif;font-size:0.8em;font-weight:700;cursor:pointer;">📅 شهري</button>
-                </div>
-                <div id="weekNavBar" style="display:none;text-align:center;margin-bottom:8px;">
-                    <button type="button" onclick="changeWeek(-1)" style="background:none;border:1px solid var(--accent-border);border-radius:8px;padding:4px 12px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:0.85em;">◄</button>
-                    <span id="weekRangeLabel" style="display:inline-block;min-width:180px;font-weight:700;font-size:0.9em;color:var(--primary-dark);font-family:'Amiri',serif;"></span>
-                    <button type="button" onclick="changeWeek(1)" style="background:none;border:1px solid var(--accent-border);border-radius:8px;padding:4px 12px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:0.85em;">►</button>
                 </div>
 
                 <div class="stats">
@@ -3609,12 +3573,6 @@
                             <canvas id="fardWeeklyPatternChart" role="img" aria-label="Weekly pattern chart"></canvas>
                         </div>
                     </div>
-                    <div class="chart-card">
-                        <h3 data-t="prayer_heatmap">🕌 خريطة الالتزام بصلاة الجماعة</h3>
-                        <div class="chart-wrapper" style="height:200px;">
-                            <canvas id="fardHeatmapChart" role="img" aria-label="Yearly heatmap"></canvas>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Streaks in Dashboard -->
@@ -3628,7 +3586,7 @@
                     <h3>🔴 تقرير الصلوات المقضية (قضاء)</h3>
                     <p style="font-size:0.8em;color:var(--text-muted);margin:0 0 12px;">الصلوات التي أُديت في غير وقتها</p>
                     <div class="dashboard-grid" id="fardQadaStatsGrid" style="margin-bottom:12px;"></div>
-                    <div class="chart-wrapper" style="height:260px;">
+                    <div class="chart-wrapper" style="height:180px;">
                         <canvas id="fardQadaChart" role="img" aria-label="Qada prayers chart"></canvas>
                     </div>
                     <div id="fardQadaMonthlyBreakdown" style="margin-top:12px;"></div>
@@ -4080,6 +4038,12 @@
 
         function getHijriMonthNames() {
             return currentLang === 'ar' ? hijriMonthNamesAr : hijriMonthNamesEn;
+        }
+
+        function getHijriMonthNamesShort() {
+            return currentLang === 'ar' 
+                ? ['محرم', 'صفر', 'ربيع١', 'ربيع٢', 'جمادى١', 'جمادى٢', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة']
+                : ['Muh', 'Saf', 'Rb1', 'Rb2', 'Jm1', 'Jm2', 'Raj', 'Sha', 'Ram', 'Shw', 'DhQ', 'DhH'];
         }
 
         function getHijriMonthName(index) {
@@ -4549,7 +4513,7 @@
                     charts.fardCong = new Chart(congCtx, {
                         type: 'bar',
                         data: {
-                            labels: getHijriMonthNames(),
+                            labels: getHijriMonthNamesShort(),
                             datasets: [{
                                 label: t('cong_rate'),
                                 data: congMonthlyData,
@@ -4563,7 +4527,10 @@
                             responsive: true,
                             maintainAspectRatio: false,
                             plugins: { legend: { display: false } },
-                            scales: { y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } } }
+                            scales: { 
+                                y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } },
+                                x: { ticks: { maxRotation: 45, minRotation: 0, font: { size: 10 } } }
+                            }
                         }
                     });
                 }
@@ -4622,7 +4589,7 @@
             charts[type].monthlyProgress = new Chart(document.getElementById(`${type}MonthlyProgressChart`), {
                 type: 'line',
                 data: {
-                    labels: getHijriMonthNames(),
+                    labels: getHijriMonthNamesShort(),
                     datasets: [{
                         label: t('chart_percentage'),
                         data: monthlyData,
@@ -6852,7 +6819,7 @@
                 charts.fasting = new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: getHijriMonthNames(),
+                        labels: getHijriMonthNamesShort(),
                         datasets: [{
                             label: t('fasting_days_chart'),
                             data: monthlyVol,
@@ -8673,20 +8640,19 @@
             });
 
             statsGrid.innerHTML = '' +
-                '<div class="stat-card" style="border-right:3px solid #dc2626;">' +
-                    '<div class="label">' + (currentLang === 'ar' ? 'إجمالي صلوات القضاء' : 'Total Qada Prayers') + '</div>' +
-                    '<div class="value" style="color:#dc2626;">' + totalQada + '</div>' +
-                    '<div class="sublabel">' + (currentLang === 'ar' ? 'هذه السنة الهجرية' : 'This Hijri year') + '</div>' +
+                '<div class="stat-card" style="border-right:3px solid #dc2626;padding:10px 12px;">' +
+                    '<div class="label" style="font-size:0.75em;">' + (currentLang === 'ar' ? 'إجمالي صلوات القضاء' : 'Total Qada Prayers') + '</div>' +
+                    '<div class="value" style="color:#dc2626;font-size:1.8em;">' + totalQada + '</div>' +
                 '</div>' +
-                '<div class="stat-card" style="border-right:3px solid #f97316;">' +
-                    '<div class="label">' + (currentLang === 'ar' ? 'أكثر صلاة قضاءً' : 'Most Qada Prayer') + '</div>' +
-                    '<div class="value" style="color:#f97316;">' + (worstPrayer.id ? getPrayerName(worstPrayer.id) : '-') + '</div>' +
+                '<div class="stat-card" style="border-right:3px solid #f97316;padding:10px 12px;">' +
+                    '<div class="label" style="font-size:0.75em;">' + (currentLang === 'ar' ? 'أكثر صلاة قضاءً' : 'Most Qada Prayer') + '</div>' +
+                    '<div class="value" style="color:#f97316;font-size:1.2em;">' + (worstPrayer.id ? getPrayerName(worstPrayer.id) : '-') + '</div>' +
                     '<div class="sublabel">' + worstPrayer.count + ' ' + (currentLang === 'ar' ? 'مرة' : 'times') + '</div>' +
                 '</div>' +
-                '<div class="stat-card" style="border-right:3px solid #eab308;">' +
-                    '<div class="label">' + (currentLang === 'ar' ? 'أسوأ شهر' : 'Worst Month') + '</div>' +
-                    '<div class="value" style="color:#eab308;">' + (worstMonth.month > 0 ? getHijriMonthName(worstMonth.month - 1) : '-') + '</div>' +
-                    '<div class="sublabel">' + worstMonth.count + ' ' + (currentLang === 'ar' ? 'صلاة قضاء' : 'qada prayers') + '</div>' +
+                '<div class="stat-card" style="border-right:3px solid #eab308;padding:10px 12px;">' +
+                    '<div class="label" style="font-size:0.75em;">' + (currentLang === 'ar' ? 'أسوأ شهر' : 'Worst Month') + '</div>' +
+                    '<div class="value" style="color:#eab308;font-size:1.2em;">' + (worstMonth.month > 0 ? getHijriMonthName(worstMonth.month - 1) : '-') + '</div>' +
+                    '<div class="sublabel" style="font-size:0.7em;">' + worstMonth.count + ' ' + (currentLang === 'ar' ? 'صلاة قضاء' : 'qada prayers') + '</div>' +
                 '</div>';
 
             // Monthly breakdown bars
@@ -9012,12 +8978,15 @@
             // type: 'light', 'medium', 'success'
             try {
                 if (navigator.vibrate) {
-                    if (type === 'light') navigator.vibrate(10);
-                    else if (type === 'medium') navigator.vibrate(25);
-                    else if (type === 'success') navigator.vibrate([15, 50, 15]);
-                    else navigator.vibrate(15);
+                    // Nothing Phone 2 and many Android devices need longer vibration to be felt
+                    if (type === 'light') navigator.vibrate([30]);
+                    else if (type === 'medium') navigator.vibrate([50]);
+                    else if (type === 'success') navigator.vibrate([40, 60, 40]);
+                    else navigator.vibrate([35]);
                 }
-            } catch(e) {}
+            } catch(e) {
+                console.log('Vibrate error:', e);
+            }
             
             // Also try AudioContext for a subtle click sound
             try {
@@ -9028,10 +8997,11 @@
                     osc.connect(gain);
                     gain.connect(ctx.destination);
                     osc.frequency.value = type === 'success' ? 880 : 660;
-                    gain.gain.value = 0.03; // Very subtle
+                    gain.gain.value = 0.05;
                     osc.start();
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
-                    osc.stop(ctx.currentTime + 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+                    osc.stop(ctx.currentTime + 0.1);
+                    setTimeout(function() { ctx.close(); }, 200);
                 }
             } catch(e) {}
         }
