@@ -1,5 +1,5 @@
-// Prayer Tracker PWA — Service Worker v51 (Milestone 3 Azkar)
-const CACHE_NAME = 'salah-tracker-v51';
+// Prayer Tracker PWA — Service Worker v52 (Design Fix)
+const CACHE_NAME = 'salah-tracker-v52';
 const ASSETS = [
     './',
     './index.html',

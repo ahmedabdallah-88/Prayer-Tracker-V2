@@ -64,7 +64,7 @@ window.App.Jamaah = (function() {
         var bestStreak = 0;
         var tempStreak = 0;
 
-        var useCongregation = (type === 'fard');
+        var useCongregation = false; // Streak tracks completion, not congregation
         var checkDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 0, 0);
         var todayH = Hijri.gregorianToHijri(checkDate);
 

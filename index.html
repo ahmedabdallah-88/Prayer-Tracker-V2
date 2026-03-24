@@ -29,7 +29,10 @@
     <div class="shell-bar" id="shellBar">
         <div class="shell-bar-title">
             <span class="app-icon"><span class="material-symbols-rounded" style="font-size:18px;">mosque</span></span>
-            <span data-t="app_title_short" id="shellTitle">سجل الصلوات</span>
+            <div style="display:flex;flex-direction:column;">
+                <span data-t="app_title_short" id="shellTitle" style="font-size:0.95em;">سجل الصلوات</span>
+                <span id="shellDateText" style="font-size:0.65em;font-weight:500;color:var(--text-muted);"><span class="material-symbols-rounded" style="font-size:12px;vertical-align:middle;">calendar_today</span></span>
+            </div>
         </div>
         <div class="shell-bar-actions">
             <button class="shell-btn" onclick="toggleThemeMenu()" id="shellThemeBtn" title="Theme"><span class="material-symbols-rounded" style="font-size:20px;">palette</span></button>
@@ -142,18 +145,6 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <div class="container" id="mainContent">
-        <div class="header">
-            <h1 data-t="app_title">سجل الصلوات</h1>
-            <p class="quran-verse" style="direction:rtl;">﴿ إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا ﴾</p>
-            <p class="verse-ref" style="direction:rtl;">[النساء: 103]</p>
-
-            <div class="current-profile-badge" onclick="openProfileSettings()" id="profileBadge" style="display:none;">
-                <div class="badge-avatar male" id="badgeAvatar"><span class="material-symbols-rounded" style="font-size:18px;">person</span></div>
-                <span class="badge-name" id="badgeName">الاسم</span>
-                <span class="badge-switch" data-t="switch_profile"><span class="material-symbols-rounded" style="font-size:14px;">chevron_left</span></span>
-            </div>
-        </div>
-
         <!-- Main Toggle (hidden, using bottom tab bar) -->
         <div class="main-toggle" role="tablist" aria-label="Main sections">
             <button class="main-toggle-btn active" onclick="switchSection('fard')" data-t="fard_prayers"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">mosque</span> الفرائض</button>
@@ -164,12 +155,6 @@
 
         <!-- ==================== FARD SECTION ==================== -->
         <div id="fardSection" class="section active" role="tabpanel" aria-label="Obligatory prayers">
-            <div class="view-toggle">
-                <button class="toggle-btn active" onclick="switchView('fard', 'tracker')" data-t="monthly_tracker">المتتبع الشهري</button>
-                <button class="toggle-btn" onclick="switchView('fard', 'yearly')" data-t="yearly_view">نظرة السنة</button>
-                <button class="toggle-btn" onclick="switchView('fard', 'dashboard')" data-t="dashboard">لوحة التحكم</button>
-            </div>
-
             <div class="sub-tabs" id="fardSubTabs">
                 <button class="sub-tab active" onclick="switchView('fard','tracker')" data-t="monthly_tracker"><span class="material-symbols-rounded" style="font-size:16px;">grid_view</span> التتبع</button>
                 <button class="sub-tab" onclick="switchView('fard','yearly')" data-t="yearly_view"><span class="material-symbols-rounded" style="font-size:16px;">calendar_month</span> السنة</button>
@@ -177,56 +162,28 @@
             </div>
             <!-- Fard Tracker View (Active by default) -->
             <div id="fardTrackerView" class="view active">
-                <div class="controls">
-                    <div class="nav-buttons">
-                        <button class="nav-btn" onclick="changeTrackerMonth('fard', -1)" data-t="prev_month">◄ الشهر السابق</button>
-                        <button class="nav-btn" onclick="changeTrackerMonth('fard', 1)" data-t="next_month">الشهر التالي ►</button>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label data-t="month">الشهر:</label>
-                        <select id="fardTrackerMonthSelect" onchange="updateTrackerView('fard')">
-                            <option value="1">محرم</option>
-                            <option value="2">صفر</option>
-                            <option value="3">ربيع الأول</option>
-                            <option value="4">ربيع الآخر</option>
-                            <option value="5">جمادى الأولى</option>
-                            <option value="6">جمادى الآخرة</option>
-                            <option value="7">رجب</option>
-                            <option value="8">شعبان</option>
-                            <option value="9">رمضان</option>
-                            <option value="10">شوال</option>
-                            <option value="11">ذو القعدة</option>
-                            <option value="12">ذو الحجة</option>
-                        </select>
-                    </div>
+                <!-- Hidden inputs for JS compatibility -->
+                <select id="fardTrackerMonthSelect" style="display:none" onchange="updateTrackerView('fard')">
+                    <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                </select>
+                <input type="number" id="fardTrackerYearInput" style="display:none" min="1400" max="1500" onchange="updateTrackerView('fard')">
 
-                    <div class="input-group">
-                        <label data-t="hijri_year">السنة الهجرية:</label>
-                        <input type="number" id="fardTrackerYearInput" min="1400" max="1500" onchange="updateTrackerView('fard')">
+                <!-- Compact month nav -->
+                <div class="month-nav-compact">
+                    <button class="nav-circle" onclick="changeTrackerMonth('fard', 1)"><span class="material-symbols-rounded">chevron_right</span></button>
+                    <div class="month-nav-center">
+                        <span class="month-nav-label" id="fardTrackerMonthLabel"></span>
+                        <span class="month-days-pill" id="monthDaysToggleBtn" onclick="toggleMonthDays()">30</span>
+                        <button class="nav-gear" onclick="showHijriOverrideDialog()" title="تعديل"><span class="material-symbols-rounded" style="font-size:16px;">settings</span></button>
                     </div>
+                    <button class="nav-circle" onclick="changeTrackerMonth('fard', -1)"><span class="material-symbols-rounded">chevron_left</span></button>
                 </div>
 
-                <div id="fardTrackerHijriHeader" style="text-align:center;font-family:'Amiri',serif;font-size:1.2em;color:var(--green-deep);margin:8px 0 4px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;">
-                    <span id="fardTrackerHijriHeaderText"></span>
-                    <button type="button" id="monthDaysToggleBtn" onclick="toggleMonthDays()" style="background:var(--green-light);border:1.5px solid var(--border, rgba(0,0,0,0.1));border-radius:8px;padding:2px 10px;font-size:0.6em;cursor:pointer;color:var(--green-deep);font-family:'Cairo',sans-serif;font-weight:700;" title="تعديل عدد أيام الشهر">30</button>
-                    <button type="button" onclick="showHijriOverrideDialog()" style="background:none;border:1px solid var(--border, rgba(0,0,0,0.1));border-radius:8px;padding:2px 8px;font-size:0.7em;cursor:pointer;color:var(--text-muted);" title="تعديل بداية الشهر الهجري"><span class="material-symbols-rounded" style="font-size:16px;">settings</span></button>
-                </div>
-
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="label" data-t="total_completed">إجمالي الصلوات المقضية</div>
-                        <div class="value" id="fardTrackerTotalCompleted">0</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="label" data-t="total_remaining">إجمالي الصلوات المتبقية</div>
-                        <div class="value" id="fardTrackerTotalRemaining">0</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="label" data-t="completion_rate">نسبة الإنجاز</div>
-                        <div class="value" id="fardTrackerCompletionRate">0%</div>
-                    </div>
-                </div>
+                <!-- Hidden stat values for JS compat -->
+                <span id="fardTrackerTotalCompleted" style="display:none">0</span>
+                <span id="fardTrackerTotalRemaining" style="display:none">0</span>
+                <span id="fardTrackerCompletionRate" style="display:none">0%</span>
+                <span id="fardTrackerHijriHeaderText" style="display:none"></span>
 
                 
 
@@ -242,25 +199,29 @@
                 </div>
 
 
-                <!-- Prayer Times Bar -->
-                <div class="prayer-times-bar" id="prayerTimesBar">
-                    <div class="prayer-times-header">
-                        <span><span class="material-symbols-rounded" style="font-size:18px;">schedule</span></span>
-                        <span id="prayerTimesTitle" data-t="prayer_times">مواقيت الصلاة</span>
-                        <span id="prayerTimesLocation" style="font-size:0.75em;color:var(--text-muted);"></span>
-                        <div style="margin-inline-start:auto;display:flex;gap:6px;align-items:center;">
-                            <button type="button" id="notifToggleBtn" onclick="togglePrayerNotifications()" style="background:none;border:1px solid var(--border, rgba(0,0,0,0.1));border-radius:8px;padding:3px 10px;font-size:0.8em;cursor:pointer;font-family:'Cairo',sans-serif;" title="تفعيل التنبيهات"><span class="material-symbols-rounded" style="font-size:18px;">notifications_off</span></button>
-                            <button type="button" onclick="refreshPrayerTimes()" style="background:none;border:1px solid var(--border, rgba(0,0,0,0.1));border-radius:8px;padding:3px 8px;font-size:0.8em;cursor:pointer;" title="تحديث"><span class="material-symbols-rounded" style="font-size:18px;">refresh</span></button>
-                        </div>
+                <!-- Next Prayer Countdown -->
+                <div class="next-prayer-card" id="nextPrayerCard" style="display:none;">
+                    <div class="npc-icon"><span class="material-symbols-rounded">hourglass_top</span></div>
+                    <div class="npc-info">
+                        <div class="npc-label">الصلاة القادمة</div>
+                        <div class="npc-name" id="nextPrayerName"></div>
                     </div>
+                    <div class="npc-timer" id="nextPrayerTimer">--:--</div>
+                </div>
+
+                <!-- Prayer Times Bar (compact, no header text) -->
+                <div class="prayer-times-compact" id="prayerTimesBar">
+                    <span id="prayerTimesLocation" style="display:none"></span>
+                    <span id="prayerTimesTitle" style="display:none"></span>
+                    <button type="button" id="notifToggleBtn" style="display:none"></button>
                     <div class="prayer-times-grid" id="prayerTimesGrid">
-                        <div class="pt-item"><div class="pt-name">الفجر</div><div class="pt-time" style="color:var(--text-muted);">--:--</div></div>
-                        <div class="pt-item"><div class="pt-name">الظهر</div><div class="pt-time" style="color:var(--text-muted);">--:--</div></div>
-                        <div class="pt-item"><div class="pt-name">العصر</div><div class="pt-time" style="color:var(--text-muted);">--:--</div></div>
-                        <div class="pt-item"><div class="pt-name">المغرب</div><div class="pt-time" style="color:var(--text-muted);">--:--</div></div>
-                        <div class="pt-item"><div class="pt-name">العشاء</div><div class="pt-time" style="color:var(--text-muted);">--:--</div></div>
+                        <div class="pt-item" data-prayer="fajr"><div class="pt-icon"><span class="material-symbols-rounded">wb_twilight</span></div><div class="pt-name">الفجر</div><div class="pt-time">--:--</div></div>
+                        <div class="pt-item" data-prayer="dhuhr"><div class="pt-icon"><span class="material-symbols-rounded">wb_sunny</span></div><div class="pt-name">الظهر</div><div class="pt-time">--:--</div></div>
+                        <div class="pt-item" data-prayer="asr"><div class="pt-icon"><span class="material-symbols-rounded">partly_cloudy_day</span></div><div class="pt-name">العصر</div><div class="pt-time">--:--</div></div>
+                        <div class="pt-item" data-prayer="maghrib"><div class="pt-icon"><span class="material-symbols-rounded">wb_twilight</span></div><div class="pt-name">المغرب</div><div class="pt-time">--:--</div></div>
+                        <div class="pt-item" data-prayer="isha"><div class="pt-icon"><span class="material-symbols-rounded">dark_mode</span></div><div class="pt-name">العشاء</div><div class="pt-time">--:--</div></div>
                     </div>
-                    <div id="nextPrayerInfo" style="text-align:center;font-size:0.85em;color:var(--text-muted);font-weight:600;margin-top:6px;"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">hourglass_top</span> جاري تحميل المواقيت...</div>
+                    <div id="nextPrayerInfo" style="display:none;"></div>
                 </div>
 
                 <!-- Smart Reminder -->
@@ -399,11 +360,6 @@
 
         <!-- ==================== SUNNAH SECTION ==================== -->
         <div id="sunnahSection" class="section" role="tabpanel" aria-label="Sunnah prayers">
-            <div class="view-toggle">
-                <button class="toggle-btn active" onclick="switchView('sunnah', 'tracker')" data-t="monthly_tracker">المتتبع الشهري</button>
-                <button class="toggle-btn" onclick="switchView('sunnah', 'yearly')" data-t="yearly_view">نظرة السنة</button>
-                <button class="toggle-btn" onclick="switchView('sunnah', 'dashboard')" data-t="dashboard">لوحة التحكم</button>
-            </div>
 
             <div class="sub-tabs" id="sunnahSubTabs">
                 <button class="sub-tab active" onclick="switchView('sunnah','tracker')" data-t="monthly_tracker"><span class="material-symbols-rounded" style="font-size:16px;">grid_view</span> التتبع</button>
@@ -412,52 +368,27 @@
             </div>
             <!-- Sunnah Tracker View (Active by default) -->
             <div id="sunnahTrackerView" class="view active">
-                <div class="controls">
-                    <div class="nav-buttons">
-                        <button class="nav-btn" onclick="changeTrackerMonth('sunnah', -1)" data-t="prev_month">◄ الشهر السابق</button>
-                        <button class="nav-btn" onclick="changeTrackerMonth('sunnah', 1)" data-t="next_month">الشهر التالي ►</button>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label data-t="month">الشهر:</label>
-                        <select id="sunnahTrackerMonthSelect" onchange="updateTrackerView('sunnah')">
-                            <option value="1">محرم</option>
-                            <option value="2">صفر</option>
-                            <option value="3">ربيع الأول</option>
-                            <option value="4">ربيع الآخر</option>
-                            <option value="5">جمادى الأولى</option>
-                            <option value="6">جمادى الآخرة</option>
-                            <option value="7">رجب</option>
-                            <option value="8">شعبان</option>
-                            <option value="9">رمضان</option>
-                            <option value="10">شوال</option>
-                            <option value="11">ذو القعدة</option>
-                            <option value="12">ذو الحجة</option>
-                        </select>
-                    </div>
+                <!-- Hidden inputs for JS compatibility -->
+                <select id="sunnahTrackerMonthSelect" style="display:none" onchange="updateTrackerView('sunnah')">
+                    <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                </select>
+                <input type="number" id="sunnahTrackerYearInput" style="display:none" min="1400" max="1500" onchange="updateTrackerView('sunnah')">
 
-                    <div class="input-group">
-                        <label data-t="hijri_year">السنة الهجرية:</label>
-                        <input type="number" id="sunnahTrackerYearInput" min="1400" max="1500" onchange="updateTrackerView('sunnah')">
+                <!-- Compact month nav -->
+                <div class="month-nav-compact">
+                    <button class="nav-circle" onclick="changeTrackerMonth('sunnah', 1)"><span class="material-symbols-rounded">chevron_right</span></button>
+                    <div class="month-nav-center">
+                        <span class="month-nav-label" id="sunnahTrackerMonthLabel"></span>
+                        <span class="month-days-pill" id="sunnahMonthDaysPill">30</span>
                     </div>
+                    <button class="nav-circle" onclick="changeTrackerMonth('sunnah', -1)"><span class="material-symbols-rounded">chevron_left</span></button>
                 </div>
 
-                <div id="sunnahTrackerHijriHeader" style="text-align:center;font-family:'Amiri',serif;font-size:1.2em;color:var(--green-deep);margin:8px 0 4px;font-weight:700;"></div>
-
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="label" data-t="sunnah_completed">إجمالي السنن المؤداة</div>
-                        <div class="value" id="sunnahTrackerTotalCompleted">0</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="label" data-t="sunnah_remaining">إجمالي السنن المتبقية</div>
-                        <div class="value" id="sunnahTrackerTotalRemaining">0</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="label" data-t="completion_rate">نسبة الإنجاز</div>
-                        <div class="value" id="sunnahTrackerCompletionRate">0%</div>
-                    </div>
-                </div>
+                <!-- Hidden stat values for JS compat -->
+                <span id="sunnahTrackerTotalCompleted" style="display:none">0</span>
+                <span id="sunnahTrackerTotalRemaining" style="display:none">0</span>
+                <span id="sunnahTrackerCompletionRate" style="display:none">0%</span>
+                <span id="sunnahTrackerHijriHeaderText" style="display:none"></span>
 
                 
 
@@ -581,32 +512,20 @@
             </div>
             <!-- Voluntary Fasting Tracker -->
             <div id="fastingVoluntaryView" class="view active">
-                <div class="controls">
-                    <div class="nav-buttons">
-                        <button class="nav-btn" onclick="changeFastingMonth(-1)" data-t="prev_month">◄ الشهر السابق</button>
-                        <button class="nav-btn" onclick="changeFastingMonth(1)" data-t="next_month">الشهر التالي ►</button>
+                <!-- Hidden inputs for JS compat -->
+                <select id="fastingMonthSelect" style="display:none" onchange="updateVoluntaryFasting()">
+                    <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                </select>
+                <input type="number" id="fastingYearVoluntary" style="display:none" min="1400" max="1500" onchange="updateVoluntaryFasting()">
+
+                <!-- Compact month nav -->
+                <div class="month-nav-compact">
+                    <button class="nav-circle" onclick="changeFastingMonth(1)"><span class="material-symbols-rounded">chevron_right</span></button>
+                    <div class="month-nav-center">
+                        <span class="month-nav-label" id="fastingMonthLabel"></span>
+                        <span class="month-days-pill" id="fastingMonthDaysPill">30</span>
                     </div>
-                    <div class="input-group">
-                        <label data-t="month">الشهر:</label>
-                        <select id="fastingMonthSelect" onchange="updateVoluntaryFasting()">
-                            <option value="1">محرم</option>
-                            <option value="2">صفر</option>
-                            <option value="3">ربيع الأول</option>
-                            <option value="4">ربيع الآخر</option>
-                            <option value="5">جمادى الأولى</option>
-                            <option value="6">جمادى الآخرة</option>
-                            <option value="7">رجب</option>
-                            <option value="8">شعبان</option>
-                            <option value="9">رمضان</option>
-                            <option value="10">شوال</option>
-                            <option value="11">ذو القعدة</option>
-                            <option value="12">ذو الحجة</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label data-t="hijri_year">السنة الهجرية:</label>
-                        <input type="number" id="fastingYearVoluntary" min="1400" max="1500" onchange="updateVoluntaryFasting()">
-                    </div>
+                    <button class="nav-circle" onclick="changeFastingMonth(-1)"><span class="material-symbols-rounded">chevron_left</span></button>
                 </div>
 
                 <!-- Female Exempt Bar for Fasting -->
@@ -642,7 +561,7 @@
                         </div>
                         <div class="prayer-counter" id="volFastingCounter">0 / 0</div>
                     </div>
-                    <div class="days-grid" id="voluntaryFastingGrid"></div>
+                    <div class="days-grid flow-grid" id="voluntaryFastingGrid"></div>
                 </div>
 
                 <div class="action-buttons">
@@ -663,15 +582,15 @@
                 <div class="fasting-legend">
                     <div class="legend-item">
                         <div class="legend-dot" style="background:#059669;border-color:#047857;"></div>
-                        <span data-t="fasted">صامت ✓</span>
+                        <span data-t="fasted">صامت</span>
                     </div>
                     <div class="legend-item" id="fastingExemptLegend" style="display:none;">
                         <div class="legend-dot" style="background:repeating-linear-gradient(45deg,#fce7f3,#fce7f3 3px,#fbcfe8 3px,#fbcfe8 6px);border-color:#ec4899;"></div>
-                        <span data-t="period_mark">حيض 🩸</span>
+                        <span data-t="period_mark">حيض</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-dot" style="background:#fee2e2;border-color:#f87171;"></div>
-                        <span data-t="broke_fast">أفطرت ✗</span>
+                        <span data-t="broke_fast">أفطرت</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-dot" style="background:white;border-color:#d4af37;"></div>
@@ -706,7 +625,7 @@
                         </div>
                         <div class="prayer-counter" id="fastingCounter">0 / 30</div>
                     </div>
-                    <div class="days-grid" id="fastingGrid"></div>
+                    <div class="days-grid flow-grid" id="fastingGrid"></div>
                 </div>
 
                 <div class="action-buttons">
@@ -801,7 +720,7 @@
                 <div class="counter-display" id="azkarCounter">0 / 0</div>
 
                 <!-- Days grid -->
-                <div class="days-grid" id="azkarDaysGrid"></div>
+                <div class="days-grid flow-grid" id="azkarDaysGrid"></div>
 
                 <!-- Action buttons -->
                 <div class="action-row" style="margin-top:12px;display:flex;gap:8px;justify-content:center;">

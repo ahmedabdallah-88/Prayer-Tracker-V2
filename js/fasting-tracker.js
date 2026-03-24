@@ -77,6 +77,14 @@ window.App.Fasting = (function() {
         var isFemale = window.App.Storage.getActiveProfile() && window.App.Storage.getActiveProfile().gender === 'female' && window.App.Storage.getActiveProfile().age >= 12;
         var exemptData = isFemale ? window.App.Female.getExemptDays(fastingYear, fastingMonth) : {};
 
+        // Update compact month nav label
+        var monthLabel = document.getElementById('fastingMonthLabel');
+        if (monthLabel && window.App.Hijri) {
+            monthLabel.textContent = window.App.Hijri.getHijriMonthName(fastingMonth - 1) + ' ' + fastingYear;
+        }
+        var daysPill = document.getElementById('fastingMonthDaysPill');
+        if (daysPill) daysPill.textContent = daysInMonth;
+
         var grid = document.getElementById('voluntaryFastingGrid');
         grid.innerHTML = '';
 

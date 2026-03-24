@@ -57,6 +57,9 @@ window.App.Azkar = (function() {
         var grid = document.getElementById('azkarDaysGrid');
         grid.innerHTML = '';
 
+        var todayH = Hijri.getTodayHijri();
+        var isCurrentMonth = (todayH.year === year && todayH.month === month);
+
         var completed = 0;
         for (var day = 1; day <= daysInMonth; day++) {
             var dayBox = document.createElement('div');
@@ -64,9 +67,13 @@ window.App.Azkar = (function() {
 
             dayBox.appendChild(Hijri.createDualDayNum(day, year, month));
 
+            // Today highlight
+            if (isCurrentMonth && todayH.day === day) {
+                dayBox.classList.add('today-box');
+            }
+
             if (Storage.isFutureDate(day, month, year)) {
                 dayBox.classList.add('disabled');
-                dayBox.style.opacity = '0.3';
             } else {
                 if (catData[day]) {
                     dayBox.classList.add('checked');

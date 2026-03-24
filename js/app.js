@@ -65,6 +65,13 @@ window.App.Main = (function() {
         Storage.loadAllData('fard');
         Storage.loadAllData('sunnah');
 
+        // Update shell bar date
+        var shellDate = document.getElementById('shellDateText');
+        if (shellDate) {
+            var monthName = window.App.Config.monthNames[todayH.month - 1] || '';
+            shellDate.textContent = monthName + ' ' + todayH.year + ' \u0647\u0640';
+        }
+
         if (typeof window.updateTrackerView === 'function') {
             window.updateTrackerView('fard');
         }

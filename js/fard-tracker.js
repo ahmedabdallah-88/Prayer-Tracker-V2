@@ -248,6 +248,33 @@ window.App.Tracker = (function() {
         var exemptData  = isFemale ? Female.getExemptDays(hYear, hMonth) : {};
         var isExemptModeOn = Female.getExemptMode()[type];
         var currentLang = I18n.getCurrentLang();
+        var todayH = Hijri.getTodayHijri();
+        var isCurrentMonth = (todayH.year === hYear && todayH.month === hMonth);
+
+        // Update compact month nav label
+        var monthLabel = document.getElementById(type + 'TrackerMonthLabel');
+        if (monthLabel) {
+            monthLabel.textContent = Hijri.getHijriMonthName(hMonth - 1) + ' ' + hYear;
+        }
+        var daysPill = document.getElementById(type === 'fard' ? 'monthDaysToggleBtn' : type + 'MonthDaysPill');
+        if (daysPill) daysPill.textContent = daysInMonth;
+
+        // Sky-time gradient map for prayer icon backgrounds
+        var skyGradients = {
+            'fajr': 'linear-gradient(135deg, #E8B4B8, #D4A0A7)',
+            'dhuhr': 'linear-gradient(135deg, #F0C75E, #E8B84A)',
+            'asr': 'linear-gradient(135deg, #E8A849, #D4943A)',
+            'maghrib': 'linear-gradient(135deg, #C47A5A, #B0664A)',
+            'isha': 'linear-gradient(135deg, #5B6B8A, #4A5A7A)',
+            'tahajjud': 'linear-gradient(135deg, #2e4482, #1e3a8a)',
+            'sunnah-fajr': 'linear-gradient(135deg, #E8B4B8, #D4A0A7)',
+            'duha': 'linear-gradient(135deg, #fbbf24, #f59e0b)',
+            'sunnah-dhuhr': 'linear-gradient(135deg, #F0C75E, #E8B84A)',
+            'sunnah-asr': 'linear-gradient(135deg, #E8A849, #D4943A)',
+            'sunnah-maghrib': 'linear-gradient(135deg, #C47A5A, #B0664A)',
+            'sunnah-isha': 'linear-gradient(135deg, #5B6B8A, #4A5A7A)',
+            'witr': 'linear-gradient(135deg, #a855f7, #8b4789)'
+        };
 
         prayers.forEach(function(prayer) {
             var section = document.createElement('div');
@@ -258,88 +285,56 @@ window.App.Tracker = (function() {
             if (dataObj[hMonth] && dataObj[hMonth][prayer.id]) {
                 completed = Object.values(dataObj[hMonth][prayer.id]).filter(function(v) { return v; }).length;
             }
-
             var adjustedTotal = daysInMonth - exemptCount;
+            var pct = adjustedTotal > 0 ? Math.round((completed / adjustedTotal) * 100) : 0;
 
+            // Congregation count for fard
+            var congCount = 0;
+            if (type === 'fard') {
+                var congDataH = Storage.getCongregationData(hYear, hMonth);
+                if (congDataH[prayer.id]) {
+                    congCount = Object.values(congDataH[prayer.id]).filter(Boolean).length;
+                }
+            }
+
+            // Prayer header with sky-time icon, name, congregation pill, % pill
             var header = document.createElement('div');
             header.className = 'prayer-header';
 
+            var iconBg = skyGradients[prayer.id] || 'linear-gradient(135deg, #888, #666)';
             var nameDiv = document.createElement('div');
             nameDiv.className = 'prayer-name';
-            nameDiv.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">' + prayer.icon + '</span><span>' + I18n.getPrayerName(prayer.id) + '</span>';
+            nameDiv.innerHTML = '<span class="prayer-icon-badge" style="background:' + iconBg + '"><span class="material-symbols-rounded" style="font-size:18px;color:white;">' + prayer.icon + '</span></span><span>' + I18n.getPrayerName(prayer.id) + '</span>';
 
-            var counter = document.createElement('div');
-            counter.className = 'prayer-counter';
-            counter.textContent = completed + ' / ' + adjustedTotal;
-
-            // Batch select button
-            if (!isExemptModeOn && !(type === 'fard' && window.congregationMode)) {
-                var batchBtn = document.createElement('button');
-                batchBtn.className = 'batch-btn';
-                batchBtn.textContent = I18n.t('mark_all');
-                batchBtn.onclick = (function(pId) {
-                    return function(e) {
-                        e.stopPropagation();
-                        batchMarkPrayer(type, pId);
-                    };
-                })(prayer.id);
-                header.appendChild(nameDiv);
-                header.appendChild(batchBtn);
-                header.appendChild(counter);
-            } else {
-                header.appendChild(nameDiv);
-                header.appendChild(counter);
+            var headerEnd = document.createElement('div');
+            headerEnd.className = 'prayer-header-end';
+            if (type === 'fard' && congCount > 0) {
+                headerEnd.innerHTML += '<span class="cong-pill"><span class="material-symbols-rounded" style="font-size:12px;">mosque</span> ' + congCount + '</span>';
             }
+            var pctColor = pct >= 80 ? 'var(--green-deep)' : pct >= 50 ? 'var(--gold)' : 'var(--red)';
+            headerEnd.innerHTML += '<span class="pct-pill" style="background:' + pctColor + '">' + pct + '%</span>';
+            headerEnd.innerHTML += '<span class="prayer-counter">' + completed + '/' + adjustedTotal + '</span>';
 
+            header.appendChild(nameDiv);
+            header.appendChild(headerEnd);
+
+            // Flowing sequential grid (NO weekday headers, NO offsets)
             var grid = document.createElement('div');
-            grid.className = 'days-grid';
+            grid.className = 'days-grid flow-grid';
 
-            // Get today's Hijri for "today" highlighting
-            var todayH = Hijri.getTodayHijri();
-            var isCurrentMonth = (todayH.year === hYear && todayH.month === hMonth);
-
-            // Weekday headers
-            var dayLabels = currentLang === 'ar'
-                ? ['أحد', 'إثن', 'ثلث', 'أرب', 'خمس', 'جمع', 'سبت']
-                : ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-            dayLabels.forEach(function(lbl) {
-                var hdr = document.createElement('div');
-                hdr.className = 'weekday-header';
-                hdr.textContent = lbl;
-                grid.appendChild(hdr);
-            });
-
-            // Calculate day-of-week offset for day 1
-            var day1Greg = Hijri.hijriToGregorian(hYear, hMonth, 1);
-            var startDow = day1Greg.getDay(); // 0=Sun
-
-            // Add empty cells for offset
-            for (var _e = 0; _e < startDow; _e++) {
-                var emptyCell = document.createElement('div');
-                emptyCell.className = 'day-box empty-cell';
-                grid.appendChild(emptyCell);
-            }
-
-            // Render each day
             for (var day = 1; day <= daysInMonth; day++) {
                 var dayBox = document.createElement('div');
                 dayBox.className = 'day-box';
 
                 dayBox.appendChild(createDualDayNum(day, hYear, hMonth));
 
-                // Tooltip
                 try {
                     var gDate = Hijri.hijriToGregorian(hYear, hMonth, day);
                     dayBox.title = gDate.getDate() + '/' + (gDate.getMonth() + 1) + '/' + gDate.getFullYear();
                 } catch(e) {}
 
-                // Today marker
                 var isDayToday = isCurrentMonth && todayH.day === day;
-                if (isDayToday) {
-                    dayBox.classList.add('today-box');
-                    var gregEl = dayBox.querySelector('.day-greg');
-                    if (gregEl) gregEl.textContent = currentLang === 'ar' ? 'اليوم' : 'TODAY';
-                }
+                if (isDayToday) dayBox.classList.add('today-box');
 
                 if (Female.isPrayerExempt(exemptData, prayer.id, day)) {
                     dayBox.classList.add('exempt');
@@ -347,7 +342,6 @@ window.App.Tracker = (function() {
                         dayBox.onclick = (function(pId, d) {
                             return function() { Female.toggleExemptPrayer(pId, d); };
                         })(prayer.id, day);
-                        dayBox.title = I18n.t('click_remove_exempt');
                     }
                 } else if (Hijri.isFutureDateHijri(day, hMonth, hYear)) {
                     dayBox.classList.add('disabled');
@@ -356,7 +350,6 @@ window.App.Tracker = (function() {
                         dayBox.onclick = (function(pId, d) {
                             return function() { Female.toggleExemptPrayer(pId, d); };
                         })(prayer.id, day);
-                        dayBox.title = I18n.t('click_mark_exempt');
                         dayBox.style.cursor = 'crosshair';
                     } else {
                         if (dataObj[hMonth][prayer.id] && dataObj[hMonth][prayer.id][day]) {
@@ -366,16 +359,12 @@ window.App.Tracker = (function() {
                                 if (isCongregation(congData, prayer.id, day)) {
                                     dayBox.classList.add('congregation');
                                     dayBox.classList.remove('checked');
-                                    var ico = dayBox.querySelector('.day-icon');
-                                    if (ico) ico.textContent = 'mosque';
                                 }
                             }
                             var qadaData = Storage.getQadaData(hYear, hMonth);
                             if (qadaData[prayer.id] && qadaData[prayer.id][day]) {
                                 dayBox.classList.remove('checked', 'congregation');
                                 dayBox.classList.add('qada');
-                                var ico2 = dayBox.querySelector('.day-icon');
-                                if (ico2) ico2.textContent = 'schedule';
                             }
                         }
                         dayBox.onclick = (function(t, pId, d) {
@@ -389,24 +378,22 @@ window.App.Tracker = (function() {
 
             section.appendChild(header);
             section.appendChild(grid);
-
-            // Add legend under each prayer
-            var legend = document.createElement('div');
-            legend.className = 'prayer-legend';
-            if (type === 'fard') {
-                legend.innerHTML =
-                    '<div class="legend-item"><div class="legend-dot" style="background:var(--green-deep,#2D6A4F);"><span class="material-symbols-rounded" style="font-size:12px;color:white;">check</span></div><span>' + (currentLang === 'ar' ? 'منفرد' : 'ALONE') + '</span></div>' +
-                    '<div class="legend-item"><div class="legend-dot" style="background:var(--gold,#D4A03C);"><span class="material-symbols-rounded" style="font-size:12px;color:white;">mosque</span></div><span>' + (currentLang === 'ar' ? 'جماعة' : 'CONGREGATION') + '</span></div>' +
-                    '<div class="legend-item"><div class="legend-dot" style="background:var(--red,#C1574E);"><span class="material-symbols-rounded" style="font-size:12px;color:white;">schedule</span></div><span>' + (currentLang === 'ar' ? 'قضاء' : 'QADA') + '</span></div>';
-            } else {
-                legend.innerHTML =
-                    '<div class="legend-item"><div class="legend-dot" style="background:var(--green-deep,#2D6A4F);"><span class="material-symbols-rounded" style="font-size:12px;color:white;">check</span></div><span>' + (currentLang === 'ar' ? 'مؤداة' : 'DONE') + '</span></div>' +
-                    '<div class="legend-item"><div class="legend-dot" style="background:var(--red,#C1574E);"><span class="material-symbols-rounded" style="font-size:12px;color:white;">schedule</span></div><span>' + (currentLang === 'ar' ? 'قضاء' : 'QADA') + '</span></div>';
-            }
-            section.appendChild(legend);
-
             container.appendChild(section);
         });
+
+        // ONE legend at bottom of all prayers (Bug 1.11)
+        var legend = document.createElement('div');
+        legend.className = 'prayer-legend';
+        if (type === 'fard') {
+            legend.innerHTML =
+                '<div class="legend-item"><div class="legend-dot checked-dot"><span class="material-symbols-rounded" style="font-size:10px;color:white;">check</span></div><span>' + (currentLang === 'ar' ? 'منفرد' : 'Alone') + '</span></div>' +
+                '<div class="legend-item"><div class="legend-dot cong-dot"><span class="material-symbols-rounded" style="font-size:10px;color:white;">mosque</span></div><span>' + (currentLang === 'ar' ? 'جماعة' : 'Congregation') + '</span></div>' +
+                '<div class="legend-item"><div class="legend-dot qada-dot"><span class="material-symbols-rounded" style="font-size:10px;color:white;">schedule</span></div><span>' + (currentLang === 'ar' ? 'قضاء' : 'Qada') + '</span></div>';
+        } else {
+            legend.innerHTML =
+                '<div class="legend-item"><div class="legend-dot checked-dot"><span class="material-symbols-rounded" style="font-size:10px;color:white;">check</span></div><span>' + (currentLang === 'ar' ? 'مؤداة' : 'Done') + '</span></div>';
+        }
+        container.appendChild(legend);
     }
 
     // ==================== toggleTrackerDay ====================

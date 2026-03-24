@@ -183,7 +183,7 @@ window.App.SVGCharts = (function() {
             children.push(el('path', { d: buildPath(values2, false), fill: 'none', stroke: color2, 'stroke-width': 2, 'stroke-dasharray': '6 3' }));
         }
 
-        // Dots and labels
+        // Dots and labels (only show % on peaks >= 95 to avoid overlap)
         values.forEach(function(v, i) {
             var x = padL + (i / (values.length - 1)) * plotW;
             var y = padT + plotH - (v / maxVal) * plotH;
@@ -191,10 +191,8 @@ window.App.SVGCharts = (function() {
             children.push(el('circle', { cx: x, cy: y, r: isHighlight ? 5 : 3.5, fill: color1, stroke: 'white', 'stroke-width': 2 }));
             if (isHighlight) {
                 children.push(el('circle', { cx: x, cy: y, r: 8, fill: color1, opacity: '0.15' }));
-            }
-            // % label above
-            if (v > 0) {
-                children.push(el('text', { x: x, y: y - 8, 'text-anchor': 'middle', fill: 'var(--text-secondary)', 'font-size': '9', 'font-weight': '600', 'font-family': 'Rubik' }, v + '%'));
+                var labelY = (i % 2 === 0) ? y - 10 : y - 18;
+                children.push(el('text', { x: x, y: labelY, 'text-anchor': 'middle', fill: 'var(--text-secondary)', 'font-size': '9', 'font-weight': '600', 'font-family': 'Rubik' }, v + '%'));
             }
         });
 
@@ -414,12 +412,12 @@ window.App.SVGCharts = (function() {
             var x = labelW + week * (cellSize + gap);
             var y = padT + dow * (cellSize + gap);
             var intensity = cell.count / maxCount;
-            var color = intensity === 0 ? 'var(--border, rgba(0,0,0,0.04))'
-                : intensity <= 0.2 ? 'var(--green-light)' + '44'
-                : intensity <= 0.4 ? 'var(--green-light)' + '77'
-                : intensity <= 0.6 ? 'var(--green-mid)' + 'aa'
-                : intensity <= 0.8 ? 'var(--green-deep)' + 'bb'
-                : 'var(--green-deep)';
+            var color = intensity === 0 ? 'rgba(0,0,0,0.03)'
+                : intensity <= 0.2 ? 'rgba(45,106,79,0.15)'
+                : intensity <= 0.4 ? 'rgba(45,106,79,0.3)'
+                : intensity <= 0.6 ? 'rgba(45,106,79,0.5)'
+                : intensity <= 0.8 ? 'rgba(45,106,79,0.7)'
+                : '#2D6A4F';
 
             children.push(el('rect', { x: x, y: y, width: cellSize, height: cellSize, rx: 4, fill: color }));
         });
@@ -429,7 +427,7 @@ window.App.SVGCharts = (function() {
         var scaleLabels = data.scaleLabels || ['أقل', 'أكثر'];
         children.push(el('text', { x: labelW, y: scaleY, fill: 'var(--text-muted)', 'font-size': '9', 'font-family': 'Noto Kufi Arabic' }, scaleLabels[0]));
         [0, 0.25, 0.5, 0.75, 1].forEach(function(v, i) {
-            var c = v === 0 ? '#e5e7eb' : v <= 0.25 ? '#a7f3d0' : v <= 0.5 ? '#6ee7b7' : v <= 0.75 ? '#34d399' : '#059669';
+            var c = v === 0 ? 'rgba(0,0,0,0.03)' : v <= 0.25 ? 'rgba(45,106,79,0.2)' : v <= 0.5 ? 'rgba(45,106,79,0.4)' : v <= 0.75 ? 'rgba(45,106,79,0.65)' : '#2D6A4F';
             children.push(el('rect', { x: labelW + 24 + i * (cellSize + 2), y: scaleY - 12, width: cellSize, height: 12, rx: 3, fill: c }));
         });
         children.push(el('text', { x: labelW + 24 + 5 * (cellSize + 2) + 4, y: scaleY, fill: 'var(--text-muted)', 'font-size': '9', 'font-family': 'Noto Kufi Arabic' }, scaleLabels[1]));

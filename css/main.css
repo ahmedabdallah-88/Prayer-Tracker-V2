@@ -1757,13 +1757,14 @@ body {
 .reminder-bar {
     display: none;
     align-items: center;
-    justify-content: center;
     gap: 10px;
-    padding: 10px 16px;
+    padding: 12px 16px;
     margin-bottom: 14px;
-    background: rgba(212,160,60,0.08);
-    border: 1px solid rgba(212,160,60,0.2);
-    border-radius: 14px;
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.04);
     cursor: pointer;
     transition: all 0.2s;
 }
@@ -2068,3 +2069,449 @@ body {
 
 /* Period dashboard */
 .period-history-dashboard { margin-top: 16px; }
+
+/* ==================== COMPACT MONTH NAVIGATION ==================== */
+.month-nav-compact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding: 10px 16px;
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.04);
+}
+
+.nav-circle {
+    width: 30px; height: 30px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(0,0,0,0.04);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.nav-circle:hover {
+    background: var(--green-deep);
+    color: white;
+}
+
+.month-nav-center {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.month-nav-label {
+    font-size: 1em;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: 'Noto Kufi Arabic', sans-serif;
+}
+
+.month-days-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    height: 22px;
+    padding: 0 6px;
+    background: rgba(45,106,79,0.08);
+    color: var(--green-deep);
+    border-radius: 11px;
+    font-size: 0.75em;
+    font-weight: 700;
+    font-family: 'Rubik', sans-serif;
+    cursor: pointer;
+}
+
+.nav-gear {
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: all 0.2s;
+}
+
+.nav-gear:hover {
+    background: rgba(0,0,0,0.04);
+    color: var(--text-secondary);
+}
+
+/* ==================== FLOWING GRID (Sequential Days) ==================== */
+.flow-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 5px;
+    justify-items: center;
+}
+
+@media (max-width: 480px) {
+    .flow-grid {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+    }
+}
+
+@media (max-width: 360px) {
+    .flow-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 3px;
+    }
+}
+
+/* ==================== PRAYER HEADER END (pills) ==================== */
+.prayer-header-end {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.cong-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 8px;
+    background: rgba(212,160,60,0.12);
+    color: var(--gold);
+    border-radius: 8px;
+    font-size: 0.7em;
+    font-weight: 700;
+    font-family: 'Rubik', sans-serif;
+    white-space: nowrap;
+}
+
+.pct-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 8px;
+    color: white;
+    border-radius: 8px;
+    font-size: 0.7em;
+    font-weight: 700;
+    font-family: 'Rubik', sans-serif;
+    min-width: 36px;
+    text-align: center;
+}
+
+/* ==================== NEXT PRAYER CARD ==================== */
+.next-prayer-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.04);
+}
+
+.npc-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: rgba(45,106,79,0.1);
+    color: var(--green-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.npc-info {
+    flex: 1;
+}
+
+.npc-label {
+    font-size: 0.7em;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.npc-name {
+    font-size: 0.9em;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.npc-timer {
+    font-size: 1.2em;
+    font-weight: 800;
+    color: var(--green-deep);
+    font-family: 'Rubik', sans-serif;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ==================== PRAYER TIMES COMPACT ==================== */
+.prayer-times-compact {
+    margin-bottom: 12px;
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.04);
+    padding: 10px;
+}
+
+/* ==================== PRAYER LEGEND (bottom of prayers) ==================== */
+.prayer-legend {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 14px;
+    padding: 10px;
+    flex-wrap: wrap;
+}
+
+.prayer-legend .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75em;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.prayer-legend .legend-dot {
+    width: 18px; height: 18px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.prayer-legend .legend-dot.checked-dot {
+    background: linear-gradient(135deg, var(--green-deep), var(--green-light));
+}
+
+.prayer-legend .legend-dot.cong-dot {
+    background: linear-gradient(135deg, var(--green-deep), var(--green-light));
+    border: 2px solid var(--gold);
+}
+
+.prayer-legend .legend-dot.qada-dot {
+    background: linear-gradient(135deg, var(--red), var(--red-light));
+}
+
+/* ==================== REMINDER BAR GLASSMORPHISM ==================== */
+/* (Main .reminder-bar rule updated in place above) */
+
+/* ==================== TAB BAR ACTIVE PILL ==================== */
+.tab-item.active {
+    color: var(--green-deep);
+}
+
+.tab-item.active .tab-icon {
+    background: linear-gradient(135deg, var(--green-deep), var(--green-light));
+    color: white;
+    padding: 4px 12px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tab-item.active .tab-icon .material-symbols-rounded {
+    font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 20;
+}
+
+.tab-item.active::before {
+    display: none;
+}
+
+/* ==================== AZKAR TOGGLE GROUP ==================== */
+.toggle-group {
+    display: flex;
+    background: rgba(0,0,0,0.04);
+    border-radius: 14px;
+    padding: 3px;
+    gap: 2px;
+}
+
+.toggle-group .toggle-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 10px 8px;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    font-weight: 600;
+    font-size: 0.8em;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.toggle-group .toggle-btn.active {
+    background: white;
+    color: var(--text-primary);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* ==================== AZKAR MONTH NAV ==================== */
+.month-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 10px 16px;
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.04);
+}
+
+.month-nav select,
+.month-nav input {
+    padding: 6px 10px;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 10px;
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    font-size: 0.85em;
+    background: white;
+    color: var(--text-primary);
+    min-width: 80px;
+}
+
+/* ==================== AZKAR STATS BAR ==================== */
+.stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.04);
+}
+
+.stat-mini {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8em;
+}
+
+.stat-mini .stat-label {
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.stat-mini .stat-value {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-family: 'Rubik', sans-serif;
+}
+
+/* ==================== AZKAR COUNTER ==================== */
+.counter-display {
+    text-align: center;
+    font-size: 0.85em;
+    font-weight: 700;
+    color: var(--green-deep);
+    font-family: 'Rubik', sans-serif;
+    margin-bottom: 10px;
+}
+
+/* ==================== AZKAR BUTTONS ==================== */
+.btn {
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    font-weight: 600;
+    font-size: 0.8em;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-sm { padding: 6px 12px; font-size: 0.75em; }
+.btn-outline { background: rgba(45,106,79,0.08); color: var(--green-deep); }
+.btn-outline:hover { background: var(--green-deep); color: white; }
+.btn-danger-outline { background: rgba(193,87,78,0.08); color: var(--red); }
+.btn-danger-outline:hover { background: var(--red); color: white; }
+
+/* ==================== BODY BACKGROUND RADIAL GRADIENTS ==================== */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+        radial-gradient(ellipse at 20% 20%, rgba(45,106,79,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(212,160,60,0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(14,165,233,0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ==================== TODAY BOX VARIANT ==================== */
+.day-box.today-box {
+    background: rgba(45,106,79,0.08);
+    border-color: var(--green-deep);
+}
+
+.day-box.today-box .day-number { color: var(--green-deep); }
+
+/* SVG Chart Legend (used by dashboard charts) */
+.svg-chart-legend {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.svg-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75em;
+}
+
+.svg-legend-dot {
+    width: 12px; height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.svg-legend-label {
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-family: 'Noto Kufi Arabic', sans-serif;
+}
+
+.svg-legend-value {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-family: 'Rubik', sans-serif;
+}
