@@ -100,12 +100,12 @@ window.App.Notifications = (function() {
         if (!btn) return;
         var currentLang = getCurrentLang();
         if (notificationsEnabled) {
-            btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">notifications_active</span>';
+            btn.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">notifications_active</span>';
             btn.style.background = 'rgba(5,150,105,0.15)';
             btn.style.borderColor = '#059669';
             btn.title = currentLang === 'ar' ? 'التنبيهات مفعّلة - اضغط لإيقاف' : 'Notifications ON - tap to disable';
         } else {
-            btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">notifications_off</span>';
+            btn.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">notifications_off</span>';
             btn.style.background = '';
             btn.style.borderColor = '';
             btn.title = currentLang === 'ar' ? 'تفعيل التنبيهات' : 'Enable notifications';
@@ -118,7 +118,7 @@ window.App.Notifications = (function() {
             // Disable
             notificationsEnabled = false;
             localStorage.setItem('salah_notif_enabled', 'false');
-            showToast(currentLang === 'ar' ? '🔕 تم إيقاف التنبيهات' : '🔕 Notifications disabled', 'info');
+            showToast(currentLang === 'ar' ? 'تم إيقاف التنبيهات' : 'Notifications disabled', 'info');
         } else {
             // Check iOS standalone mode
             var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -126,8 +126,8 @@ window.App.Notifications = (function() {
 
             if (isIOS && !isStandalone) {
                 showToast(currentLang === 'ar'
-                    ? '📱 للتنبيهات على iOS: أضف التطبيق للشاشة الرئيسية أولاً (مشاركة ← إضافة للشاشة الرئيسية)'
-                    : '📱 For iOS notifications: Add to Home Screen first (Share → Add to Home Screen)', 'warning', 6000);
+                    ? 'للتنبيهات على iOS: أضف التطبيق للشاشة الرئيسية أولاً (مشاركة ← إضافة للشاشة الرئيسية)'
+                    : 'For iOS notifications: Add to Home Screen first (Share → Add to Home Screen)', 'warning', 6000);
                 return;
             }
 
@@ -152,7 +152,7 @@ window.App.Notifications = (function() {
             if (permission === 'granted') {
                 notificationsEnabled = true;
                 localStorage.setItem('salah_notif_enabled', 'true');
-                showToast(currentLang === 'ar' ? '🔔 تم تفعيل التنبيهات' : '🔔 Notifications enabled', 'success');
+                showToast(currentLang === 'ar' ? 'تم تفعيل التنبيهات' : 'Notifications enabled', 'success');
 
                 // Show test notification via SW
                 sendPrayerNotification(
@@ -174,15 +174,15 @@ window.App.Notifications = (function() {
         var title, body, tag;
 
         if (type === 'test') {
-            title = '🕌 ' + prayerName;
+            title = prayerName;
             body = currentLang === 'ar' ? 'سيتم تذكيرك قبل كل صلاة بـ ٢٠ دقيقة' : 'You will be reminded 20 min before each prayer';
             tag = 'prayer-test';
         } else if (type === 'before') {
-            title = '🕌 ' + (currentLang === 'ar' ? 'قرب وقت الصلاة' : 'Prayer time approaching');
+            title = currentLang === 'ar' ? 'قرب وقت الصلاة' : 'Prayer time approaching';
             body = (currentLang === 'ar' ? 'يقترب وقت صلاة ' + prayerName + ' — استعد!' : prayerName + ' is coming in ~20 minutes');
             tag = 'prayer-before-' + prayerName;
         } else {
-            title = '⏰ ' + (currentLang === 'ar' ? 'هل صليت؟' : 'Did you pray?');
+            title = currentLang === 'ar' ? 'هل صليت؟' : 'Did you pray?';
             body = (currentLang === 'ar' ? 'مرّ وقت صلاة ' + prayerName + ' — سجّل صلاتك' : prayerName + ' time has passed — log your prayer');
             tag = 'prayer-after-' + prayerName;
         }
@@ -369,7 +369,7 @@ window.App.Notifications = (function() {
                 var delayMs = (beforeMin - nowMin) * 60000;
                 navigator.serviceWorker.controller.postMessage({
                     type: 'SCHEDULE_NOTIFICATION',
-                    title: '🕌 ' + (currentLang === 'ar' ? 'قرب وقت الصلاة' : 'Prayer approaching'),
+                    title: (currentLang === 'ar' ? 'قرب وقت الصلاة' : 'Prayer approaching'),
                     body: (currentLang === 'ar' ? 'يقترب وقت صلاة ' + prayerName + ' — استعد!' : prayerName + ' in ~20 minutes'),
                     tag: 'prayer-before-' + p.id,
                     delay: delayMs
@@ -384,7 +384,7 @@ window.App.Notifications = (function() {
                     var delayMs2 = (afterMin - nowMin) * 60000;
                     navigator.serviceWorker.controller.postMessage({
                         type: 'SCHEDULE_NOTIFICATION',
-                        title: '⏰ ' + (currentLang === 'ar' ? 'هل صليت؟' : 'Did you pray?'),
+                        title: (currentLang === 'ar' ? 'هل صليت؟' : 'Did you pray?'),
                         body: (currentLang === 'ar' ? 'مرّ وقت صلاة ' + prayerName + ' — سجّل صلاتك' : prayerName + ' time passed — log it'),
                         tag: 'prayer-after-' + p.id,
                         delay: delayMs2

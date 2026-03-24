@@ -1,5 +1,5 @@
-// Prayer Tracker PWA — Service Worker v48 (modular refactor)
-const CACHE_NAME = 'salah-tracker-v48';
+// Prayer Tracker PWA — Service Worker v51 (Milestone 3 Azkar)
+const CACHE_NAME = 'salah-tracker-v51';
 const ASSETS = [
     './',
     './index.html',
@@ -24,6 +24,8 @@ const ASSETS = [
     './js/fasting-tracker.js',
     './js/prayer-times.js',
     './js/notifications.js',
+    './js/azkar-tracker.js',
+    './js/svg-charts.js',
     './js/qada-report.js',
     './js/dashboard.js',
     './js/year-overview.js',
@@ -41,13 +43,13 @@ const ASSETS = [
     './icons/maskable-192x192.png',
     './icons/maskable-512x512.png',
     // CDN (cached on first fetch)
-    'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js',
-    'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap'
+    'https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700&family=Rubik:wght@400;500;700&display=swap',
+    'https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200'
 ];
 
 // ==================== INSTALL ====================
 self.addEventListener('install', event => {
-    console.log('[SW] Installing v48...');
+    console.log('[SW] Installing v49...');
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => cache.addAll(ASSETS))
@@ -57,7 +59,7 @@ self.addEventListener('install', event => {
 
 // ==================== ACTIVATE ====================
 self.addEventListener('activate', event => {
-    console.log('[SW] Activating v48...');
+    console.log('[SW] Activating v49...');
     event.waitUntil(
         caches.keys().then(keys => {
             return Promise.all(
@@ -85,9 +87,8 @@ self.addEventListener('fetch', event => {
         return;
     }
     
-    // CDN resources (Chart.js, fonts) — cache first
-    if (url.hostname === 'cdn.jsdelivr.net' || 
-        url.hostname === 'fonts.googleapis.com' || 
+    // CDN resources (fonts) — cache first
+    if (url.hostname === 'fonts.googleapis.com' ||
         url.hostname === 'fonts.gstatic.com') {
         event.respondWith(
             caches.match(event.request).then(cached => {

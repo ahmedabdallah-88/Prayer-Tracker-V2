@@ -192,31 +192,14 @@ window.App.Fasting = (function() {
         document.getElementById('fastDashRamadan').textContent = ramadanFasted + '/' + ramadanDays;
         document.getElementById('fastDashRamadanRate').textContent = Math.round((ramadanFasted / ramadanDays) * 100) + '%';
 
-        // Monthly chart
-        var charts = window.App.Storage.getCharts();
-        if (charts.fasting) charts.fasting.destroy();
-        var ctx = document.getElementById('fastingMonthlyChart');
-        if (ctx) {
-            charts.fasting = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: window.App.Dashboard.getHijriMonthNamesShort(),
-                    datasets: [{
-                        label: window.App.I18n.t('fasting_days_chart'),
-                        data: monthlyVol,
-                        backgroundColor: 'rgba(5, 150, 105, 0.7)',
-                        borderColor: '#059669',
-                        borderWidth: 2,
-                        borderRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
-                }
+        // Monthly chart (SVG bar chart)
+        var chartContainer = document.getElementById('fastingMonthlyChart');
+        if (chartContainer && window.App.SVGCharts) {
+            var monthLabels = window.App.Dashboard.getHijriMonthNamesShort();
+            var items = monthlyVol.map(function(v, i) {
+                return { label: monthLabels[i], value: v, color: '#059669' };
             });
+            window.App.SVGCharts.barChart(chartContainer, { items: items });
         }
     }
 
@@ -234,7 +217,7 @@ window.App.Fasting = (function() {
         // Show Gregorian reference
         var refEl = document.getElementById('ramadanHijriRef');
         if (refEl) {
-            refEl.textContent = '\uD83C\uDF19 ' + window.App.Hijri.getHijriMonthName(8) + ' ' + year + ' (' + window.App.Hijri.getGregorianSpanForHijriMonth(year, 9) + ')';
+            refEl.innerHTML = '<span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">nights_stay</span> ' + window.App.Hijri.getHijriMonthName(8) + ' ' + year + ' (' + window.App.Hijri.getGregorianSpanForHijriMonth(year, 9) + ')';
         }
 
         var fasted = 0, exempt = 0, missed = 0;

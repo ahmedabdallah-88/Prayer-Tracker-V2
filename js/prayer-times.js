@@ -240,8 +240,8 @@ window.App.PrayerTimes = (function() {
                 var nextInfo = document.getElementById('nextPrayerInfo');
                 if (nextInfo) {
                     nextInfo.textContent = currentLang === 'ar'
-                        ? '\u26A0\uFE0F \u062A\u0639\u0630\u0631 \u062A\u062D\u0645\u064A\u0644 \u0627\u0644\u0645\u0648\u0627\u0642\u064A\u062A \u2014 \u0627\u0636\u063A\u0637 \uD83D\uDD04 \u0623\u0648 \u0641\u0639\u0651\u0644 \u0627\u0644\u0645\u0648\u0642\u0639'
-                        : '\u26A0\uFE0F Could not load times \u2014 tap \uD83D\uDD04 or enable location';
+                        ? '\u062A\u0639\u0630\u0631 \u062A\u062D\u0645\u064A\u0644 \u0627\u0644\u0645\u0648\u0627\u0642\u064A\u062A \u2014 \u0627\u0636\u063A\u0637 \u0623\u0648 \u0641\u0639\u0651\u0644 \u0627\u0644\u0645\u0648\u0642\u0639'
+                        : 'Could not load times \u2014 tap refresh or enable location';
                     nextInfo.style.color = '#dc2626';
                 }
             }
@@ -382,7 +382,7 @@ window.App.PrayerTimes = (function() {
         // Location display
         var locEl = document.getElementById('prayerTimesLocation');
         if (locEl && prayerTimesData.location) {
-            locEl.textContent = '\uD83D\uDCCD ' + prayerTimesData.location;
+            locEl.innerHTML = '<span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">location_on</span> ' + prayerTimesData.location;
         }
 
         // Update notification toggle button state

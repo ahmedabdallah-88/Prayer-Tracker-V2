@@ -107,11 +107,11 @@ window.App.Profiles = (function() {
 
             if (p.gender === 'female') {
                 avatarClass = isChild ? 'child-female' : 'female';
-                avatarIcon = isChild ? '\uD83D\uDC67' : '\uD83D\uDC69';
+                avatarIcon = isChild ? '<span class="material-symbols-rounded" style="font-size:22px;">face</span>' : '<span class="material-symbols-rounded" style="font-size:22px;">person</span>';
                 genderLabel = isChild ? t('child_f') : t('female');
             } else {
                 avatarClass = isChild ? 'child-male' : 'male';
-                avatarIcon = isChild ? '\uD83D\uDC66' : '\uD83D\uDC68';
+                avatarIcon = isChild ? '<span class="material-symbols-rounded" style="font-size:22px;">face</span>' : '<span class="material-symbols-rounded" style="font-size:22px;">person</span>';
                 genderLabel = isChild ? t('child_m') : t('male');
             }
 
@@ -126,8 +126,8 @@ window.App.Profiles = (function() {
                     '<div class="details">' + genderLabel + ' \u00B7 ' + p.age + ' ' + t('years_old') + '</div>' +
                 '</div>' +
                 '<div class="profile-actions">' +
-                    '<button class="profile-action-btn edit" onclick="event.stopPropagation();editProfile(\'' + p.id + '\')" title="\u062A\u0639\u062F\u064A\u0644">\u270F\uFE0F</button>' +
-                    '<button class="profile-action-btn delete" onclick="event.stopPropagation();deleteProfile(\'' + p.id + '\')" title="\u062D\u0630\u0641">\uD83D\uDDD1\uFE0F</button>' +
+                    '<button class="profile-action-btn edit" onclick="event.stopPropagation();editProfile(\'' + p.id + '\')" title="\u062A\u0639\u062F\u064A\u0644"><span class="material-symbols-rounded" style="font-size:16px;">edit</span></button>' +
+                    '<button class="profile-action-btn delete" onclick="event.stopPropagation();deleteProfile(\'' + p.id + '\')" title="\u062D\u0630\u0641"><span class="material-symbols-rounded" style="font-size:16px;">delete_outline</span></button>' +
                 '</div>';
             card.onclick = function() { selectProfile(p.id); };
             list.appendChild(card);
@@ -344,21 +344,21 @@ window.App.Profiles = (function() {
         if (!activeProfile) return;
 
         var isChild = activeProfile.age < 12;
-        var avatarClass, avatarIcon;
+        var avatarClass, materialIcon;
 
         if (activeProfile.gender === 'female' && activeProfile.age >= 12) {
             avatarClass = isChild ? 'child-female' : 'female';
-            avatarIcon = isChild ? '\uD83D\uDC67' : '\uD83D\uDC69';
+            materialIcon = isChild ? 'face' : 'person';
         } else {
             avatarClass = isChild ? 'child-male' : 'male';
-            avatarIcon = isChild ? '\uD83D\uDC66' : '\uD83D\uDC68';
+            materialIcon = isChild ? 'face' : 'person';
         }
 
         // Show profile badge in header
         var badge = document.getElementById('profileBadge');
         badge.style.display = 'flex';
         document.getElementById('badgeAvatar').className = 'badge-avatar ' + avatarClass;
-        document.getElementById('badgeAvatar').textContent = avatarIcon;
+        document.getElementById('badgeAvatar').innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">' + materialIcon + '</span>';
         document.getElementById('badgeName').textContent = activeProfile.name;
 
         // Show/hide female features

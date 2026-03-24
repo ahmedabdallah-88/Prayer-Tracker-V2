@@ -39,6 +39,10 @@ window.App.Storage = (function() {
         return 'salah_volfasting_' + getProfilePrefix() + 'h' + year + '_' + month;
     }
 
+    function getAzkarKey(year, month) {
+        return 'salah_azkar_' + getProfilePrefix() + 'h' + year + '_' + month;
+    }
+
     // ==================== DATA ACCESS ====================
 
     function getDataObject(type) {
@@ -221,6 +225,7 @@ window.App.Storage = (function() {
         getExemptKey: getExemptKey,
         getFastingKey: getFastingKey,
         getVolFastingKey: getVolFastingKey,
+        getAzkarKey: getAzkarKey,
         getDataObject: getDataObject,
         getPrayersArray: getPrayersArray,
         loadAllData: loadAllData,

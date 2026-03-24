@@ -6,6 +6,7 @@ window.App.YearOverview = (function() {
         var Hijri = window.App.Hijri;
         var Storage = window.App.Storage;
         var I18n = window.App.I18n;
+        var currentLang = I18n.getCurrentLang();
 
         var yearVal = parseInt(document.getElementById(type + 'YearlyYear').value);
         Hijri.setCurrentHijriYear(yearVal);
@@ -15,65 +16,94 @@ window.App.YearOverview = (function() {
         var grid = document.getElementById(type + 'MonthsGrid');
         grid.innerHTML = '';
 
+        var todayH = Hijri.getTodayHijri();
+        var totalPct = 0, totalCong = 0, bestMonthIdx = 0, bestPct = 0;
+
+        // First pass: gather summary data
+        var monthStats = [];
+        for (var m = 1; m <= 12; m++) {
+            var stats = Storage.getMonthStats(type, m, yearVal);
+            var congRate = 0;
+            if (type === 'fard') {
+                var congData = Storage.getCongregationData(yearVal, m);
+                var prayers = Storage.getPrayersArray('fard');
+                var dataObj = Storage.getDataObject('fard');
+                var mCong = 0, mComp = 0;
+                prayers.forEach(function(prayer) {
+                    if (dataObj[m] && dataObj[m][prayer.id]) {
+                        var cDays = Object.keys(dataObj[m][prayer.id]).filter(function(d) { return dataObj[m][prayer.id][d]; });
+                        mComp += cDays.length;
+                        cDays.forEach(function(d) {
+                            if (congData[prayer.id] && congData[prayer.id][parseInt(d)]) mCong++;
+                        });
+                    }
+                });
+                congRate = mComp > 0 ? Math.round((mCong / mComp) * 100) : 0;
+                totalCong += congRate;
+            }
+            totalPct += stats.percentage;
+            if (stats.percentage > bestPct) { bestPct = stats.percentage; bestMonthIdx = m; }
+            monthStats.push({ stats: stats, congRate: congRate });
+        }
+
+        // Summary cards
+        var summaryEl = document.getElementById(type + 'YearlySummary');
+        if (summaryEl) {
+            var avgPct = Math.round(totalPct / 12);
+            var avgCong = type === 'fard' ? Math.round(totalCong / 12) : 0;
+            var bestName = bestMonthIdx > 0 ? Hijri.getHijriMonthName(bestMonthIdx - 1) : '-';
+            var html = '<div class="dashboard-grid" style="margin-bottom:16px;">' +
+                '<div class="stat-card"><div class="label"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">verified</span> ' + (currentLang === 'ar' ? 'متوسط الإنجاز' : 'Avg Completion') + '</div><div class="value">' + avgPct + '%</div></div>';
+            if (type === 'fard') {
+                html += '<div class="stat-card"><div class="label"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">mosque</span> ' + (currentLang === 'ar' ? 'متوسط الجماعة' : 'Avg Congregation') + '</div><div class="value">' + avgCong + '%</div></div>';
+            }
+            html += '<div class="stat-card"><div class="label"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">emoji_events</span> ' + (currentLang === 'ar' ? 'أفضل شهر' : 'Best Month') + '</div><div class="value" style="font-size:1.2em;">' + bestName + '</div><div class="sublabel">' + bestPct + '%</div></div>';
+            html += '</div>';
+            summaryEl.innerHTML = html;
+        }
+
+        // Month cards
         for (var month = 1; month <= 12; month++) {
-            var stats = Storage.getMonthStats(type, month, yearVal);
+            var ms = monthStats[month - 1];
             var card = document.createElement('div');
             card.className = 'month-card';
             card.setAttribute('role', 'button');
             card.setAttribute('tabindex', '0');
-            card.onclick = (function(t, m) {
-                return function() { openMonth(t, m); };
+            card.onclick = (function(t, mm) {
+                return function() { openMonth(t, mm); };
             })(type, month);
 
-            // Calculate congregation stats for fard
-            var congHtml = '';
-            if (type === 'fard') {
-                var congData = Storage.getCongregationData(yearVal, month);
-                var prayers = Storage.getPrayersArray('fard');
-                var dataObj = Storage.getDataObject('fard');
-                var monthCong = 0, monthCompleted = 0;
+            var isCurrent = todayH.year === yearVal && todayH.month === month;
+            var isFuture = todayH.year === yearVal && month > todayH.month;
+            if (isCurrent) card.classList.add('current-month');
+            if (isFuture) card.style.opacity = '0.35';
 
-                prayers.forEach(function(prayer) {
-                    if (dataObj[month] && dataObj[month][prayer.id]) {
-                        var completedDays = Object.keys(dataObj[month][prayer.id]).filter(function(d) { return dataObj[month][prayer.id][d]; });
-                        monthCompleted += completedDays.length;
-                        completedDays.forEach(function(d) {
-                            if (congData[prayer.id] && congData[prayer.id][parseInt(d)]) monthCong++;
-                        });
-                    }
-                });
+            // Progress bar color
+            var pct = ms.stats.percentage;
+            var barColor = pct >= 90 ? 'var(--green-deep, #2D6A4F)' : pct >= 70 ? 'var(--gold, #D4A03C)' : 'var(--red, #dc2626)';
 
-                var congRate = monthCompleted > 0 ? Math.round((monthCong / monthCompleted) * 100) : 0;
-                congHtml =
-                    '<div class="month-stat" style="grid-column: 1 / -1;">' +
-                        '<div class="label"><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">mosque</span> ' + I18n.t('congregation') + '</div>' +
-                        '<div class="value">' + congRate + '%</div>' +
-                    '</div>';
+            var congBadge = '';
+            if (type === 'fard' && ms.congRate > 0) {
+                congBadge = '<span class="month-badge"><span class="material-symbols-rounded" style="font-size:14px;vertical-align:middle;">mosque</span> ' + ms.congRate + '%</span>';
             }
 
             var hijriLabel = Hijri.getHijriMonthName(month - 1);
             var gregSpan = Hijri.getGregorianSpanForHijriMonth(yearVal, month);
 
             card.innerHTML =
-                '<h3>' + hijriLabel + ' ' + yearVal + '</h3>' +
-                '<div class="month-greg-ref" style="font-size:0.75em;color:var(--text-muted);margin-top:-6px;margin-bottom:8px;">' + gregSpan + '</div>' +
+                '<div class="month-card-header">' +
+                    '<h3>' + hijriLabel + (isCurrent ? ' <span class="current-dot"></span>' : '') + '</h3>' +
+                    '<span class="month-pct">' + pct + '%</span>' +
+                '</div>' +
+                '<div class="month-greg-ref">' + gregSpan + '</div>' +
                 '<div class="month-progress">' +
                     '<div class="progress-bar">' +
-                        '<div class="progress-fill" style="width: ' + stats.percentage + '%">' +
-                            stats.percentage + '%' +
-                        '</div>' +
+                        '<div class="progress-fill" style="width:' + pct + '%;background:' + barColor + '"></div>' +
                     '</div>' +
                 '</div>' +
                 '<div class="month-stats">' +
-                    '<div class="month-stat">' +
-                        '<div class="label">' + (type === 'fard' ? I18n.t('completed_word') : I18n.t('performed')) + '</div>' +
-                        '<div class="value">' + stats.completed + '</div>' +
-                    '</div>' +
-                    '<div class="month-stat">' +
-                        '<div class="label">' + I18n.t('remaining_word') + '</div>' +
-                        '<div class="value">' + (stats.total - stats.completed) + '</div>' +
-                    '</div>' +
-                    congHtml +
+                    '<span class="month-stat-mini">' + ms.stats.completed + '/' + ms.stats.total + '</span>' +
+                    congBadge +
                 '</div>';
 
             grid.appendChild(card);
@@ -132,7 +162,7 @@ window.App.YearOverview = (function() {
             section.innerHTML =
                 '<div class="prayer-header">' +
                     '<div class="prayer-name">' +
-                        '<span>' + prayer.icon + '</span>' +
+                        '<span class="material-symbols-rounded" style="font-size:18px;">' + prayer.icon + '</span>' +
                         '<span>' + I18n.getPrayerName(prayer.id) + '</span>' +
                     '</div>' +
                     '<div class="prayer-counter">' + completed + ' / ' + adjustedTotal + '</div>' +
@@ -202,7 +232,7 @@ window.App.YearOverview = (function() {
         } catch(e) {}
 
         var iconSpan = document.createElement('span');
-        iconSpan.className = 'day-icon material-symbols-outlined';
+        iconSpan.className = 'day-icon material-symbols-rounded';
         iconSpan.style.display = 'none';
         iconSpan.style.fontSize = '13px';
         iconSpan.textContent = 'mosque';

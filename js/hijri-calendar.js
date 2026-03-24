@@ -216,7 +216,7 @@ window.App.Hijri = (function() {
 
         // Hidden Material icon (shown by CSS for congregation/qada)
         var iconSpan = document.createElement('span');
-        iconSpan.className = 'day-icon material-symbols-outlined';
+        iconSpan.className = 'day-icon material-symbols-rounded';
         iconSpan.style.display = 'none';
         iconSpan.style.fontSize = '13px';
         iconSpan.textContent = 'mosque'; // default, overridden by CSS context
@@ -347,7 +347,7 @@ window.App.Hijri = (function() {
         var days = getHijriDaysInMonth(currentHijriYear, currentHijriMonth);
         btn.textContent = days;
         btn.style.background = localStorage.getItem('salah_hijri_days_' + currentHijriYear + '_' + currentHijriMonth)
-            ? 'rgba(201,162,39,0.25)' : 'var(--primary-light)';
+            ? 'rgba(201,162,39,0.25)' : 'var(--green-light)';
     }
 
     // ==================== HIJRI OVERRIDE DIALOG ====================
@@ -370,20 +370,20 @@ window.App.Hijri = (function() {
         var monthLabel = getHijriMonthName(hMonth - 1) + ' ' + hYear;
 
         overlay.innerHTML = '\
-            <div style="background:var(--bg-card);border-radius:20px;padding:24px;max-width:360px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,0.2);font-family:\'Cairo\',sans-serif;direction:rtl;">\
-                <h3 style="margin:0 0 12px;color:var(--primary-dark);font-size:1.1em;">\u2699\uFE0F تعديل بداية الشهر الهجري</h3>\
+            <div style="background:var(--card-bg);border-radius:20px;padding:24px;max-width:360px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,0.2);font-family:\'Noto Kufi Arabic\',sans-serif;direction:rtl;">\
+                <h3 style="margin:0 0 12px;color:var(--green-deep);font-size:1.1em;"><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">settings</span> تعديل بداية الشهر الهجري</h3>\
                 <p style="color:var(--text-muted);font-size:0.85em;margin:0 0 16px;">\
                     ' + (currentLang === 'ar' ? 'حدد التاريخ الميلادي لأول يوم من' : 'Set the Gregorian date for the 1st of') + ' <strong>' + monthLabel + '</strong>\
                 </p>\
                 <div style="margin-bottom:16px;">\
-                    <label style="display:block;margin-bottom:6px;font-size:0.85em;color:var(--text-body);">' + (currentLang === 'ar' ? 'أول يوم ميلادي:' : 'First Gregorian day:') + '</label>\
-                    <input type="date" id="hijriOverrideDateInput" value="' + isoStr + '" style="width:100%;padding:10px;border:1px solid var(--accent-border);border-radius:10px;font-size:16px;font-family:\'Cairo\',sans-serif;box-sizing:border-box;">\
+                    <label style="display:block;margin-bottom:6px;font-size:0.85em;color:var(--text-secondary);">' + (currentLang === 'ar' ? 'أول يوم ميلادي:' : 'First Gregorian day:') + '</label>\
+                    <input type="date" id="hijriOverrideDateInput" value="' + isoStr + '" style="width:100%;padding:10px;border:1px solid var(--border, rgba(0,0,0,0.1));border-radius:10px;font-size:16px;font-family:\'Cairo\',sans-serif;box-sizing:border-box;">\
                 </div>\
-                ' + (currentOverride ? '<p style="font-size:0.75em;color:var(--accent-dark);">\u270F\uFE0F ' + (currentLang === 'ar' ? 'تم تعديل هذا الشهر مسبقاً' : 'This month has a manual override') + '</p>' : '') + '\
+                ' + (currentOverride ? '<p style="font-size:0.75em;color:var(--green-deep);"><span class="material-symbols-rounded" style="font-size:14px;vertical-align:middle;">edit</span> ' + (currentLang === 'ar' ? 'تم تعديل هذا الشهر مسبقاً' : 'This month has a manual override') + '</p>' : '') + '\
                 <div style="display:flex;gap:8px;margin-top:8px;">\
-                    <button type="button" id="hijriOverrideSaveBtn" style="flex:1;padding:10px;background:var(--primary-dark);color:var(--text-on-dark);border:none;border-radius:10px;font-weight:700;cursor:pointer;font-family:\'Cairo\',sans-serif;">' + (currentLang === 'ar' ? 'حفظ' : 'Save') + '</button>\
+                    <button type="button" id="hijriOverrideSaveBtn" style="flex:1;padding:10px;background:var(--green-deep);color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-family:\'Cairo\',sans-serif;">' + (currentLang === 'ar' ? 'حفظ' : 'Save') + '</button>\
                     ' + (currentOverride ? '<button type="button" id="hijriOverrideResetBtn" style="padding:10px 16px;background:#fee2e2;color:#dc2626;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-family:\'Cairo\',sans-serif;">' + (currentLang === 'ar' ? 'إعادة تعيين' : 'Reset') + '</button>' : '') + '\
-                    <button type="button" id="hijriOverrideCancelBtn" style="padding:10px 16px;background:#f3f4f6;color:var(--text-body);border:none;border-radius:10px;font-weight:600;cursor:pointer;font-family:\'Cairo\',sans-serif;">' + (currentLang === 'ar' ? 'إلغاء' : 'Cancel') + '</button>\
+                    <button type="button" id="hijriOverrideCancelBtn" style="padding:10px 16px;background:#f3f4f6;color:var(--text-secondary);border:none;border-radius:10px;font-weight:600;cursor:pointer;font-family:\'Cairo\',sans-serif;">' + (currentLang === 'ar' ? 'إلغاء' : 'Cancel') + '</button>\
                 </div>\
             </div>\
         ';

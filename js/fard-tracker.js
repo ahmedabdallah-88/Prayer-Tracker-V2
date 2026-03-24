@@ -36,7 +36,7 @@ window.App.Tracker = (function() {
 
         // Hidden Material icon (shown by CSS for congregation/qada)
         var iconSpan = document.createElement('span');
-        iconSpan.className = 'day-icon material-symbols-outlined';
+        iconSpan.className = 'day-icon material-symbols-rounded';
         iconSpan.style.display = 'none';
         iconSpan.style.fontSize = '13px';
         iconSpan.textContent = 'mosque';
@@ -60,7 +60,27 @@ window.App.Tracker = (function() {
         document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
         document.querySelectorAll('.main-toggle-btn').forEach(function(b) { b.classList.remove('active'); });
 
-        if (section === 'fasting') {
+        if (section === 'azkar') {
+            // Azkar section
+            var azkarSec = document.getElementById('azkarSection');
+            if (azkarSec) azkarSec.classList.add('active');
+            var azkarBtn = document.getElementById('azkarToggleBtn');
+            if (azkarBtn) azkarBtn.classList.add('active');
+
+            var todayHA = Hijri.getTodayHijri();
+            var azMonthEl = document.getElementById('azkarTrackerMonth');
+            var azYearEl = document.getElementById('azkarTrackerYear');
+            if (azMonthEl) azMonthEl.value = todayHA.month;
+            if (azYearEl) azYearEl.value = todayHA.year;
+            var azDashYear = document.getElementById('azkarDashboardYear');
+            if (azDashYear) azDashYear.value = todayHA.year;
+            var azYearlyYear = document.getElementById('azkarYearlyYear');
+            if (azYearlyYear) azYearlyYear.value = todayHA.year;
+
+            if (typeof window.switchAzkarView === 'function') {
+                window.switchAzkarView('tracker');
+            }
+        } else if (section === 'fasting') {
             // Fasting override branch
             document.getElementById('fastingSection').classList.add('active');
             document.getElementById('fastingToggleBtn').classList.add('active');
@@ -246,7 +266,7 @@ window.App.Tracker = (function() {
 
             var nameDiv = document.createElement('div');
             nameDiv.className = 'prayer-name';
-            nameDiv.innerHTML = '<span>' + prayer.icon + '</span><span>' + I18n.getPrayerName(prayer.id) + '</span>';
+            nameDiv.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">' + prayer.icon + '</span><span>' + I18n.getPrayerName(prayer.id) + '</span>';
 
             var counter = document.createElement('div');
             counter.className = 'prayer-counter';
@@ -375,13 +395,13 @@ window.App.Tracker = (function() {
             legend.className = 'prayer-legend';
             if (type === 'fard') {
                 legend.innerHTML =
-                    '<div class="legend-item"><div class="legend-dot" style="background:var(--primary-dark,#0f4c3a);"><span class="material-symbols-outlined" style="font-size:12px;color:white;">check</span></div><span>' + (currentLang === 'ar' ? 'منفرد' : 'ALONE') + '</span></div>' +
-                    '<div class="legend-item"><div class="legend-dot" style="background:#a0722a;"><span class="material-symbols-outlined" style="font-size:12px;color:white;">mosque</span></div><span>' + (currentLang === 'ar' ? 'جماعة' : 'CONGREGATION') + '</span></div>' +
-                    '<div class="legend-item"><div class="legend-dot" style="background:#dc2626;"><span class="material-symbols-outlined" style="font-size:12px;color:white;">schedule</span></div><span>' + (currentLang === 'ar' ? 'قضاء' : 'QADA') + '</span></div>';
+                    '<div class="legend-item"><div class="legend-dot" style="background:var(--green-deep,#2D6A4F);"><span class="material-symbols-rounded" style="font-size:12px;color:white;">check</span></div><span>' + (currentLang === 'ar' ? 'منفرد' : 'ALONE') + '</span></div>' +
+                    '<div class="legend-item"><div class="legend-dot" style="background:var(--gold,#D4A03C);"><span class="material-symbols-rounded" style="font-size:12px;color:white;">mosque</span></div><span>' + (currentLang === 'ar' ? 'جماعة' : 'CONGREGATION') + '</span></div>' +
+                    '<div class="legend-item"><div class="legend-dot" style="background:var(--red,#C1574E);"><span class="material-symbols-rounded" style="font-size:12px;color:white;">schedule</span></div><span>' + (currentLang === 'ar' ? 'قضاء' : 'QADA') + '</span></div>';
             } else {
                 legend.innerHTML =
-                    '<div class="legend-item"><div class="legend-dot" style="background:var(--primary-dark,#0f4c3a);"><span class="material-symbols-outlined" style="font-size:12px;color:white;">check</span></div><span>' + (currentLang === 'ar' ? 'مؤداة' : 'DONE') + '</span></div>' +
-                    '<div class="legend-item"><div class="legend-dot" style="background:#dc2626;"><span class="material-symbols-outlined" style="font-size:12px;color:white;">schedule</span></div><span>' + (currentLang === 'ar' ? 'قضاء' : 'QADA') + '</span></div>';
+                    '<div class="legend-item"><div class="legend-dot" style="background:var(--green-deep,#2D6A4F);"><span class="material-symbols-rounded" style="font-size:12px;color:white;">check</span></div><span>' + (currentLang === 'ar' ? 'مؤداة' : 'DONE') + '</span></div>' +
+                    '<div class="legend-item"><div class="legend-dot" style="background:var(--red,#C1574E);"><span class="material-symbols-rounded" style="font-size:12px;color:white;">schedule</span></div><span>' + (currentLang === 'ar' ? 'قضاء' : 'QADA') + '</span></div>';
             }
             section.appendChild(legend);
 
@@ -652,7 +672,7 @@ window.App.Tracker = (function() {
         }
 
         var pName = I18n.getPrayerName(prayerId);
-        UI.showToast(pName + ': ' + (shouldMark ? '\u2705' : '\u21A9\uFE0F') + ' ' + availableDays, 'success', 1500);
+        UI.showToast(pName + ': ' + availableDays, 'success', 1500);
     }
 
     // ==================== toggleDay (year overview variant) ====================
@@ -736,7 +756,7 @@ window.App.Tracker = (function() {
             section.innerHTML =
                 '<div class="prayer-header">' +
                     '<div class="prayer-name">' +
-                        '<span>' + prayer.icon + '</span>' +
+                        '<span class="material-symbols-rounded" style="font-size:18px;">' + prayer.icon + '</span>' +
                         '<span>' + I18n.getPrayerName(prayer.id) + '</span>' +
                     '</div>' +
                     '<div class="prayer-counter">' + completed + ' / ' + adjustedTotal + '</div>' +

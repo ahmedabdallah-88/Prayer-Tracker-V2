@@ -50,8 +50,8 @@ window.App.Jamaah = (function() {
         var congRate = totalCompleted > 0 ? Math.round((totalCong / totalCompleted) * 100) : 0;
 
         container.innerHTML =
-            '<span class="cong-stat mosque"><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">mosque</span> ' + I18n.t('congregation') + ': ' + totalCong + ' (' + congRate + '%)</span>' +
-            '<span class="cong-stat alone">\uD83D\uDC64 ' + I18n.t('individual') + ': ' + totalAlone + '</span>';
+            '<span class="cong-stat mosque"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">mosque</span> ' + I18n.t('congregation') + ': ' + totalCong + ' (' + congRate + '%)</span>' +
+            '<span class="cong-stat alone"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">person</span> ' + I18n.t('individual') + ': ' + totalAlone + '</span>';
     }
 
     // ==================== STREAK CALCULATOR ====================
@@ -157,22 +157,22 @@ window.App.Jamaah = (function() {
             var card = document.createElement('div');
             card.className = 'streak-card' + (streak.current >= 7 ? ' high-streak' : '');
 
-            var fireEmoji = streak.current >= 7 ? '<span class="material-symbols-outlined" style="font-size:20px;color:#ea580c;">local_fire_department</span>' :
-                          streak.current >= 3 ? '<span class="material-symbols-outlined" style="font-size:20px;color:#d97706;">bolt</span>' :
-                          streak.current >= 1 ? '<span class="material-symbols-outlined" style="font-size:20px;color:#65a30d;">auto_awesome</span>' : '<span class="material-symbols-outlined" style="font-size:20px;color:#9ca3af;">bedtime</span>';
+            var fireEmoji = streak.current >= 7 ? '<span class="material-symbols-rounded" style="font-size:20px;color:#ea580c;">local_fire_department</span>' :
+                          streak.current >= 3 ? '<span class="material-symbols-rounded" style="font-size:20px;color:#d97706;">bolt</span>' :
+                          streak.current >= 1 ? '<span class="material-symbols-rounded" style="font-size:20px;color:#65a30d;">auto_awesome</span>' : '<span class="material-symbols-rounded" style="font-size:20px;color:#9ca3af;">bedtime</span>';
 
             var isOnFire = streak.current >= 3;
 
             var streakLabel = isFard
-                ? (currentLang === 'ar' ? 'أيام جماعة متتابعة \uD83D\uDD4C' : 'Consecutive congregation days \uD83D\uDD4C')
+                ? (currentLang === 'ar' ? 'أيام جماعة متتابعة' : 'Consecutive congregation days')
                 : I18n.t('consecutive_days');
             var bestLabel = isFard
-                ? (currentLang === 'ar' ? '\uD83C\uDFC6 أفضل سلسلة جماعة:' : '\uD83C\uDFC6 Best congregation streak:')
+                ? (currentLang === 'ar' ? 'أفضل سلسلة جماعة:' : 'Best congregation streak:')
                 : I18n.t('best_streak');
 
             card.innerHTML =
                 '<div class="streak-prayer-name">' +
-                    '<span>' + prayer.icon + '</span>' +
+                    '<span class="material-symbols-rounded" style="font-size:18px;">' + prayer.icon + '</span>' +
                     '<span>' + I18n.getPrayerName(prayer.id) + '</span>' +
                 '</div>' +
                 '<div class="streak-value ' + (isOnFire ? 'fire' : '') + '">' + fireEmoji + ' ' + streak.current + '</div>' +

@@ -1,21 +1,13 @@
 /**
- * dashboard.js — Dashboard, Charts & Advanced Visualizations
- * Extracted from index.html
+ * dashboard.js — Dashboard using custom SVG visualizations
+ * All Chart.js usage replaced with window.App.SVGCharts
  */
 window.App = window.App || {};
 window.App.Dashboard = (function() {
-    // ==================== MODULE REFERENCES ====================
     var Storage = window.App.Storage;
     var Hijri   = window.App.Hijri;
     var I18n    = window.App.I18n;
     var Config  = window.App.Config;
-
-    // ==================== LOCAL HELPERS ====================
-
-    function getHijriMonthNames() {
-        var lang = I18n.getCurrentLang();
-        return lang === 'ar' ? Config.hijriMonthNamesAr : Config.hijriMonthNamesEn;
-    }
 
     function getHijriMonthNamesShort() {
         var lang = I18n.getCurrentLang();
@@ -24,137 +16,267 @@ window.App.Dashboard = (function() {
             : ['Muh', 'Saf', 'Rb1', 'Rb2', 'Jm1', 'Jm2', 'Raj', 'Sha', 'Ram', 'Shw', 'DhQ', 'DhH'];
     }
 
-    // ==================== DASHBOARD ====================
+    // ==================== SHARED DATA GATHERERS ====================
+
+    function gatherPrayerStats(type, hYear) {
+        var prayers = Storage.getPrayersArray(type);
+        var dataObj = Storage.getDataObject(type);
+        var results = [];
+
+        prayers.forEach(function(prayer) {
+            var completed = 0, total = 0, congCount = 0;
+            for (var m = 1; m <= 12; m++) {
+                var days = Hijri.getHijriDaysInMonth(hYear, m);
+                total += days;
+                if (dataObj[m] && dataObj[m][prayer.id]) {
+                    var cDays = Object.keys(dataObj[m][prayer.id]).filter(function(d) { return dataObj[m][prayer.id][d]; });
+                    completed += cDays.length;
+                    if (type === 'fard') {
+                        var congData = Storage.getCongregationData(hYear, m);
+                        cDays.forEach(function(d) {
+                            if (congData[prayer.id] && congData[prayer.id][parseInt(d)]) congCount++;
+                        });
+                    }
+                }
+            }
+            var pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+            var congPct = completed > 0 ? Math.round((congCount / completed) * 100) : 0;
+            results.push({
+                id: prayer.id,
+                name: I18n.getPrayerName(prayer.id),
+                icon: prayer.icon || prayer.materialIcon,
+                color: prayer.color,
+                completed: completed,
+                total: total,
+                completion: pct,
+                congregation: congPct,
+                congCount: congCount
+            });
+        });
+        return results;
+    }
+
+    function gatherMonthlyData(type, hYear) {
+        var completionData = [];
+        var congData = [];
+        for (var m = 1; m <= 12; m++) {
+            completionData.push(Storage.getMonthStats(type, m, hYear).percentage);
+            if (type === 'fard') {
+                var prayers = Storage.getPrayersArray('fard');
+                var dataObj = Storage.getDataObject('fard');
+                var cd = Storage.getCongregationData(hYear, m);
+                var monthComp = 0, monthCong = 0;
+                prayers.forEach(function(p) {
+                    if (dataObj[m] && dataObj[m][p.id]) {
+                        var cDays = Object.keys(dataObj[m][p.id]).filter(function(d) { return dataObj[m][p.id][d]; });
+                        monthComp += cDays.length;
+                        cDays.forEach(function(d) {
+                            if (cd[p.id] && cd[p.id][parseInt(d)]) monthCong++;
+                        });
+                    }
+                });
+                congData.push(monthComp > 0 ? Math.round((monthCong / monthComp) * 100) : 0);
+            }
+        }
+        return { completion: completionData, congregation: congData };
+    }
+
+    function gatherWeeklyData(hYear) {
+        var prayers = Storage.getPrayersArray('fard');
+        var currentLang = I18n.getCurrentLang();
+        var dayNames = Config.T['day_names'][currentLang];
+        var weekTotals = [0,0,0,0,0,0,0];
+        var weekCong = [0,0,0,0,0,0,0];
+
+        for (var month = 1; month <= 12; month++) {
+            var cd = Storage.getCongregationData(hYear, month);
+            var daysInMonth = Hijri.getHijriDaysInMonth(hYear, month);
+            for (var day = 1; day <= daysInMonth; day++) {
+                var date = Hijri.hijriToGregorian(hYear, month, day);
+                var dow = date.getDay();
+                weekTotals[dow]++;
+                var dayCong = 0;
+                prayers.forEach(function(p) {
+                    if (cd[p.id] && cd[p.id][day]) dayCong++;
+                });
+                weekCong[dow] += dayCong;
+            }
+        }
+
+        return dayNames.map(function(name, i) {
+            var maxPossible = weekTotals[i] * prayers.length;
+            return { name: name, value: maxPossible > 0 ? Math.round((weekCong[i] / maxPossible) * 100) : 0 };
+        });
+    }
+
+    function gatherHeatmapData(hYear) {
+        var prayers = Storage.getPrayersArray('fard');
+        var dataObj = Storage.getDataObject('fard');
+        var grid = [];
+        var todayH = Hijri.getTodayHijri();
+
+        // Build last ~10 weeks of data (70 days back from current date)
+        var today = new Date();
+        var startDate = new Date(today.getTime() - 69 * 86400000);
+
+        for (var i = 0; i < 70; i++) {
+            var d = new Date(startDate.getTime() + i * 86400000);
+            var h = Hijri.gregorianToHijri(d);
+            var congData = Storage.getCongregationData(h.year, h.month);
+            var count = 0;
+            prayers.forEach(function(p) {
+                if (congData[p.id] && congData[p.id][h.day]) count++;
+            });
+            grid.push({ count: count });
+        }
+        return grid;
+    }
+
+    // ==================== MAIN DASHBOARD UPDATE ====================
 
     function updateDashboard(type) {
-        var currentHijriYear = parseInt(document.getElementById(type + 'DashboardYear').value);
-        var currentYear = currentHijriYear;
-        Storage.setCurrentYear(currentYear);
+        var Charts = window.App.SVGCharts;
+        var hYear = parseInt(document.getElementById(type + 'DashboardYear').value);
+        Storage.setCurrentYear(hYear);
         Storage.loadAllData(type);
 
-        var yearStats = Storage.getYearStats(type, currentYear);
+        var yearStats = Storage.getYearStats(type, hYear);
+        var prayerStats = gatherPrayerStats(type, hYear);
+        var monthlyData = gatherMonthlyData(type, hYear);
+        var monthLabels = getHijriMonthNamesShort();
+        var currentLang = I18n.getCurrentLang();
+        var todayH = Hijri.getTodayHijri();
+
+        // --- Update stat cards ---
         document.getElementById(type + 'YearTotalCompleted').textContent = yearStats.completed;
         document.getElementById(type + 'YearTotalPossible').textContent = yearStats.total;
         document.getElementById(type + 'YearCompletionRate').textContent = yearStats.percentage + '%';
 
-        // Find best month
         var bestMonth = { month: 0, percentage: 0 };
-        var monthNames = Config.monthNames;
-        for (var month = 1; month <= 12; month++) {
-            var stats = Storage.getMonthStats(type, month, currentYear);
-            if (stats.percentage > bestMonth.percentage) {
-                bestMonth = { month: month, percentage: stats.percentage };
-            }
+        for (var m = 1; m <= 12; m++) {
+            var ms = Storage.getMonthStats(type, m, hYear);
+            if (ms.percentage > bestMonth.percentage) bestMonth = { month: m, percentage: ms.percentage };
         }
-        document.getElementById(type + 'BestMonth').textContent = bestMonth.month > 0 ? monthNames[bestMonth.month - 1] : '-';
+        document.getElementById(type + 'BestMonth').textContent = bestMonth.month > 0 ? Config.monthNames[bestMonth.month - 1] : '-';
         document.getElementById(type + 'BestMonthRate').textContent = bestMonth.percentage + '%';
 
-        // Find best prayer
-        var prayers = Storage.getPrayersArray(type);
-        var dataObj = Storage.getDataObject(type);
-        var prayerStats = {};
-        prayers.forEach(function(prayer) {
-            var completed = 0;
-            var total = 0;
-            for (var m = 1; m <= 12; m++) {
-                var days = Hijri.getHijriDaysInMonth(currentHijriYear, m);
-                total += days;
-                if (dataObj[m] && dataObj[m][prayer.id]) {
-                    completed += Object.values(dataObj[m][prayer.id]).filter(function(v) { return v; }).length;
-                }
-            }
-            prayerStats[prayer.id] = {
-                name: I18n.getPrayerName(prayer.id),
-                percentage: total > 0 ? Math.round((completed / total) * 100) : 0
-            };
-        });
-
-        var bestPrayer = Object.entries(prayerStats).reduce(function(best, entry) {
-            var stats = entry[1];
-            return stats.percentage > best.percentage ? stats : best;
-        }, { name: '-', percentage: 0 });
-
+        var bestPrayer = prayerStats.reduce(function(best, p) { return p.completion > best.completion ? p : best; }, { name: '-', completion: 0 });
         document.getElementById(type + 'BestPrayer').textContent = bestPrayer.name;
-        document.getElementById(type + 'BestPrayerRate').textContent = bestPrayer.percentage + '%';
+        document.getElementById(type + 'BestPrayerRate').textContent = bestPrayer.completion + '%';
 
-        updateCharts(type);
-        if (typeof window.renderStreaks === 'function') window.renderStreaks(type);
-
-        // Congregation yearly stats (fard only)
+        // Congregation stats (fard only)
         if (type === 'fard') {
-            var yearCong = 0, yearCompleted = 0;
-            var congMonthlyData = [];
-            var charts = Storage.getCharts();
-
-            for (var cm = 1; cm <= 12; cm++) {
-                var congData = Storage.getCongregationData(currentHijriYear, cm);
-                var fardPrayers = Storage.getPrayersArray('fard');
-                var fardDataObj = Storage.getDataObject('fard');
-                var monthCong = 0, monthCompleted = 0;
-
-                fardPrayers.forEach(function(prayer) {
-                    if (fardDataObj[cm] && fardDataObj[cm][prayer.id]) {
-                        var completedDays = Object.keys(fardDataObj[cm][prayer.id]).filter(function(d) {
-                            return fardDataObj[cm][prayer.id][d];
-                        });
-                        monthCompleted += completedDays.length;
-                        completedDays.forEach(function(d) {
-                            if (window.isCongregation(congData, prayer.id, parseInt(d))) monthCong++;
-                        });
-                    }
-                });
-
-                yearCong += monthCong;
-                yearCompleted += monthCompleted;
-                congMonthlyData.push(monthCompleted > 0 ? Math.round((monthCong / monthCompleted) * 100) : 0);
-            }
-
-            var congRate = yearCompleted > 0 ? Math.round((yearCong / yearCompleted) * 100) : 0;
+            var yearCong = 0, yearComp = 0;
+            prayerStats.forEach(function(p) { yearCong += p.congCount; yearComp += p.completed; });
+            var congRate = yearComp > 0 ? Math.round((yearCong / yearComp) * 100) : 0;
             document.getElementById('fardYearCongRate').textContent = congRate + '%';
-            document.getElementById('fardYearCongCount').textContent = yearCong + ' ' + I18n.t('congregation') + ' / ' + yearCompleted;
-
-            // Congregation chart
-            if (charts.fardCong) charts.fardCong.destroy();
-            var congCtx = document.getElementById('fardCongregationChart');
-            renderAdvancedCharts();
-            if (congCtx) {
-                charts.fardCong = new Chart(congCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: getHijriMonthNamesShort(),
-                        datasets: [{
-                            label: I18n.t('cong_rate'),
-                            data: congMonthlyData,
-                            backgroundColor: 'rgba(37, 99, 235, 0.6)',
-                            borderColor: '#2563eb',
-                            borderWidth: 2,
-                            borderRadius: 6
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { beginAtZero: true, max: 100, ticks: { callback: function(v) { return v + '%'; } } },
-                            x: { ticks: { maxRotation: 45, minRotation: 0, font: { size: 10 } } }
-                        }
-                    }
-                });
-            }
+            document.getElementById('fardYearCongCount').textContent = yearCong + ' ' + I18n.t('congregation') + ' / ' + yearComp;
         }
 
-        // Render period history in fard dashboard for females
+        // --- RENDER SVG CHARTS ---
+
+        // 1. Orbital Progress
+        var orbitalEl = document.getElementById(type + 'OrbitalProgress');
+        if (orbitalEl) {
+            var rings = [{ value: yearStats.completed, max: yearStats.total, color: '#2D6A4F', label: currentLang === 'ar' ? 'الإنجاز' : 'Completion' }];
+            var legend = [{ color: '#2D6A4F', label: currentLang === 'ar' ? 'الإنجاز' : 'Completion', value: yearStats.percentage + '%' }];
+            if (type === 'fard') {
+                var yCong = 0, yComp = 0;
+                prayerStats.forEach(function(p) { yCong += p.congCount; yComp += p.completed; });
+                rings.push({ value: yCong, max: yComp || 1, color: '#D4A03C', label: currentLang === 'ar' ? 'الجماعة' : 'Congregation' });
+                legend.push({ color: '#D4A03C', label: currentLang === 'ar' ? 'الجماعة' : 'Congregation', value: (yComp > 0 ? Math.round((yCong / yComp) * 100) : 0) + '%' });
+            }
+            Charts.orbitalProgress(orbitalEl, {
+                rings: rings,
+                centerText: yearStats.percentage + '%',
+                centerSub: currentLang === 'ar' ? 'الإنجاز السنوي' : 'Yearly',
+                legend: legend
+            });
+        }
+
+        // 2. Streak Flame Bars
+        var streakEl = document.getElementById(type + 'StreakFlame');
+        if (streakEl && window.App.Jamaah) {
+            var streakData = prayerStats.map(function(p) {
+                var streak = window.App.Jamaah.calculateStreak(type, p.id);
+                return { name: p.name, icon: p.icon, color: p.color, current: streak.current, best: streak.best };
+            });
+            Charts.streakFlameBars(streakEl, {
+                prayers: streakData,
+                legendLabels: {
+                    current: currentLang === 'ar' ? 'الحالية' : 'Current',
+                    best: currentLang === 'ar' ? 'الأفضل' : 'Best',
+                    record: currentLang === 'ar' ? 'رقم قياسي' : 'Record'
+                }
+            });
+        }
+
+        // 3. Mountain Landscape
+        var mtnEl = document.getElementById(type + 'MountainChart');
+        if (mtnEl) {
+            var mtnData = {
+                labels: monthLabels,
+                values: monthlyData.completion,
+                currentMonth: todayH.year === hYear ? todayH.month : undefined
+            };
+            if (type === 'fard') {
+                mtnData.values2 = monthlyData.congregation;
+                mtnData.legend = [
+                    { color: 'var(--green-deep)', label: currentLang === 'ar' ? 'الإنجاز الكلي' : 'Total' },
+                    { color: 'var(--gold)', label: currentLang === 'ar' ? 'الجماعة' : 'Congregation', dashed: true }
+                ];
+            }
+            Charts.mountainChart(mtnEl, mtnData);
+        }
+
+        // 4. Prayer Radar
+        var radarEl = document.getElementById(type + 'RadarChart');
+        if (radarEl) {
+            Charts.prayerRadar(radarEl, {
+                prayers: prayerStats,
+                showCongregation: type === 'fard'
+            });
+        }
+
+        // 5. Prayer Lollipop
+        var lolEl = document.getElementById(type + 'LollipopChart');
+        if (lolEl) {
+            Charts.prayerLollipop(lolEl, {
+                prayers: prayerStats,
+                showCongregation: type === 'fard'
+            });
+        }
+
+        // 6. Weekly Rhythm (fard only)
+        var weeklyEl = document.getElementById(type + 'WeeklyRhythm');
+        if (weeklyEl && type === 'fard') {
+            var weeklyData = gatherWeeklyData(hYear);
+            Charts.weeklyRhythm(weeklyEl, { days: weeklyData });
+        }
+
+        // 7. Congregation Heatmap (fard only)
+        var heatEl = document.getElementById(type + 'Heatmap');
+        if (heatEl && type === 'fard') {
+            var heatGrid = gatherHeatmapData(hYear);
+            var heatDayNames = (Config.T['day_names'][currentLang] || []).slice(0, 7);
+            Charts.congregationHeatmap(heatEl, {
+                grid: heatGrid,
+                dayNames: heatDayNames,
+                maxPrayers: 5
+            });
+        }
+
+        // Qada report (fard only)
+        if (type === 'fard' && typeof window.renderQadaReport === 'function') {
+            window.renderQadaReport();
+        }
+
+        // Period history (females)
         var activeProfile = Storage.getActiveProfile();
         if (type === 'fard' && activeProfile && activeProfile.gender === 'female' && activeProfile.age >= 12) {
             var fardPeriodDash = document.getElementById('fardPeriodDashboard');
             if (fardPeriodDash) fardPeriodDash.style.display = '';
             renderPeriodHistoryDashboard();
-        }
-
-        // Render Qada report (fard only)
-        if (type === 'fard') {
-            if (typeof window.renderQadaReport === 'function') window.renderQadaReport();
         }
     }
 
@@ -178,315 +300,9 @@ window.App.Dashboard = (function() {
         periods.forEach(function(p) {
             var entry = document.createElement('div');
             entry.className = 'period-entry';
-            entry.innerHTML = '<div class="dates">\uD83D\uDCC5 ' + p.start + ' ' + I18n.getHijriMonthName(p.month - 1) + ' \u2192 ' + p.end + ' ' + I18n.getHijriMonthName(p.month - 1) + ' ' + year + '</div>' +
+            entry.innerHTML = '<div class="dates"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">calendar_month</span> ' + p.start + ' ' + I18n.getHijriMonthName(p.month - 1) + ' \u2192 ' + p.end + ' ' + I18n.getHijriMonthName(p.month - 1) + ' ' + year + '</div>' +
                 '<div class="duration">' + p.duration + ' \u064a\u0648\u0645</div>';
             container.appendChild(entry);
-        });
-    }
-
-    // ==================== CHARTS ====================
-
-    function updateCharts(type) {
-        var prayers = Storage.getPrayersArray(type);
-        var dataObj = Storage.getDataObject(type);
-        var hYear = Hijri.getCurrentHijriYear();
-        var charts = Storage.getCharts();
-
-        // Monthly Progress Chart
-        var monthlyData = [];
-        for (var month = 1; month <= 12; month++) {
-            monthlyData.push(Storage.getMonthStats(type, month, hYear).percentage);
-        }
-
-        if (charts[type].monthlyProgress) charts[type].monthlyProgress.destroy();
-        charts[type].monthlyProgress = new Chart(document.getElementById(type + 'MonthlyProgressChart'), {
-            type: 'line',
-            data: {
-                labels: getHijriMonthNamesShort(),
-                datasets: [{
-                    label: I18n.t('chart_percentage'),
-                    data: monthlyData,
-                    borderColor: '#d4af37',
-                    backgroundColor: 'rgba(212, 175, 55, 0.1)',
-                    tension: 0.4,
-                    fill: true,
-                    pointRadius: 5,
-                    pointHoverRadius: 7
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, max: 100, ticks: { callback: function(value) { return value + '%'; } } } }
-            }
-        });
-
-        // Prayer Type Chart
-        var prayerTypeData;
-        var prayerTypeLabel;
-
-        if (type === 'fard') {
-            prayerTypeData = prayers.map(function(prayer) {
-                var congCount = 0;
-                for (var m = 1; m <= 12; m++) {
-                    var congData = Storage.getCongregationData(hYear, m);
-                    if (congData[prayer.id]) {
-                        congCount += Object.values(congData[prayer.id]).filter(function(v) { return v; }).length;
-                    }
-                }
-                return congCount;
-            });
-            prayerTypeLabel = I18n.t('congregation');
-        } else {
-            prayerTypeData = prayers.map(function(prayer) {
-                var completed = 0;
-                for (var m = 1; m <= 12; m++) {
-                    if (dataObj[m] && dataObj[m][prayer.id]) {
-                        completed += Object.values(dataObj[m][prayer.id]).filter(function(v) { return v; }).length;
-                    }
-                }
-                return completed;
-            });
-            prayerTypeLabel = I18n.t('chart_sunnah_count');
-        }
-
-        if (charts[type].prayerType) charts[type].prayerType.destroy();
-        charts[type].prayerType = new Chart(document.getElementById(type + 'PrayerTypeChart'), {
-            type: 'bar',
-            data: {
-                labels: prayers.map(function(p) { return I18n.getPrayerName(p.id); }),
-                datasets: [{
-                    label: prayerTypeLabel,
-                    data: prayerTypeData,
-                    backgroundColor: prayers.map(function(p) { return p.color; }),
-                    borderColor: prayers.map(function(p) { return p.color; }),
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true } }
-            }
-        });
-
-        // Completion Pie Chart
-        var yearStats = Storage.getYearStats(type, hYear);
-        if (charts[type].completionPie) charts[type].completionPie.destroy();
-        charts[type].completionPie = new Chart(document.getElementById(type + 'CompletionPieChart'), {
-            type: 'doughnut',
-            data: {
-                labels: [I18n.t('chart_completed_label'), I18n.t('chart_remaining_label')],
-                datasets: [{
-                    data: [yearStats.completed, yearStats.total - yearStats.completed],
-                    backgroundColor: ['#2d7a4f', '#e0e0e0'],
-                    borderWidth: 3,
-                    borderColor: '#fff'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { position: 'bottom' } }
-            }
-        });
-
-        // Prayer Comparison Chart
-        var comparisonData = prayers.map(function(prayer) {
-            var completed = 0;
-            var total = 0;
-            for (var m = 1; m <= 12; m++) {
-                var days = Hijri.getHijriDaysInMonth(hYear, m);
-                total += days;
-                if (dataObj[m] && dataObj[m][prayer.id]) {
-                    completed += Object.values(dataObj[m][prayer.id]).filter(function(v) { return v; }).length;
-                }
-            }
-            return total > 0 ? Math.round((completed / total) * 100) : 0;
-        });
-
-        if (charts[type].prayerComparison) charts[type].prayerComparison.destroy();
-        charts[type].prayerComparison = new Chart(document.getElementById(type + 'PrayerComparisonChart'), {
-            type: 'radar',
-            data: {
-                labels: prayers.map(function(p) { return I18n.getPrayerName(p.id); }),
-                datasets: [{
-                    label: '\u0646\u0633\u0628\u0629 \u0627\u0644\u0625\u0646\u062c\u0627\u0632 %',
-                    data: comparisonData,
-                    backgroundColor: 'rgba(15, 76, 58, 0.2)',
-                    borderColor: '#0f4c3a',
-                    borderWidth: 2,
-                    pointBackgroundColor: prayers.map(function(p) { return p.color; }),
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 5
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    r: {
-                        beginAtZero: true,
-                        max: 100,
-                        ticks: {
-                            callback: function(value) { return value + '%'; }
-                        }
-                    }
-                },
-                plugins: {
-                    legend: { display: false }
-                }
-            }
-        });
-    }
-
-    // ==================== ADVANCED VISUALIZATIONS ====================
-
-    function renderAdvancedCharts() {
-        renderWeeklyPattern();
-        renderYearlyHeatmap();
-    }
-
-    function renderWeeklyPattern() {
-        var ctx = document.getElementById('fardWeeklyPatternChart');
-        if (!ctx) return;
-
-        var prayers = Storage.getPrayersArray('fard');
-        var dataObj = Storage.getDataObject('fard');
-        var currentLang = I18n.getCurrentLang();
-        var dayNames = Config.T['day_names'][currentLang];
-        var currentHijriYear = Hijri.getCurrentHijriYear();
-        var charts = Storage.getCharts();
-
-        // Count CONGREGATION by day of week for each prayer
-        var weekData = {};
-        prayers.forEach(function(p) { weekData[p.id] = [0,0,0,0,0,0,0]; });
-        var weekTotals = [0,0,0,0,0,0,0];
-
-        for (var month = 1; month <= 12; month++) {
-            var congData = Storage.getCongregationData(currentHijriYear, month);
-            var daysInMonth = Hijri.getHijriDaysInMonth(currentHijriYear, month);
-            for (var day = 1; day <= daysInMonth; day++) {
-                // Convert Hijri date to Gregorian to get day of week
-                var date = Hijri.hijriToGregorian(currentHijriYear, month, day);
-                var dow = date.getDay();
-                weekTotals[dow]++;
-                prayers.forEach(function(p) {
-                    if (congData[p.id] && congData[p.id][day]) {
-                        weekData[p.id][dow]++;
-                    }
-                });
-            }
-        }
-
-        var datasets = prayers.map(function(p) {
-            return {
-                label: I18n.getPrayerName(p.id),
-                data: weekData[p.id].map(function(count, i) {
-                    return weekTotals[i] > 0 ? Math.round((count / weekTotals[i]) * 100) : 0;
-                }),
-                backgroundColor: p.color + '88',
-                borderColor: p.color,
-                borderWidth: 2
-            };
-        });
-
-        if (charts.fardWeekly) charts.fardWeekly.destroy();
-        charts.fardWeekly = new Chart(ctx, {
-            type: 'bar',
-            data: { labels: dayNames, datasets: datasets },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom', labels: { font: { size: 10 } } }
-                },
-                scales: {
-                    y: { beginAtZero: true, max: 100, ticks: { callback: function(v) { return v + '%'; } } },
-                    x: { stacked: false }
-                }
-            }
-        });
-    }
-
-    function renderYearlyHeatmap() {
-        var ctx = document.getElementById('fardHeatmapChart');
-        if (!ctx) return;
-
-        var prayers = Storage.getPrayersArray('fard');
-        var dataObj = Storage.getDataObject('fard');
-        var mNames = getHijriMonthNames();
-        var currentHijriYear = Hijri.getCurrentHijriYear();
-        var charts = Storage.getCharts();
-
-        // Build monthly CONGREGATION rates
-        var heatData = [];
-        var labels = [];
-
-        for (var month = 1; month <= 12; month++) {
-            var congData = Storage.getCongregationData(currentHijriYear, month);
-            var totalCompleted = 0, totalCong = 0;
-
-            prayers.forEach(function(p) {
-                if (dataObj[month] && dataObj[month][p.id]) {
-                    var completedDays = Object.keys(dataObj[month][p.id]).filter(function(d) {
-                        return dataObj[month][p.id][d];
-                    });
-                    totalCompleted += completedDays.length;
-                    completedDays.forEach(function(d) {
-                        if (congData[p.id] && congData[p.id][parseInt(d)]) totalCong++;
-                    });
-                }
-            });
-
-            heatData.push(totalCompleted > 0 ? Math.round((totalCong / totalCompleted) * 100) : 0);
-            labels.push(mNames[month - 1]);
-        }
-
-        var colors = heatData.map(function(v) {
-            if (v >= 80) return '#1d4ed8';
-            if (v >= 60) return '#3b82f6';
-            if (v >= 40) return '#60a5fa';
-            if (v >= 20) return '#93c5fd';
-            if (v > 0) return '#bfdbfe';
-            return '#e5e7eb';
-        });
-
-        if (charts.fardHeatmap) charts.fardHeatmap.destroy();
-        charts.fardHeatmap = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: I18n.t('cong_rate'),
-                    data: heatData,
-                    backgroundColor: colors,
-                    borderColor: colors.map(function(c) { return c === '#e5e7eb' ? '#d1d5db' : c; }),
-                    borderWidth: 2,
-                    borderRadius: 4,
-                    barPercentage: 0.9
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                indexAxis: 'y',
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: function(tooltipCtx) { return tooltipCtx.parsed.x + '%'; }
-                        }
-                    }
-                },
-                scales: {
-                    x: { beginAtZero: true, max: 100, ticks: { callback: function(v) { return v + '%'; } } },
-                    y: { grid: { display: false } }
-                }
-            }
         });
     }
 
@@ -494,10 +310,6 @@ window.App.Dashboard = (function() {
 
     return {
         updateDashboard: updateDashboard,
-        updateCharts: updateCharts,
-        renderAdvancedCharts: renderAdvancedCharts,
-        renderWeeklyPattern: renderWeeklyPattern,
-        renderYearlyHeatmap: renderYearlyHeatmap,
         renderPeriodHistoryDashboard: renderPeriodHistoryDashboard,
         getHijriMonthNamesShort: getHijriMonthNamesShort
     };
@@ -505,5 +317,3 @@ window.App.Dashboard = (function() {
 
 // Backward compat
 window.updateDashboard = window.App.Dashboard.updateDashboard;
-window.updateCharts = window.App.Dashboard.updateCharts;
-window.renderAdvancedCharts = window.App.Dashboard.renderAdvancedCharts;

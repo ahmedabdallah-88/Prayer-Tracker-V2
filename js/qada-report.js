@@ -88,38 +88,19 @@ window.App.QadaReport = (function() {
 
         if (!breakdownHtml) {
             breakdownHtml = '<p style="text-align:center;color:var(--text-muted);padding:16px;font-size:0.9em;">' +
-                (currentLang === 'ar' ? '\uD83C\uDF89 \u0644\u0627 \u062A\u0648\u062C\u062F \u0635\u0644\u0648\u0627\u062A \u0642\u0636\u0627\u0621 \u0647\u0630\u0647 \u0627\u0644\u0633\u0646\u0629 \u2014 \u0623\u062D\u0633\u0646\u062A!' : '\uD83C\uDF89 No qada prayers this year \u2014 great job!') + '</p>';
+                (currentLang === 'ar' ? '\u0644\u0627 \u062A\u0648\u062C\u062F \u0635\u0644\u0648\u0627\u062A \u0642\u0636\u0627\u0621 \u0647\u0630\u0647 \u0627\u0644\u0633\u0646\u0629 \u2014 \u0623\u062D\u0633\u0646\u062A!' : 'No qada prayers this year \u2014 great job!') + '</p>';
         }
         breakdown.innerHTML = breakdownHtml;
 
-        // Chart - Qada by prayer type
-        var charts = Storage.getCharts();
-        if (charts.fardQada) charts.fardQada.destroy();
-        if (chartCanvas && totalQada > 0) {
-            var prayerLabels = prayers.map(function(p) { return I18n.getPrayerName(p.id); });
-            var prayerQadaCounts = prayers.map(function(p) { return qadaByPrayer[p.id]; });
-            var prayerColors = prayers.map(function(p) { return p.color + 'cc'; });
-
-            charts.fardQada = new Chart(chartCanvas, {
-                type: 'bar',
-                data: {
-                    labels: prayerLabels,
-                    datasets: [{
-                        label: currentLang === 'ar' ? '\u0635\u0644\u0648\u0627\u062A \u0627\u0644\u0642\u0636\u0627\u0621' : 'Qada Prayers',
-                        data: prayerQadaCounts,
-                        backgroundColor: prayerColors,
-                        borderColor: prayers.map(function(p) { return p.color; }),
-                        borderWidth: 2,
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
-                }
+        // Chart - Qada by prayer type (SVG bar chart)
+        var chartContainer = document.getElementById('fardQadaChart');
+        if (chartContainer && totalQada > 0 && window.App.SVGCharts) {
+            var items = prayers.map(function(p) {
+                return { label: I18n.getPrayerName(p.id), value: qadaByPrayer[p.id], color: p.color };
             });
+            window.App.SVGCharts.barChart(chartContainer, { items: items });
+        } else if (chartContainer) {
+            chartContainer.innerHTML = '';
         }
     }
 

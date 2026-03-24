@@ -57,6 +57,11 @@ window.App.Main = (function() {
         el = document.getElementById('sunnahTrackerMonthSelect'); if (el) el.value = todayH.month;
         el = document.getElementById('sunnahTrackerYearInput'); if (el) el.value = todayH.year;
 
+        el = document.getElementById('azkarTrackerMonth');     if (el) el.value = todayH.month;
+        el = document.getElementById('azkarTrackerYear');      if (el) el.value = todayH.year;
+        el = document.getElementById('azkarDashboardYear');    if (el) el.value = todayH.year;
+        el = document.getElementById('azkarYearlyYear');       if (el) el.value = todayH.year;
+
         Storage.loadAllData('fard');
         Storage.loadAllData('sunnah');
 
@@ -87,26 +92,36 @@ window.App.Main = (function() {
 
     function updateShellBar() {
         var activeProfile = window.App.Storage.getActiveProfile();
+        var profileBtn = document.getElementById('shellProfileBtn');
         if (!activeProfile) {
-            var shell = document.getElementById('shellProfile');
-            if (shell) shell.style.display = 'none';
+            if (profileBtn) profileBtn.style.display = 'none';
             return;
         }
-        var shell = document.getElementById('shellProfile');
-        if (shell) shell.style.display = 'flex';
+        if (profileBtn) profileBtn.style.display = 'flex';
 
-        var isChild = activeProfile.age < 12;
-        var avatarIcon;
-        if (activeProfile.gender === 'female') {
-            avatarIcon = isChild ? '\uD83D\uDC67' : '\uD83D\uDC69';
-        } else {
-            avatarIcon = isChild ? '\uD83D\uDC66' : '\uD83D\uDC68';
+        // Update profile settings card if visible
+        var psName = document.getElementById('psName');
+        var psDetails = document.getElementById('psDetails');
+        if (psName) psName.textContent = activeProfile.name;
+        if (psDetails) {
+            var t = window.App.I18n ? window.App.I18n.t : function(k){return k;};
+            var isChild = activeProfile.age < 12;
+            var genderLabel = activeProfile.gender === 'female' ? (isChild ? t('child_f') : t('female')) : (isChild ? t('child_m') : t('male'));
+            psDetails.textContent = genderLabel + ' \u00B7 ' + activeProfile.age + ' ' + t('years_old');
         }
+    }
 
-        var avatarEl = document.getElementById('shellAvatar');
-        var nameEl = document.getElementById('shellName');
-        if (avatarEl) avatarEl.textContent = avatarIcon;
-        if (nameEl) nameEl.textContent = activeProfile.name;
+    function openProfileSettings() {
+        var overlay = document.getElementById('profileSettingsOverlay');
+        if (overlay) {
+            overlay.classList.add('show');
+            updateShellBar();
+        }
+    }
+
+    function closeProfileSettings() {
+        var overlay = document.getElementById('profileSettingsOverlay');
+        if (overlay) overlay.classList.remove('show');
     }
 
     // ==================== applyUpdate ====================
@@ -195,7 +210,7 @@ window.App.Main = (function() {
                                     var updateBar = document.createElement('div');
                                     updateBar.id = 'updateBar';
                                     updateBar.style.cssText = 'position:fixed;top:0;left:0;right:0;background:linear-gradient(135deg,#059669,#047857);color:white;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:10001;font-family:Cairo,sans-serif;font-size:0.9em;direction:rtl;box-shadow:0 4px 15px rgba(0,0,0,0.2);';
-                                    updateBar.innerHTML = '<span><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">refresh</span> ' +
+                                    updateBar.innerHTML = '<span><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">refresh</span> ' +
                                         (currentLang === 'ar' ? '\u062A\u062D\u062F\u064A\u062B \u062C\u062F\u064A\u062F \u0645\u062A\u0627\u062D' : 'Update available') + '</span>' +
                                         '<button type="button" onclick="applyUpdate()" style="background:white;color:#047857;border:none;padding:6px 16px;border-radius:8px;font-weight:700;cursor:pointer;font-family:Cairo,sans-serif;">' +
                                         (currentLang === 'ar' ? '\u062A\u062D\u062F\u064A\u062B \u0627\u0644\u0622\u0646' : 'Update now') + '</button>';
@@ -258,6 +273,8 @@ window.App.Main = (function() {
         startup: startup,
         switchTab: switchTab,
         updateShellBar: updateShellBar,
+        openProfileSettings: openProfileSettings,
+        closeProfileSettings: closeProfileSettings,
         applyUpdate: applyUpdate
     };
 })();
@@ -265,6 +282,8 @@ window.App.Main = (function() {
 // Backward compat globals
 window.switchTab = window.App.Main.switchTab;
 window.updateShellBar = window.App.Main.updateShellBar;
+window.openProfileSettings = window.App.Main.openProfileSettings;
+window.closeProfileSettings = window.App.Main.closeProfileSettings;
 window.applyUpdate = window.App.Main.applyUpdate;
 
 // ==================== RUN STARTUP ====================

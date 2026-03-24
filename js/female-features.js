@@ -180,7 +180,7 @@ window.App.Female = (function() {
             entry.className = 'period-entry';
             var monthName = Hijri.getHijriMonthName(p.month - 1);
             entry.innerHTML =
-                '<div class="dates">🗓️ ' + p.start + ' ' + monthName + ' → ' + p.end + ' ' + monthName + ' ' + year + '</div>' +
+                '<div class="dates"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">calendar_month</span>' + p.start + ' ' + monthName + ' → ' + p.end + ' ' + monthName + ' ' + year + '</div>' +
                 '<div class="duration">' + p.duration + ' يوم</div>';
             container.appendChild(entry);
         });
@@ -208,7 +208,7 @@ window.App.Female = (function() {
             entry.className = 'period-entry';
             var monthName = Hijri.getHijriMonthName(p.month - 1);
             entry.innerHTML =
-                '<div class="dates">🗓️ ' + p.start + ' ' + monthName + ' → ' + p.end + ' ' + monthName + ' ' + year + '</div>' +
+                '<div class="dates"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">calendar_month</span>' + p.start + ' ' + monthName + ' → ' + p.end + ' ' + monthName + ' ' + year + '</div>' +
                 '<div class="duration">' + p.duration + ' يوم</div>';
             container.appendChild(entry);
         });

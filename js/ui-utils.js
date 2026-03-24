@@ -323,17 +323,17 @@ window.App.UI = (function() {
                 var banner = document.createElement('div');
                 banner.id = 'installBanner';
                 banner.innerHTML =
-                    '<div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,var(--primary-dark),var(--primary-medium));' +
+                    '<div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,var(--green-deep),var(--green-mid));' +
                         'padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;' +
-                        'z-index:10000;box-shadow:0 -4px 20px rgba(0,0,0,0.3);border-top:3px solid var(--accent);direction:rtl;">' +
-                        '<div style="color:white;font-family:\'Cairo\',sans-serif;flex:1;">' +
-                            '<div style="font-size:1.1em;font-weight:700;color:var(--accent);"><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">mosque</span> تثبيت التطبيق</div>' +
+                        'z-index:10000;box-shadow:0 -4px 20px rgba(0,0,0,0.15);border-top:3px solid var(--gold);direction:rtl;">' +
+                        '<div style="color:white;font-family:\'Noto Kufi Arabic\',sans-serif;flex:1;">' +
+                            '<div style="font-size:1.1em;font-weight:700;color:var(--gold);"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">mosque</span> تثبيت التطبيق</div>' +
                             '<div style="font-size:0.85em;opacity:0.9;margin-top:4px;">أضف متتبع الصلاة إلى شاشتك الرئيسية</div>' +
                         '</div>' +
                         '<button onclick="window.App.UI.promptInstall()" ' +
-                            'style="background:var(--accent);color:var(--primary-dark);border:none;padding:10px 24px;border-radius:8px;font-weight:700;font-size:1em;cursor:pointer;font-family:\'Cairo\',sans-serif;">تثبيت</button>' +
+                            'style="background:var(--gold);color:var(--green-deep);border:none;padding:10px 24px;border-radius:8px;font-weight:700;font-size:1em;cursor:pointer;font-family:\'Noto Kufi Arabic\',sans-serif;">تثبيت</button>' +
                         '<button onclick="document.getElementById(\'installBanner\').remove();localStorage.setItem(\'pwa_install_dismissed\',\'true\');" ' +
-                            'style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.5em;cursor:pointer;padding:5px 8px;">✕</button>' +
+                            'style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.5em;cursor:pointer;padding:5px 8px;"><span class="material-symbols-rounded">close</span></button>' +
                     '</div>';
                 document.body.appendChild(banner);
             }
