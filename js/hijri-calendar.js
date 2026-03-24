@@ -163,7 +163,8 @@ window.App.Hijri = (function() {
         var daysInMonth = getHijriDaysInMonth(hYear, hMonth);
         var lastDay = new Date(day1.getTime() + (daysInMonth - 1) * 86400000);
 
-        var gMonthNames = window.App.Config.monthNames;
+        var lang = window.App.I18n ? window.App.I18n.getCurrentLang() : 'ar';
+        var gMonthNames = lang === 'ar' ? window.App.Config.gregorianMonthNamesAr : window.App.Config.gregorianMonthNamesEn;
 
         var m1 = gMonthNames[day1.getMonth()];
         var m2 = gMonthNames[lastDay.getMonth()];

@@ -54,6 +54,14 @@ window.App.Azkar = (function() {
         var catData = data[currentCategory] || {};
         var currentLang = I18n.getCurrentLang();
 
+        // Update compact month nav label
+        var monthLabel = document.getElementById('azkarTrackerMonthLabel');
+        if (monthLabel) {
+            monthLabel.textContent = Hijri.getHijriMonthName(month - 1) + ' ' + year;
+        }
+        var daysPill = document.getElementById('azkarMonthDaysPill');
+        if (daysPill) daysPill.textContent = daysInMonth;
+
         var grid = document.getElementById('azkarDaysGrid');
         grid.innerHTML = '';
 

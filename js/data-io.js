@@ -411,17 +411,59 @@
                             profiles.push(newProfile);
                             saveProfiles(profiles);
 
+                            // Activate profile on BOTH modules before importing
+                            setActiveProfileId(newId);
+                            App.Profiles.setActiveProfile(newProfile);
+                            App.Storage.setActiveProfile(newProfile);
+
                             // Import data under new profile ID
-                            importAndConvertToHijri(imported, newId);
+                            var importCount = importAndConvertToHijri(imported, newId);
 
                             if (imported['_theme']) {
                                 localStorage.setItem('salah_tracker_theme', imported['_theme']);
                                 loadTheme();
                             }
 
-                            // Select this profile and fully reload
-                            selectProfile(newId);
-                            showToast(t('import_success'), 'success');
+                            // Hide profile screen
+                            hideProfileScreen();
+                            applyProfileUI();
+
+                            // Same proven refresh logic as the working path below
+                            var todayH = getTodayHijri();
+                            setCurrentHijriMonth(todayH.month);
+                            setCurrentHijriYear(todayH.year);
+                            App.Storage.setCurrentMonth(todayH.month);
+                            App.Storage.setCurrentYear(todayH.year);
+
+                            document.getElementById('fardTrackerMonthSelect').value = todayH.month;
+                            document.getElementById('fardTrackerYearInput').value = todayH.year;
+                            document.getElementById('sunnahTrackerMonthSelect').value = todayH.month;
+                            document.getElementById('sunnahTrackerYearInput').value = todayH.year;
+                            document.getElementById('fardDashboardYear').value = todayH.year;
+                            document.getElementById('fardYearlyYear').value = todayH.year;
+                            document.getElementById('sunnahDashboardYear').value = todayH.year;
+                            document.getElementById('sunnahYearlyYear').value = todayH.year;
+
+                            loadAllData('fard');
+                            loadAllData('sunnah');
+
+                            cleanAllGhostDays();
+
+                            loadAllData('fard');
+                            loadAllData('sunnah');
+
+                            if (window.updateTrackerView) {
+                                window.updateTrackerView('fard');
+                                window.updateTrackerView('sunnah');
+                            }
+                            if (window.renderStreaks) {
+                                window.renderStreaks('fard');
+                                window.renderStreaks('sunnah');
+                            }
+                            if (window.updateShellBar) window.updateShellBar();
+                            if (window.switchSection) window.switchSection('fard');
+
+                            showToast(t('import_success') + ' (' + importCount + ')', 'success');
                             return;
                         }
                     }
@@ -448,6 +490,8 @@
                     var todayH = getTodayHijri();
                     setCurrentHijriMonth(todayH.month);
                     setCurrentHijriYear(todayH.year);
+                    App.Storage.setCurrentMonth(todayH.month);
+                    App.Storage.setCurrentYear(todayH.year);
 
                     // Update ALL month/year selects
                     document.getElementById('fardTrackerMonthSelect').value = todayH.month;
@@ -493,8 +537,8 @@
                     showToast(t('import_success') + ' (' + importCount + ')', 'success');
                 }
             } catch (error) {
-                showToast(t('file_error'), 'error');
                 console.error('Import error:', error);
+                showToast(t('file_error'), 'error');
             }
         };
         reader.readAsText(file);
@@ -615,74 +659,32 @@
         if (!file) return;
 
         var reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = async function(e) {
             try {
                 var imported = JSON.parse(e.target.result);
                 var currentLang = getCurrentLang();
 
-                // Check if imported data contains a profile
                 if (imported['_profile']) {
                     var ip = imported['_profile'];
 
-                    // Create the profile directly (user already chose to import)
+                    // Create the profile
                     var newId = 'p_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
                     var newProfile = { id: newId, name: ip.name, age: ip.age, gender: ip.gender };
                     var profiles = getProfiles();
                     profiles.push(newProfile);
                     saveProfiles(profiles);
 
-                    // Import all data under new profile ID
-                    var count = importAndConvertToHijri(imported, newId);
+                    // Import data under new profile ID
+                    importAndConvertToHijri(imported, newId);
 
                     if (imported['_theme']) {
                         localStorage.setItem('salah_tracker_theme', imported['_theme']);
                         loadTheme();
                     }
 
-                    // Close profile screen
-                    hideProfileScreen();
-
-                    // Activate profile manually (not via selectProfile to control timing)
-                    setActiveProfileId(newId);
-                    // Sync to both Profiles and Storage so key generation uses correct prefix
-                    App.Profiles.setActiveProfile(newProfile);
-                    App.Storage.setActiveProfile(newProfile);
-                    applyProfileUI();
-
-                    var todayH = getTodayHijri();
-                    setCurrentHijriMonth(todayH.month);
-                    setCurrentHijriYear(todayH.year);
-
-                    document.getElementById('fardTrackerMonthSelect').value = todayH.month;
-                    document.getElementById('fardTrackerYearInput').value = todayH.year;
-                    document.getElementById('sunnahTrackerMonthSelect').value = todayH.month;
-                    document.getElementById('sunnahTrackerYearInput').value = todayH.year;
-                    document.getElementById('fardDashboardYear').value = todayH.year;
-                    document.getElementById('fardYearlyYear').value = todayH.year;
-                    document.getElementById('sunnahDashboardYear').value = todayH.year;
-                    document.getElementById('sunnahYearlyYear').value = todayH.year;
-
-                    loadAllData('fard');
-                    loadAllData('sunnah');
-
-                    // Clean ghost days (day 30/31 in 29-day months)
-                    cleanAllGhostDays();
-                    loadAllData('fard');
-                    loadAllData('sunnah');
-
-                    // Delayed full UI rebuild
-                    setTimeout(function() {
-                        if (window.switchSection) window.switchSection('fard');
-                        if (window.renderStreaks) window.renderStreaks('fard');
-                        if (window.updateShellBar) window.updateShellBar();
-                        if (window.startPrayerTimesMonitor) window.startPrayerTimesMonitor();
-                        showToast(
-                            (currentLang === 'ar'
-                                ? '\u2705 \u062a\u0645 \u0627\u0633\u062a\u064a\u0631\u0627\u062f ' + count + ' \u0633\u062c\u0644 \u0648\u062a\u0641\u0639\u064a\u0644: ' + ip.name
-                                : '\u2705 Imported ' + count + ' records. Profile: ' + ip.name),
-                            'success', 4000
-                        );
-                    }, 300);
+                    // Use the same proven path as handleImport: selectProfile does everything
+                    selectProfile(newId);
+                    showToast(t('import_success'), 'success');
                     return;
                 }
 

@@ -246,7 +246,8 @@ window.App.Tracker = (function() {
         var profile     = Storage.getActiveProfile();
         var isFemale    = profile && profile.gender === 'female' && profile.age >= 12;
         var exemptData  = isFemale ? Female.getExemptDays(hYear, hMonth) : {};
-        var isExemptModeOn = Female.getExemptMode()[type];
+        var isExemptModeOn = false;
+        try { isExemptModeOn = Female.getExemptMode()[type]; } catch(e) {}
         var currentLang = I18n.getCurrentLang();
         var todayH = Hijri.getTodayHijri();
         var isCurrentMonth = (todayH.year === hYear && todayH.month === hMonth);

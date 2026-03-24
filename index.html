@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>سجل قضاء الصلوات - الفرائض والسنن</title>
+    <title>متتبع الصلاة</title>
     
     <!-- PWA Meta Tags -->
     <link rel="manifest" href="manifest.json">
@@ -30,7 +30,7 @@
         <div class="shell-bar-title">
             <span class="app-icon"><span class="material-symbols-rounded" style="font-size:18px;">mosque</span></span>
             <div style="display:flex;flex-direction:column;">
-                <span data-t="app_title_short" id="shellTitle" style="font-size:0.95em;">سجل الصلوات</span>
+                <span data-t="app_title_short" id="shellTitle" style="font-size:0.95em;">متتبع الصلاة</span>
                 <span id="shellDateText" style="font-size:0.65em;font-weight:500;color:var(--text-muted);"><span class="material-symbols-rounded" style="font-size:12px;vertical-align:middle;">calendar_today</span></span>
             </div>
         </div>
@@ -83,7 +83,7 @@
     <!-- Profile Selection Overlay -->
     <div class="profile-overlay" id="profileOverlay" role="dialog" aria-modal="true" aria-label="Profile selection">
         <div class="profile-screen">
-            <h2><span class="material-symbols-rounded" style="font-size:28px;vertical-align:middle;color:var(--green-deep);">mosque</span> سجل الصلوات</h2>
+            <h2><span class="material-symbols-rounded" style="font-size:28px;vertical-align:middle;color:var(--green-deep);">mosque</span> متتبع الصلاة</h2>
             <p class="subtitle" data-t="choose_profile">اختر الملف الشخصي أو أنشئ واحداً جديداً</p>
 
             <div class="profiles-list" id="profilesList"></div>
@@ -101,11 +101,10 @@
                     <button id="exportOldBtn" onclick="exportOldData()" style="display:none; padding:10px 20px;background:var(--green-deep);color:white;border:none;border-radius:12px;font-weight:700;font-size:0.9em;cursor:pointer;font-family:'Noto Kufi Arabic',sans-serif;">
                         <span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">upload_file</span> تصدير البيانات القديمة
                     </button>
-                    <button onclick="document.getElementById('importFileProfile').click()" style="padding:10px 20px;background:var(--blue);color:white;border:none;border-radius:12px;font-weight:700;font-size:0.9em;cursor:pointer;font-family:'Noto Kufi Arabic',sans-serif;">
+                    <button onclick="document.getElementById('importFile').click()" style="padding:10px 20px;background:var(--blue);color:white;border:none;border-radius:12px;font-weight:700;font-size:0.9em;cursor:pointer;font-family:'Noto Kufi Arabic',sans-serif;">
                         <span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">download</span> استيراد بيانات من ملف
                     </button>
                 </div>
-                <input type="file" id="importFileProfile" style="display:none;" accept=".json" onchange="handleImportOnProfile(event)">
             </div>
 
             <div class="profile-form" id="profileForm">
@@ -146,7 +145,7 @@
 
     <div class="container" id="mainContent">
         <!-- Main Toggle (hidden, using bottom tab bar) -->
-        <div class="main-toggle" role="tablist" aria-label="Main sections">
+        <div class="main-toggle" role="tablist" aria-label="Main sections" style="display:none;">
             <button class="main-toggle-btn active" onclick="switchSection('fard')" data-t="fard_prayers"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">mosque</span> الفرائض</button>
             <button class="main-toggle-btn" onclick="switchSection('sunnah')" data-t="sunnah_prayers"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">auto_awesome</span> السنن والرواتب</button>
             <button class="main-toggle-btn" onclick="switchSection('fasting')" id="fastingToggleBtn" data-t="fasting_section"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">nights_stay</span> الصيام</button>
@@ -232,17 +231,17 @@
                 </div>
                 <div class="prayers-container" id="fardTrackerPrayersContainer"></div>
 
-                <div class="action-buttons">
-                    <button class="action-btn reset" onclick="resetTrackerMonth('fard')" data-t="clear_month"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">refresh</span> مسح بيانات الشهر</button>
-                    <button class="action-btn print" onclick="window.print()" data-t="print"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">print</span> طباعة</button>
-                </div>
             </div>
 
             <!-- Fard Yearly Overview -->
             <div id="fardYearlyView" class="view">
-                <div class="year-controls">
-                    <label data-t="year">السنة:</label>
-                    <input type="number" id="fardYearlyYear" min="1400" max="1500" onchange="updateYearlyView('fard')">
+                <div class="month-nav-compact">
+                    <button class="nav-circle" onclick="document.getElementById('fardYearlyYear').value=parseInt(document.getElementById('fardYearlyYear').value)+1;updateYearlyView('fard')"><span class="material-symbols-rounded">chevron_right</span></button>
+                    <div class="month-nav-center">
+                        <span class="month-nav-label" id="fardYearlyLabel"></span>
+                        <input type="number" id="fardYearlyYear" min="1400" max="1500" onchange="updateYearlyView('fard')" style="width:70px;text-align:center;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:4px 8px;font-family:'Rubik',sans-serif;font-size:0.9em;font-weight:700;">
+                    </div>
+                    <button class="nav-circle" onclick="document.getElementById('fardYearlyYear').value=parseInt(document.getElementById('fardYearlyYear').value)-1;updateYearlyView('fard')"><span class="material-symbols-rounded">chevron_left</span></button>
                 </div>
                 <div id="fardYearlySummary"></div>
                 <div class="months-grid" id="fardMonthsGrid"></div>
@@ -250,9 +249,12 @@
 
             <!-- Fard Dashboard View -->
             <div id="fardDashboardView" class="view">
-                <div class="year-controls">
-                    <label data-t="year">السنة:</label>
-                    <input type="number" id="fardDashboardYear" min="1400" max="1500" onchange="updateDashboard('fard')">
+                <div class="month-nav-compact">
+                    <button class="nav-circle" onclick="document.getElementById('fardDashboardYear').value=parseInt(document.getElementById('fardDashboardYear').value)+1;updateDashboard('fard')"><span class="material-symbols-rounded">chevron_right</span></button>
+                    <div class="month-nav-center">
+                        <input type="number" id="fardDashboardYear" min="1400" max="1500" onchange="updateDashboard('fard')" style="width:70px;text-align:center;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:4px 8px;font-family:'Rubik',sans-serif;font-size:0.9em;font-weight:700;">
+                    </div>
+                    <button class="nav-circle" onclick="document.getElementById('fardDashboardYear').value=parseInt(document.getElementById('fardDashboardYear').value)-1;updateDashboard('fard')"><span class="material-symbols-rounded">chevron_left</span></button>
                 </div>
 
                 <div class="dashboard-grid">
@@ -404,17 +406,16 @@
                 </div>
                 <div class="prayers-container" id="sunnahTrackerPrayersContainer"></div>
 
-                <div class="action-buttons">
-                    <button class="action-btn reset" onclick="resetTrackerMonth('sunnah')" data-t="clear_month"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">refresh</span> مسح بيانات الشهر</button>
-                    <button class="action-btn print" onclick="window.print()" data-t="print"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">print</span> طباعة</button>
-                </div>
             </div>
 
             <!-- Sunnah Yearly Overview -->
             <div id="sunnahYearlyView" class="view">
-                <div class="year-controls">
-                    <label data-t="year">السنة:</label>
-                    <input type="number" id="sunnahYearlyYear" min="1400" max="1500" onchange="updateYearlyView('sunnah')">
+                <div class="month-nav-compact">
+                    <button class="nav-circle" onclick="document.getElementById('sunnahYearlyYear').value=parseInt(document.getElementById('sunnahYearlyYear').value)+1;updateYearlyView('sunnah')"><span class="material-symbols-rounded">chevron_right</span></button>
+                    <div class="month-nav-center">
+                        <input type="number" id="sunnahYearlyYear" min="1400" max="1500" onchange="updateYearlyView('sunnah')" style="width:70px;text-align:center;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:4px 8px;font-family:'Rubik',sans-serif;font-size:0.9em;font-weight:700;">
+                    </div>
+                    <button class="nav-circle" onclick="document.getElementById('sunnahYearlyYear').value=parseInt(document.getElementById('sunnahYearlyYear').value)-1;updateYearlyView('sunnah')"><span class="material-symbols-rounded">chevron_left</span></button>
                 </div>
                 <div id="sunnahYearlySummary"></div>
                 <div class="months-grid" id="sunnahMonthsGrid"></div>
@@ -422,9 +423,12 @@
 
             <!-- Sunnah Dashboard View -->
             <div id="sunnahDashboardView" class="view">
-                <div class="year-controls">
-                    <label data-t="year">السنة:</label>
-                    <input type="number" id="sunnahDashboardYear" min="1400" max="1500" onchange="updateDashboard('sunnah')">
+                <div class="month-nav-compact">
+                    <button class="nav-circle" onclick="document.getElementById('sunnahDashboardYear').value=parseInt(document.getElementById('sunnahDashboardYear').value)+1;updateDashboard('sunnah')"><span class="material-symbols-rounded">chevron_right</span></button>
+                    <div class="month-nav-center">
+                        <input type="number" id="sunnahDashboardYear" min="1400" max="1500" onchange="updateDashboard('sunnah')" style="width:70px;text-align:center;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:4px 8px;font-family:'Rubik',sans-serif;font-size:0.9em;font-weight:700;">
+                    </div>
+                    <button class="nav-circle" onclick="document.getElementById('sunnahDashboardYear').value=parseInt(document.getElementById('sunnahDashboardYear').value)-1;updateDashboard('sunnah')"><span class="material-symbols-rounded">chevron_left</span></button>
                 </div>
 
                 <div class="dashboard-grid">
@@ -499,16 +503,10 @@
 
         <!-- ==================== FASTING SECTION (All Users) ==================== -->
         <div id="fastingSection" class="section" role="tabpanel" aria-label="Fasting">
-            <div class="view-toggle">
-                <button class="toggle-btn active" onclick="switchFastingView('voluntary')" data-t="voluntary_fasting">صيام التطوع</button>
-                <button class="toggle-btn" onclick="switchFastingView('ramadan')" id="ramadanViewBtn" data-t="ramadan_fasting">صيام رمضان</button>
-                <button class="toggle-btn" onclick="switchFastingView('dashboard')" data-t="dashboard">لوحة التحكم</button>
-            </div>
-
             <div class="sub-tabs" id="fastingSubTabs">
-                <button class="sub-tab active" onclick="switchFastingView('voluntary')" data-t="voluntary_fasting"><span class="material-symbols-rounded" style="font-size:16px;">grid_view</span> تطوع</button>
-                <button class="sub-tab" onclick="switchFastingView('ramadan')" data-t="ramadan_fasting"><span class="material-symbols-rounded" style="font-size:16px;">nights_stay</span> رمضان</button>
-                <button class="sub-tab" onclick="switchFastingView('dashboard')" data-t="dashboard_short"><span class="material-symbols-rounded" style="font-size:16px;">analytics</span> إحصائيات</button>
+                <button class="sub-tab active" onclick="switchFastingView('voluntary')"><span class="material-symbols-rounded" style="font-size:16px;">grid_view</span> تطوع</button>
+                <button class="sub-tab" onclick="switchFastingView('ramadan')"><span class="material-symbols-rounded" style="font-size:16px;">nights_stay</span> رمضان</button>
+                <button class="sub-tab" onclick="switchFastingView('dashboard')"><span class="material-symbols-rounded" style="font-size:16px;">analytics</span> إحصائيات</button>
             </div>
             <!-- Voluntary Fasting Tracker -->
             <div id="fastingVoluntaryView" class="view active">
@@ -635,9 +633,12 @@
 
             <!-- Fasting Dashboard -->
             <div id="fastingDashboardView" class="view">
-                <div class="year-controls">
-                    <label data-t="year">السنة:</label>
-                    <input type="number" id="fastingDashboardYear" min="1400" max="1500" onchange="updateFastingDashboard()">
+                <div class="month-nav-compact">
+                    <button class="nav-circle" onclick="document.getElementById('fastingDashboardYear').value=parseInt(document.getElementById('fastingDashboardYear').value)+1;updateFastingDashboard()"><span class="material-symbols-rounded">chevron_right</span></button>
+                    <div class="month-nav-center">
+                        <input type="number" id="fastingDashboardYear" min="1400" max="1500" onchange="updateFastingDashboard()" style="width:70px;text-align:center;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:4px 8px;font-family:'Rubik',sans-serif;font-size:0.9em;font-weight:700;">
+                    </div>
+                    <button class="nav-circle" onclick="document.getElementById('fastingDashboardYear').value=parseInt(document.getElementById('fastingDashboardYear').value)-1;updateFastingDashboard()"><span class="material-symbols-rounded">chevron_left</span></button>
                 </div>
 
                 <div class="dashboard-grid">
@@ -678,9 +679,9 @@
         <div id="azkarSection" class="section">
             <!-- Sub-tabs -->
             <div class="sub-tabs" id="azkarSubTabs">
-                <button class="sub-tab active" onclick="switchAzkarView('tracker')" data-t="azkar_tracker">التتبع</button>
-                <button class="sub-tab" onclick="switchAzkarView('yearly')" data-t="azkar_yearly">السنة</button>
-                <button class="sub-tab" onclick="switchAzkarView('dashboard')" data-t="azkar_dashboard">لوحة التحكم</button>
+                <button class="sub-tab active" onclick="switchAzkarView('tracker')"><span class="material-symbols-rounded" style="font-size:16px;">grid_view</span> التتبع</button>
+                <button class="sub-tab" onclick="switchAzkarView('yearly')"><span class="material-symbols-rounded" style="font-size:16px;">calendar_month</span> السنة</button>
+                <button class="sub-tab" onclick="switchAzkarView('dashboard')"><span class="material-symbols-rounded" style="font-size:16px;">analytics</span> الإحصائيات</button>
             </div>
 
             <!-- Azkar Tracker View -->
@@ -695,19 +696,20 @@
                     </button>
                 </div>
 
-                <!-- Month/Year controls -->
-                <div class="month-nav">
-                    <button class="nav-btn" onclick="changeAzkarMonth(-1)"><span class="material-symbols-rounded">chevron_right</span></button>
-                    <select id="azkarTrackerMonth" onchange="updateAzkarTracker()">
-                        <option value="1">محرم</option><option value="2">صفر</option>
-                        <option value="3">ربيع الأول</option><option value="4">ربيع الآخر</option>
-                        <option value="5">جمادى الأولى</option><option value="6">جمادى الآخرة</option>
-                        <option value="7">رجب</option><option value="8">شعبان</option>
-                        <option value="9">رمضان</option><option value="10">شوال</option>
-                        <option value="11">ذو القعدة</option><option value="12">ذو الحجة</option>
-                    </select>
-                    <input type="number" id="azkarTrackerYear" min="1400" max="1500" onchange="updateAzkarTracker()">
-                    <button class="nav-btn" onclick="changeAzkarMonth(1)"><span class="material-symbols-rounded">chevron_left</span></button>
+                <!-- Hidden inputs for JS compat -->
+                <select id="azkarTrackerMonth" style="display:none" onchange="updateAzkarTracker()">
+                    <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                </select>
+                <input type="number" id="azkarTrackerYear" style="display:none" min="1400" max="1500" onchange="updateAzkarTracker()">
+
+                <!-- Compact month nav -->
+                <div class="month-nav-compact">
+                    <button class="nav-circle" onclick="changeAzkarMonth(1)"><span class="material-symbols-rounded">chevron_right</span></button>
+                    <div class="month-nav-center">
+                        <span class="month-nav-label" id="azkarTrackerMonthLabel"></span>
+                        <span class="month-days-pill" id="azkarMonthDaysPill">30</span>
+                    </div>
+                    <button class="nav-circle" onclick="changeAzkarMonth(-1)"><span class="material-symbols-rounded">chevron_left</span></button>
                 </div>
 
                 <!-- Stats bar -->
@@ -735,9 +737,12 @@
 
             <!-- Azkar Yearly View -->
             <div id="azkarYearlyView" class="view">
-                <div class="year-controls">
-                    <label data-t="year">السنة:</label>
-                    <input type="number" id="azkarYearlyYear" min="1400" max="1500" onchange="updateAzkarYearly()">
+                <div class="month-nav-compact">
+                    <button class="nav-circle" onclick="document.getElementById('azkarYearlyYear').value=parseInt(document.getElementById('azkarYearlyYear').value)+1;updateAzkarYearly()"><span class="material-symbols-rounded">chevron_right</span></button>
+                    <div class="month-nav-center">
+                        <input type="number" id="azkarYearlyYear" min="1400" max="1500" onchange="updateAzkarYearly()" style="width:70px;text-align:center;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:4px 8px;font-family:'Rubik',sans-serif;font-size:0.9em;font-weight:700;">
+                    </div>
+                    <button class="nav-circle" onclick="document.getElementById('azkarYearlyYear').value=parseInt(document.getElementById('azkarYearlyYear').value)-1;updateAzkarYearly()"><span class="material-symbols-rounded">chevron_left</span></button>
                 </div>
                 <div id="azkarYearlySummary"></div>
                 <div class="months-grid" id="azkarMonthsGrid"></div>
@@ -745,9 +750,12 @@
 
             <!-- Azkar Dashboard View -->
             <div id="azkarDashboardView" class="view">
-                <div class="year-controls">
-                    <label data-t="year">السنة:</label>
-                    <input type="number" id="azkarDashboardYear" min="1400" max="1500" onchange="updateAzkarDashboard()">
+                <div class="month-nav-compact">
+                    <button class="nav-circle" onclick="document.getElementById('azkarDashboardYear').value=parseInt(document.getElementById('azkarDashboardYear').value)+1;updateAzkarDashboard()"><span class="material-symbols-rounded">chevron_right</span></button>
+                    <div class="month-nav-center">
+                        <input type="number" id="azkarDashboardYear" min="1400" max="1500" onchange="updateAzkarDashboard()" style="width:70px;text-align:center;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:4px 8px;font-family:'Rubik',sans-serif;font-size:0.9em;font-weight:700;">
+                    </div>
+                    <button class="nav-circle" onclick="document.getElementById('azkarDashboardYear').value=parseInt(document.getElementById('azkarDashboardYear').value)-1;updateAzkarDashboard()"><span class="material-symbols-rounded">chevron_left</span></button>
                 </div>
 
                 <!-- Stat cards -->
@@ -798,7 +806,7 @@
         <!-- Global Action Buttons (moved to Profile Settings) -->
     </div>
 
-    <input type="file" id="importFile" class="hidden" accept=".json" onchange="handleImport(event)">
+    <input type="file" id="importFile" style="display:none;" accept=".json" onchange="handleImport(event)">
 
     <script src="js/config.js"></script>
     <script src="js/storage.js"></script>
@@ -910,6 +918,28 @@
                 </div>
             </div>
 
+            <div class="ps-section">
+                <div class="ps-menu-item" onclick="closeProfileSettings();resetTrackerMonth('fard')">
+                    <div class="ps-icon"><span class="material-symbols-rounded">refresh</span></div>
+                    <div class="ps-content">
+                        <div class="ps-title">مسح بيانات الشهر (الفرائض)</div>
+                        <div class="ps-subtitle">مسح بيانات الشهر الحالي</div>
+                    </div>
+                </div>
+                <div class="ps-menu-item" onclick="closeProfileSettings();resetTrackerMonth('sunnah')">
+                    <div class="ps-icon"><span class="material-symbols-rounded">refresh</span></div>
+                    <div class="ps-content">
+                        <div class="ps-title">مسح بيانات الشهر (السنن)</div>
+                    </div>
+                </div>
+                <div class="ps-menu-item" onclick="window.print()">
+                    <div class="ps-icon"><span class="material-symbols-rounded">print</span></div>
+                    <div class="ps-content">
+                        <div class="ps-title">طباعة</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="ps-section danger">
                 <div class="ps-menu-item danger" onclick="var id=window.App.Profiles.getActiveProfileId();if(id){closeProfileSettings();deleteProfile(id);}">
                     <div class="ps-icon"><span class="material-symbols-rounded">delete_outline</span></div>
@@ -920,7 +950,7 @@
                 </div>
             </div>
 
-            <div class="ps-footer">سجل الصلوات — الإصدار ٢.٠</div>
+            <div class="ps-footer">متتبع الصلاة — الإصدار ٢.١</div>
         </div>
     </div>
 

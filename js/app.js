@@ -65,16 +65,25 @@ window.App.Main = (function() {
         Storage.loadAllData('fard');
         Storage.loadAllData('sunnah');
 
-        // Update shell bar date
+        // Update shell bar date — show Hijri + Gregorian
         var shellDate = document.getElementById('shellDateText');
         if (shellDate) {
-            var monthName = window.App.Config.monthNames[todayH.month - 1] || '';
-            shellDate.textContent = monthName + ' ' + todayH.year + ' \u0647\u0640';
+            var hijriMonthName = window.App.Config.hijriMonthNamesAr[todayH.month - 1] || '';
+            var now = new Date();
+            var gregMonthName = window.App.Config.gregorianMonthNamesAr[now.getMonth()] || '';
+            shellDate.innerHTML = '<span class="material-symbols-rounded" style="font-size:12px;vertical-align:middle;">calendar_today</span> ' + hijriMonthName + ' ' + todayH.year + ' \u0647\u0640 \u2014 ' + gregMonthName + ' ' + now.getFullYear();
         }
 
-        if (typeof window.updateTrackerView === 'function') {
-            window.updateTrackerView('fard');
-        }
+        // Defer initial render to ensure DOM is fully ready
+        setTimeout(function() {
+            try {
+                if (typeof window.updateTrackerView === 'function') {
+                    window.updateTrackerView('fard');
+                }
+            } catch(e) {
+                console.error('Initial render error:', e);
+            }
+        }, 0);
 
         // Prayer reminders (from _origInit)
         setTimeout(function() {

@@ -49,6 +49,18 @@ window.App.Config = {
         'Ramadan', 'Shawwal', 'Dhul Qi\'dah', 'Dhul Hijjah'
     ],
 
+    // ==================== GREGORIAN MONTH NAMES ====================
+
+    gregorianMonthNamesAr: [
+        '\u064A\u0646\u0627\u064A\u0631', '\u0641\u0628\u0631\u0627\u064A\u0631', '\u0645\u0627\u0631\u0633', '\u0623\u0628\u0631\u064A\u0644', '\u0645\u0627\u064A\u0648', '\u064A\u0648\u0646\u064A\u0648',
+        '\u064A\u0648\u0644\u064A\u0648', '\u0623\u063A\u0633\u0637\u0633', '\u0633\u0628\u062A\u0645\u0628\u0631', '\u0623\u0643\u062A\u0648\u0628\u0631', '\u0646\u0648\u0641\u0645\u0628\u0631', '\u062F\u064A\u0633\u0645\u0628\u0631'
+    ],
+
+    gregorianMonthNamesEn: [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ],
+
     // ==================== API MAPPING ====================
 
     PRAYER_API_MAP: {
@@ -73,7 +85,7 @@ window.App.Config = {
 
     T: {
         // Header
-        'app_title': { ar: '\u0633\u062c\u0644 \u0642\u0636\u0627\u0621 \u0627\u0644\u0635\u0644\u0648\u0627\u062a - \u0627\u0644\u0641\u0631\u0627\u0626\u0636 \u0648\u0627\u0644\u0633\u0646\u0646', en: 'Prayer Tracker - Obligatory & Sunnah' },
+        'app_title': { ar: '\u0645\u062a\u062a\u0628\u0639 \u0627\u0644\u0635\u0644\u0627\u0629', en: 'Prayer Tracker' },
         'quran_verse': { ar: '\u0625\u0650\u0646\u0651\u064e \u0671\u0644\u0635\u0651\u064e\u0644\u064e\u0648\u0670\u0629\u064e \u0643\u064e\u0627\u0646\u064e\u062a\u0652 \u0639\u064e\u0644\u064e\u0649 \u0671\u0644\u0652\u0645\u064f\u0624\u0652\u0645\u0650\u0646\u0650\u064a\u0646\u064e \u0643\u0650\u062a\u064e\u0640\u0670\u0628\u064b\u0627\u06ed \u0645\u0651\u064e\u0648\u0652\u0642\u064f\u0648\u062a\u064b\u0627\u06ed', en: 'Indeed, prayer has been decreed upon the believers at specified times' },
         'verse_ref': { ar: '[\u0633\u0648\u0631\u0629 \u0627\u0644\u0646\u0633\u0627\u0621: 103]', en: '[An-Nisa: 103]' },
 

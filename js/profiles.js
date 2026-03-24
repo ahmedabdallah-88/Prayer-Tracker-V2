@@ -316,25 +316,34 @@ window.App.Profiles = (function() {
         applyProfileUI();
 
         // Reload all data for this profile with Hijri dates
-        var todayH = getTodayHijri();
-        currentHijriMonth = todayH.month;
-        currentHijriYear = todayH.year;
-        currentMonth = currentHijriMonth;
-        currentYear = currentHijriYear;
+        var todayH = window.App.Hijri.getTodayHijri();
+        var hMonth = todayH.month;
+        var hYear = todayH.year;
 
-        document.getElementById('fardTrackerMonthSelect').value = currentHijriMonth;
-        document.getElementById('fardTrackerYearInput').value = currentHijriYear;
-        document.getElementById('sunnahTrackerMonthSelect').value = currentHijriMonth;
-        document.getElementById('sunnahTrackerYearInput').value = currentHijriYear;
-        document.getElementById('fardDashboardYear').value = currentHijriYear;
-        document.getElementById('fardYearlyYear').value = currentHijriYear;
-        document.getElementById('sunnahDashboardYear').value = currentHijriYear;
-        document.getElementById('sunnahYearlyYear').value = currentHijriYear;
+        // Sync year/month to ALL modules that track it
+        window.App.Storage.setCurrentMonth(hMonth);
+        window.App.Storage.setCurrentYear(hYear);
+        window.App.Hijri.setCurrentHijriMonth(hMonth);
+        window.App.Hijri.setCurrentHijriYear(hYear);
 
-        loadAllData('fard');
-        loadAllData('sunnah');
-        switchSection('fard');
-        setTimeout(startPrayerTimesMonitor, 500);
+        var el;
+        el = document.getElementById('fardTrackerMonthSelect');  if (el) el.value = hMonth;
+        el = document.getElementById('fardTrackerYearInput');     if (el) el.value = hYear;
+        el = document.getElementById('sunnahTrackerMonthSelect'); if (el) el.value = hMonth;
+        el = document.getElementById('sunnahTrackerYearInput');   if (el) el.value = hYear;
+        el = document.getElementById('fardDashboardYear');        if (el) el.value = hYear;
+        el = document.getElementById('fardYearlyYear');           if (el) el.value = hYear;
+        el = document.getElementById('sunnahDashboardYear');      if (el) el.value = hYear;
+        el = document.getElementById('sunnahYearlyYear');         if (el) el.value = hYear;
+
+        window.App.Storage.loadAllData('fard');
+        window.App.Storage.loadAllData('sunnah');
+        if (window.updateTrackerView) {
+            window.updateTrackerView('fard');
+            window.updateTrackerView('sunnah');
+        }
+        if (window.switchSection) window.switchSection('fard');
+        if (window.startPrayerTimesMonitor) setTimeout(window.startPrayerTimesMonitor, 500);
     }
 
     // --------------- MERGED applyProfileUI ---------------
@@ -354,12 +363,18 @@ window.App.Profiles = (function() {
             materialIcon = isChild ? 'face' : 'person';
         }
 
-        // Show profile badge in header
+        // Show profile badge in header (may not exist in all layouts)
         var badge = document.getElementById('profileBadge');
-        badge.style.display = 'flex';
-        document.getElementById('badgeAvatar').className = 'badge-avatar ' + avatarClass;
-        document.getElementById('badgeAvatar').innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">' + materialIcon + '</span>';
-        document.getElementById('badgeName').textContent = activeProfile.name;
+        if (badge) {
+            badge.style.display = 'flex';
+            var avatarEl = document.getElementById('badgeAvatar');
+            if (avatarEl) {
+                avatarEl.className = 'badge-avatar ' + avatarClass;
+                avatarEl.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;">' + materialIcon + '</span>';
+            }
+            var nameEl = document.getElementById('badgeName');
+            if (nameEl) nameEl.textContent = activeProfile.name;
+        }
 
         // Show/hide female features
         var isFemale = activeProfile.gender === 'female' && activeProfile.age >= 12;

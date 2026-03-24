@@ -8,10 +8,12 @@
 }
 
 .stat-card {
-    background: var(--card-bg);
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     padding: 16px;
     border-radius: 20px;
-    border: 1px solid var(--border, rgba(0,0,0,0.04));
+    border: 1px solid rgba(0,0,0,0.04);
     box-shadow: 0 2px 12px rgba(0,0,0,0.04);
     text-align: center;
     transition: all 0.2s;
@@ -78,20 +80,23 @@
 }
 
 .chart-card {
-    background: white;
-    padding: 25px;
-    border-radius: 15px;
-    border: 1px solid var(--border, rgba(0,0,0,0.04));
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px solid rgba(0,0,0,0.04);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
 }
 
 .chart-card h3 {
     color: var(--text-primary);
-    margin-bottom: 20px;
-    font-size: 1.3em;
+    margin-bottom: 16px;
+    font-size: 1em;
+    font-weight: 700;
     text-align: center;
-    padding-bottom: 10px;
-    border-bottom: 2px solid var(--gold, #D4A03C);
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 
 .chart-wrapper {
