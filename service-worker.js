@@ -1,9 +1,35 @@
-// Prayer Tracker PWA — Service Worker v47
-const CACHE_NAME = 'prayer-tracker-v47';
+// Prayer Tracker PWA — Service Worker v48 (modular refactor)
+const CACHE_NAME = 'salah-tracker-v48';
 const ASSETS = [
     './',
     './index.html',
     './manifest.json',
+    // CSS
+    './css/main.css',
+    './css/themes.css',
+    './css/dashboard.css',
+    // JS modules (dependency order)
+    './js/config.js',
+    './js/storage.js',
+    './js/hijri-calendar.js',
+    './js/ui-utils.js',
+    './js/i18n.js',
+    './js/themes.js',
+    './js/profiles.js',
+    './js/female-features.js',
+    './js/fard-tracker.js',
+    './js/sunnah-tracker.js',
+    './js/jamaah-tracker.js',
+    './js/weekly-view.js',
+    './js/fasting-tracker.js',
+    './js/prayer-times.js',
+    './js/notifications.js',
+    './js/qada-report.js',
+    './js/dashboard.js',
+    './js/year-overview.js',
+    './js/data-io.js',
+    './js/app.js',
+    // Icons
     './icons/icon-72x72.png',
     './icons/icon-96x96.png',
     './icons/icon-128x128.png',
@@ -11,12 +37,17 @@ const ASSETS = [
     './icons/icon-152x152.png',
     './icons/icon-192x192.png',
     './icons/icon-384x384.png',
-    './icons/icon-512x512.png'
+    './icons/icon-512x512.png',
+    './icons/maskable-192x192.png',
+    './icons/maskable-512x512.png',
+    // CDN (cached on first fetch)
+    'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js',
+    'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap'
 ];
 
 // ==================== INSTALL ====================
 self.addEventListener('install', event => {
-    console.log('[SW] Installing v47...');
+    console.log('[SW] Installing v48...');
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => cache.addAll(ASSETS))
@@ -26,7 +57,7 @@ self.addEventListener('install', event => {
 
 // ==================== ACTIVATE ====================
 self.addEventListener('activate', event => {
-    console.log('[SW] Activating v47...');
+    console.log('[SW] Activating v48...');
     event.waitUntil(
         caches.keys().then(keys => {
             return Promise.all(

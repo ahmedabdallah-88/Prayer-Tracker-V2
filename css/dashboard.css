@@ -1,0 +1,309 @@
+/* Prayer Tracker PWA — dashboard.css */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    padding: 16px;
+    border-radius: 20px;
+    border: none;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    text-align: center;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+}
+
+.stat-card .label {
+    color: var(--text-muted);
+    font-size: 0.65em;
+    margin-bottom: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stat-card .value {
+    color: var(--text-primary);
+    font-size: 2em;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.stat-card .sublabel {
+    color: var(--text-muted);
+    font-size: 0.7em;
+    margin-top: 4px;
+}
+
+/* Hero stat card - gradient green */
+.stat-card.hero-stat {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, var(--primary-dark, #003527), var(--primary-medium, #064e3b));
+    color: white;
+    padding: 20px 24px;
+    text-align: start;
+}
+.stat-card.hero-stat .label { color: rgba(255,255,255,0.7); }
+.stat-card.hero-stat .value { color: white; font-size: 2.8em; }
+.stat-card.hero-stat .sublabel { color: rgba(255,255,255,0.6); }
+.stat-card.hero-stat .hero-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: rgba(5,150,105,0.35);
+    color: white;
+    font-size: 0.75em;
+    font-weight: 700;
+    padding: 3px 12px;
+    border-radius: 20px;
+}
+[dir="rtl"] .stat-card.hero-stat .hero-badge { left: auto; right: 14px; }
+
+.charts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.chart-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    border: 2px solid var(--accent);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.chart-card h3 {
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    font-size: 1.3em;
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--accent);
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 300px;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 16px;
+    background: var(--bg-card);
+    border-radius: 14px;
+    box-shadow: var(--card-shadow, 0 2px 12px rgba(0,0,0,0.04));
+    border: none;
+    transition: all 0.3s;
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    border-color: var(--accent);
+}
+
+.stat-item .label {
+    font-size: 0.95em;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.stat-item .value {
+    font-size: 2em;
+    font-weight: 700;
+    color: var(--primary-medium);
+    text-shadow: 1px 1px 2px var(--accent-border-light);
+}
+
+/* Streak Section Styles */
+.streak-section {
+    margin-bottom: 30px;
+    padding: 25px;
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+    border-radius: 15px;
+    border: 2px solid var(--accent);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.streak-title {
+    color: var(--accent);
+    font-size: 1.4em;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid rgba(255,255,255,0.15);
+}
+
+.streak-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.streak-card {
+    background: linear-gradient(to bottom, var(--bg-container-start), var(--bg-container-end));
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    border: 2px solid var(--accent-border-light);
+    transition: all 0.3s;
+}
+
+.streak-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    border-color: var(--accent);
+}
+
+.streak-prayer-name {
+    font-size: 0.95em;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.streak-value {
+    font-size: 2.2em;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.streak-value.fire {
+    color: #e65100;
+}
+
+.streak-label {
+    font-size: 0.8em;
+    color: var(--text-muted);
+}
+
+.streak-best {
+    font-size: 0.75em;
+    color: var(--accent-dark);
+    margin-top: 6px;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .streak-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 8px;
+    }
+    .streak-value {
+        font-size: 1.8em;
+    }
+}
+
+@media (max-width: 480px) {
+    .streak-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+    .streak-card {
+        padding: 10px;
+    }
+    .streak-value {
+        font-size: 1.5em;
+    }
+}
+
+/* Streak card pulse when high streak */
+.streak-card.high-streak {
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 5px rgba(230, 81, 0, 0.1); }
+    50% { box-shadow: 0 0 20px rgba(230, 81, 0, 0.3); }
+}
+
+/* Qada Report */
+.qada-month-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: rgba(248,113,113,0.06);
+    margin-bottom: 6px;
+    font-size: 0.85em;
+}
+.qada-month-row .qm-month { font-weight: 700; min-width: 90px; }
+.qada-month-row .qm-bar { flex:1; height:8px; background:#fee2e2; border-radius:4px; overflow:hidden; }
+.qada-month-row .qm-bar-fill { height:100%; background:linear-gradient(90deg,#f87171,#dc2626); border-radius:4px; transition:width 0.5s; }
+.qada-month-row .qm-count { font-weight:700; color:#dc2626; min-width:30px; text-align:center; }
+
+/* Hero stat card (big green) */
+.hero-stat {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium)) !important;
+    border-radius: var(--card-radius) !important;
+    padding: 28px 24px !important;
+    margin-bottom: 16px !important;
+    color: var(--text-on-dark) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-stat::after {
+    content: '★';
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2.5em;
+    color: var(--accent);
+    opacity: 0.8;
+}
+
+.hero-stat .hero-label {
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+}
+
+.hero-stat .hero-value {
+    font-size: 3em;
+    font-weight: 800;
+    line-height: 1;
+    margin-top: 4px;
+}
+
+.hero-stat .hero-sub {
+    display: flex;
+    gap: 24px;
+    margin-top: 16px;
+}
+
+.hero-stat .hero-sub-item .sub-label {
+    font-size: 0.65em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.7;
+}
+
+.hero-stat .hero-sub-item .sub-value {
+    font-size: 1.4em;
+    font-weight: 700;
+}
