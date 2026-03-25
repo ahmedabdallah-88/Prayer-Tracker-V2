@@ -114,9 +114,9 @@ window.App.Config = {
         'fasting_section': { ar: '\u0627\u0644\u0635\u064a\u0627\u0645', en: 'Fasting' },
 
         // Views
-        'monthly_tracker': { ar: '\u0627\u0644\u0645\u062a\u062a\u0628\u0639 \u0627\u0644\u0634\u0647\u0631\u064a', en: 'Monthly Tracker' },
-        'yearly_view': { ar: '\u0646\u0638\u0631\u0629 \u0627\u0644\u0633\u0646\u0629', en: 'Yearly View' },
-        'dashboard': { ar: '\u0644\u0648\u062d\u0629 \u0627\u0644\u062a\u062d\u0643\u0645', en: 'Dashboard' },
+        'monthly_tracker': { ar: '\u0627\u0644\u062a\u062a\u0628\u0639', en: 'Tracker' },
+        'yearly_view': { ar: '\u0627\u0644\u0633\u0646\u0629', en: 'Yearly' },
+        'dashboard': { ar: '\u0627\u0644\u0625\u062d\u0635\u0627\u0626\u064a\u0627\u062a', en: 'Stats' },
 
         // Fasting views
         'voluntary_fasting': { ar: '\u0635\u064a\u0627\u0645 \u0627\u0644\u062a\u0637\u0648\u0639', en: 'Voluntary Fasting' },
@@ -276,7 +276,7 @@ window.App.Config = {
         'azkar_yearly': { ar: '\u0627\u0644\u0633\u0646\u0629', en: 'Yearly' },
         'azkar_dashboard': { ar: '\u0644\u0648\u062d\u0629 \u0627\u0644\u062a\u062d\u0643\u0645', en: 'Dashboard' },
         'azkar_mark_all': { ar: '\u062a\u062d\u062f\u064a\u062f \u0627\u0644\u0643\u0644', en: 'Mark All' },
-        'dashboard_short': { ar: '\u0644\u0648\u062d\u0629 \u0627\u0644\u062a\u062d\u0643\u0645', en: 'Dashboard' },
+        'dashboard_short': { ar: '\u0627\u0644\u0625\u062d\u0635\u0627\u0626\u064a\u0627\u062a', en: 'Stats' },
         'fiori_theme': { ar: '\u0643\u0648\u0627\u0631\u062a\u0632', en: 'Quartz' },
         'skip_to_content': { ar: '\u062a\u062e\u0637\u064a \u0625\u0644\u0649 \u0627\u0644\u0645\u062d\u062a\u0648\u0649', en: 'Skip to content' },
         'offline_msg': { ar: '\u26A1 \u0623\u0646\u062a \u063a\u064a\u0631 \u0645\u062a\u0635\u0644 \u2014 \u0627\u0644\u062a\u0637\u0628\u064a\u0642 \u064a\u0639\u0645\u0644 \u0628\u062f\u0648\u0646 \u0627\u062a\u0635\u0627\u0644', en: '\u26A1 You are offline \u2014 app works without connection' },
