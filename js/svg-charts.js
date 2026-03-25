@@ -30,30 +30,33 @@ window.App.SVGCharts = (function() {
 
     function orbitalProgress(container, data) {
         container.innerHTML = '';
-        var size = 220, cx = 110, cy = 110, strokeW = 16;
+        var size = 180, cx = 90, cy = 90;
         var rings = data.rings || []; // [{value, max, color, label}]
         var centerText = data.centerText || '';
         var centerSub = data.centerSub || '';
+        var ringDefs = [{r: 72, w: 10}, {r: 56, w: 8}];
 
         var children = [];
 
         rings.forEach(function(ring, i) {
-            var r = 85 - i * 24;
+            var rd = ringDefs[i] || {r: 72 - i * 16, w: 8};
+            var r = rd.r;
+            var strokeW = rd.w;
             var pct = ring.max > 0 ? Math.min(ring.value / ring.max, 1) : 0;
             var circ = 2 * Math.PI * r;
             var offset = circ * (1 - pct);
 
             // Track
-            children.push(el('circle', { cx: cx, cy: cy, r: r, fill: 'none', stroke: ring.color + '22', 'stroke-width': strokeW }));
+            children.push(el('circle', { cx: cx, cy: cy, r: r, fill: 'none', stroke: 'rgba(0,0,0,0.03)', 'stroke-width': strokeW }));
             // Value arc
             var arc = el('circle', { cx: cx, cy: cy, r: r, fill: 'none', stroke: ring.color, 'stroke-width': strokeW, 'stroke-linecap': 'round', 'stroke-dasharray': circ, 'stroke-dashoffset': offset, transform: 'rotate(-90 ' + cx + ' ' + cy + ')' });
-            arc.style.transition = 'stroke-dashoffset 0.8s ease';
+            arc.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
             children.push(arc);
         });
 
         // Center text
-        children.push(el('text', { x: cx, y: cy - 8, 'text-anchor': 'middle', fill: 'var(--text-primary)', 'font-size': '32', 'font-weight': '800', 'font-family': 'Rubik, sans-serif' }, centerText));
-        children.push(el('text', { x: cx, y: cy + 16, 'text-anchor': 'middle', fill: 'var(--text-muted)', 'font-size': '12', 'font-family': 'Noto Kufi Arabic, sans-serif' }, centerSub));
+        children.push(el('text', { x: cx, y: cy - 4, 'text-anchor': 'middle', fill: 'var(--text-primary)', 'font-size': '36', 'font-weight': '800', 'font-family': 'Rubik, sans-serif' }, centerText));
+        children.push(el('text', { x: cx, y: cy + 14, 'text-anchor': 'middle', fill: 'var(--text-muted)', 'font-size': '12', 'font-weight': '600', 'font-family': 'Rubik, sans-serif' }, centerSub));
 
         var s = svg(size, size, '0 0 ' + size + ' ' + size, children);
         container.appendChild(s);
@@ -87,16 +90,16 @@ window.App.SVGCharts = (function() {
             var curY = chartH - curH;
 
             // Ghost (best) bar
-            children.push(el('rect', { x: x, y: bestY, width: barW, height: bestH, rx: 8, fill: 'none', stroke: p.color + '44', 'stroke-width': 2, 'stroke-dasharray': '4 3' }));
+            children.push(el('rect', { x: x, y: bestY, width: barW, height: bestH, rx: 12, fill: 'rgba(0,0,0,0.03)', stroke: 'rgba(0,0,0,0.06)', 'stroke-width': 1, 'stroke-dasharray': '4 3' }));
             // Current bar
             var grad = el('linearGradient', { id: 'sg' + i, x1: '0', y1: '1', x2: '0', y2: '0' });
             grad.appendChild(el('stop', { offset: '0%', 'stop-color': p.color + 'cc' }));
             grad.appendChild(el('stop', { offset: '100%', 'stop-color': p.color }));
             children.push(el('defs', {}, [grad]));
-            children.push(el('rect', { x: x, y: curY, width: barW, height: curH, rx: 8, fill: 'url(#sg' + i + ')' }));
+            children.push(el('rect', { x: x, y: curY, width: barW, height: curH, rx: 14, fill: 'url(#sg' + i + ')' }));
             // Fire icon if current == best and > 0
             if (p.current > 0 && p.current >= p.best) {
-                children.push(el('text', { x: x + barW / 2, y: curY - 4, 'text-anchor': 'middle', fill: '#ea580c', 'font-size': '16', 'font-family': 'Material Symbols Rounded' }, 'local_fire_department'));
+                children.push(el('text', { x: x + barW / 2, y: curY - 4, 'text-anchor': 'middle', fill: '#D4A03C', 'font-size': '16', 'font-family': 'Material Symbols Rounded' }, 'local_fire_department'));
             }
             // Value label
             children.push(el('text', { x: x + barW / 2, y: curY + curH / 2 + 5, 'text-anchor': 'middle', fill: 'white', 'font-size': '13', 'font-weight': '700', 'font-family': 'Rubik' }, '' + p.current));
@@ -115,7 +118,7 @@ window.App.SVGCharts = (function() {
             leg.innerHTML =
                 '<div class="svg-legend-item"><span class="svg-legend-dot" style="background:var(--green-deep)"></span><span class="svg-legend-label">' + (data.legendLabels.current || 'الحالية') + '</span></div>' +
                 '<div class="svg-legend-item"><span class="svg-legend-dot" style="background:transparent;border:2px dashed var(--text-muted)"></span><span class="svg-legend-label">' + (data.legendLabels.best || 'الأفضل') + '</span></div>' +
-                '<div class="svg-legend-item"><span class="svg-legend-dot" style="background:#ea580c"></span><span class="svg-legend-label">' + (data.legendLabels.record || 'رقم قياسي') + '</span></div>';
+                '<div class="svg-legend-item"><span class="svg-legend-dot" style="background:#D4A03C"></span><span class="svg-legend-label">' + (data.legendLabels.record || 'رقم قياسي') + '</span></div>';
             container.appendChild(leg);
         }
     }
@@ -137,8 +140,8 @@ window.App.SVGCharts = (function() {
         // Grid lines
         [25, 50, 75, 100].forEach(function(v) {
             var y = padT + plotH - (v / maxVal) * plotH;
-            children.push(el('line', { x1: padL, y1: y, x2: W - padR, y2: y, stroke: 'var(--border, rgba(0,0,0,0.06))', 'stroke-width': 1 }));
-            children.push(el('text', { x: padL - 2, y: y + 3, 'text-anchor': 'end', fill: 'var(--text-faint)', 'font-size': '8', 'font-family': 'Rubik' }, v + '%'));
+            children.push(el('line', { x1: padL, y1: y, x2: W - padR, y2: y, stroke: 'rgba(0,0,0,0.03)', 'stroke-width': 1 }));
+            children.push(el('text', { x: W - padR + 4, y: y + 3, 'text-anchor': 'start', fill: '#C8CBD0', 'font-size': '8', 'font-family': 'Rubik, sans-serif' }, String(v)));
         });
 
         function buildPath(vals, close) {
@@ -165,8 +168,9 @@ window.App.SVGCharts = (function() {
 
         // Gradients
         var gradG = el('linearGradient', { id: 'mtnPrimary', x1: '0', y1: '0', x2: '0', y2: '1' });
-        gradG.appendChild(el('stop', { offset: '0%', 'stop-color': color1, 'stop-opacity': '0.4' }));
-        gradG.appendChild(el('stop', { offset: '100%', 'stop-color': color1, 'stop-opacity': '0.05' }));
+        gradG.appendChild(el('stop', { offset: '0%', 'stop-color': '#40916C', 'stop-opacity': '0.5' }));
+        gradG.appendChild(el('stop', { offset: '40%', 'stop-color': '#52B788', 'stop-opacity': '0.3' }));
+        gradG.appendChild(el('stop', { offset: '100%', 'stop-color': '#52B788', 'stop-opacity': '0.05' }));
         children.push(el('defs', {}, [gradG]));
 
         // Primary area (total)
@@ -176,8 +180,9 @@ window.App.SVGCharts = (function() {
         // Secondary area if provided
         if (values2) {
             var gradSec = el('linearGradient', { id: 'mtnSecondary', x1: '0', y1: '0', x2: '0', y2: '1' });
-            gradSec.appendChild(el('stop', { offset: '0%', 'stop-color': color2, 'stop-opacity': '0.3' }));
-            gradSec.appendChild(el('stop', { offset: '100%', 'stop-color': color2, 'stop-opacity': '0.05' }));
+            gradSec.appendChild(el('stop', { offset: '0%', 'stop-color': '#D4A03C', 'stop-opacity': '0.45' }));
+            gradSec.appendChild(el('stop', { offset: '50%', 'stop-color': '#E8B84A', 'stop-opacity': '0.2' }));
+            gradSec.appendChild(el('stop', { offset: '100%', 'stop-color': '#E8B84A', 'stop-opacity': '0.03' }));
             children.push(el('defs', {}, [gradSec]));
             children.push(el('path', { d: buildPath(values2, true), fill: 'url(#mtnSecondary)', stroke: 'none' }));
             children.push(el('path', { d: buildPath(values2, false), fill: 'none', stroke: color2, 'stroke-width': 2, 'stroke-dasharray': '6 3' }));
@@ -232,49 +237,54 @@ window.App.SVGCharts = (function() {
         var n = prayers.length;
         if (n < 3) return;
 
-        var size = 260, cx = 130, cy = 130, R = 95;
+        var size = 220, cx = 110, cy = 110, R = 85;
         var children = [];
 
-        // Grid rings
+        // Grid rings (circles instead of polygons for cleaner look)
         [25, 50, 75, 100].forEach(function(pct) {
             var r = (pct / 100) * R;
-            var pts = [];
-            for (var i = 0; i < n; i++) {
-                var angle = (Math.PI * 2 * i / n) - Math.PI / 2;
-                pts.push((cx + r * Math.cos(angle)).toFixed(1) + ',' + (cy + r * Math.sin(angle)).toFixed(1));
-            }
-            children.push(el('polygon', { points: pts.join(' '), fill: 'none', stroke: 'var(--border, rgba(0,0,0,0.08))', 'stroke-width': 1 }));
+            children.push(el('circle', { cx: cx, cy: cy, r: r, fill: 'none', stroke: 'rgba(0,0,0,0.04)', 'stroke-width': 1 }));
         });
 
         // Axis lines
         for (var i = 0; i < n; i++) {
             var angle = (Math.PI * 2 * i / n) - Math.PI / 2;
-            children.push(el('line', { x1: cx, y1: cy, x2: cx + R * Math.cos(angle), y2: cy + R * Math.sin(angle), stroke: 'var(--border, rgba(0,0,0,0.06))', 'stroke-width': 1 }));
+            children.push(el('line', { x1: cx, y1: cy, x2: cx + R * Math.cos(angle), y2: cy + R * Math.sin(angle), stroke: 'rgba(0,0,0,0.04)', 'stroke-width': 1 }));
         }
 
-        function makePoly(vals, color, opacity) {
+        function makePoly(vals, color, fillOpacity, strokeWidth) {
             var pts = vals.map(function(v, i) {
                 var r = (v / 100) * R;
                 var angle = (Math.PI * 2 * i / n) - Math.PI / 2;
                 return (cx + r * Math.cos(angle)).toFixed(1) + ',' + (cy + r * Math.sin(angle)).toFixed(1);
             });
-            children.push(el('polygon', { points: pts.join(' '), fill: color, 'fill-opacity': opacity, stroke: color, 'stroke-width': 2 }));
+            children.push(el('polygon', { points: pts.join(' '), fill: color, 'fill-opacity': fillOpacity, stroke: color, 'stroke-width': strokeWidth, 'stroke-linejoin': 'round' }));
         }
 
         // Congregation polygon (gold, behind)
         if (data.showCongregation) {
-            makePoly(prayers.map(function(p) { return p.congregation || 0; }), 'var(--gold)', 0.15);
+            makePoly(prayers.map(function(p) { return p.congregation || 0; }), '#D4A03C', 0.1, 1.5);
         }
         // Completion polygon (green)
-        makePoly(prayers.map(function(p) { return p.completion || 0; }), 'var(--green-deep)', 0.2);
+        makePoly(prayers.map(function(p) { return p.completion || 0; }), '#40916C', 0.12, 2);
+
+        // Data points on completion polygon
+        prayers.forEach(function(p, i) {
+            var v = p.completion || 0;
+            var r = (v / 100) * R;
+            var angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+            var px = cx + r * Math.cos(angle);
+            var py = cy + r * Math.sin(angle);
+            children.push(el('circle', { cx: px, cy: py, r: 4, fill: '#40916C', stroke: '#fff', 'stroke-width': 2 }));
+        });
 
         // Labels
         prayers.forEach(function(p, i) {
             var angle = (Math.PI * 2 * i / n) - Math.PI / 2;
-            var lx = cx + (R + 28) * Math.cos(angle);
-            var ly = cy + (R + 28) * Math.sin(angle);
-            children.push(el('text', { x: lx, y: ly - 6, 'text-anchor': 'middle', fill: 'var(--text-primary)', 'font-size': '10', 'font-weight': '600', 'font-family': 'Noto Kufi Arabic' }, p.name));
-            children.push(el('text', { x: lx, y: ly + 8, 'text-anchor': 'middle', fill: p.color || 'var(--text-muted)', 'font-size': '11', 'font-weight': '700', 'font-family': 'Rubik' }, p.completion + '%'));
+            var lx = cx + (R + 22) * Math.cos(angle);
+            var ly = cy + (R + 22) * Math.sin(angle);
+            children.push(el('text', { x: lx, y: ly - 6, 'text-anchor': 'middle', fill: '#2B2D42', 'font-size': '11', 'font-weight': '700', 'font-family': 'Noto Kufi Arabic, sans-serif' }, p.name));
+            children.push(el('text', { x: lx, y: ly + 8, 'text-anchor': 'middle', fill: '#40916C', 'font-size': '10', 'font-weight': '700', 'font-family': 'Rubik, sans-serif' }, p.completion + '%'));
         });
 
         var s = svg(size, size, '0 0 ' + size + ' ' + size, children);
@@ -339,14 +349,14 @@ window.App.SVGCharts = (function() {
         var days = data.days || []; // [{name, value}] 7 items
         if (days.length !== 7) return;
 
-        var size = 260, cx = 130, cy = 130, R = 100, innerR = 35;
+        var size = 180, cx = 90, cy = 90, R = 80, innerR = 30;
         var children = [];
 
         // Center circle
         var avg = Math.round(days.reduce(function(s, d) { return s + d.value; }, 0) / 7);
-        children.push(el('circle', { cx: cx, cy: cy, r: innerR, fill: 'var(--card-bg, rgba(255,255,255,0.55))', stroke: 'var(--border)', 'stroke-width': 1 }));
-        children.push(el('text', { x: cx, y: cy - 4, 'text-anchor': 'middle', fill: 'var(--text-primary)', 'font-size': '20', 'font-weight': '800', 'font-family': 'Rubik' }, avg + '%'));
-        children.push(el('text', { x: cx, y: cy + 12, 'text-anchor': 'middle', fill: 'var(--text-muted)', 'font-size': '9', 'font-family': 'Noto Kufi Arabic' }, 'المعدل'));
+        children.push(el('circle', { cx: cx, cy: cy, r: innerR - 2, fill: '#F5F3EF' }));
+        children.push(el('text', { x: cx, y: cy - 3, 'text-anchor': 'middle', fill: '#8D99AE', 'font-size': '8', 'font-weight': '600', 'font-family': 'Noto Kufi Arabic, sans-serif' }, 'متوسط'));
+        children.push(el('text', { x: cx, y: cy + 10, 'text-anchor': 'middle', fill: '#2B2D42', 'font-size': '14', 'font-weight': '800', 'font-family': 'Rubik, sans-serif' }, avg + '%'));
 
         var segAngle = (2 * Math.PI) / 7;
         days.forEach(function(d, i) {
@@ -355,7 +365,7 @@ window.App.SVGCharts = (function() {
             var midAngle = startAngle + segAngle / 2;
             var segR = innerR + ((d.value / 100) * (R - innerR));
 
-            var color = d.value >= 90 ? 'var(--green-deep)' : d.value >= 75 ? 'var(--green-mid)' : d.value >= 60 ? 'var(--gold)' : 'var(--red)';
+            var color = d.value >= 90 ? '#2D6A4F' : d.value >= 75 ? '#40916C' : d.value >= 60 ? '#D4A03C' : '#C1574E';
 
             // Segment path
             var x1i = cx + innerR * Math.cos(startAngle);
@@ -367,19 +377,39 @@ window.App.SVGCharts = (function() {
             var x2o = cx + segR * Math.cos(endAngle);
             var y2o = cy + segR * Math.sin(endAngle);
 
-            var path = 'M' + x1i + ',' + y1i + ' L' + x1o + ',' + y1o +
-                ' A' + segR + ',' + segR + ' 0 0,1 ' + x2o + ',' + y2o +
-                ' L' + x2i + ',' + y2i +
-                ' A' + innerR + ',' + innerR + ' 0 0,0 ' + x1i + ',' + y1i + 'Z';
+            // Track (full extent)
+            var tx1o = cx + R * Math.cos(startAngle + 0.04);
+            var ty1o = cy + R * Math.sin(startAngle + 0.04);
+            var tx2o = cx + R * Math.cos(endAngle - 0.04);
+            var ty2o = cy + R * Math.sin(endAngle - 0.04);
+            var tx1i = cx + innerR * Math.cos(startAngle + 0.04);
+            var ty1i = cy + innerR * Math.sin(startAngle + 0.04);
+            var tx2i = cx + innerR * Math.cos(endAngle - 0.04);
+            var ty2i = cy + innerR * Math.sin(endAngle - 0.04);
+            var trackPath = 'M' + tx1i + ',' + ty1i + ' L' + tx1o + ',' + ty1o +
+                ' A' + R + ',' + R + ' 0 0,1 ' + tx2o + ',' + ty2o +
+                ' L' + tx2i + ',' + ty2i +
+                ' A' + innerR + ',' + innerR + ' 0 0,0 ' + tx1i + ',' + ty1i + 'Z';
+            children.push(el('path', { d: trackPath, fill: 'rgba(0,0,0,0.02)' }));
 
-            children.push(el('path', { d: path, fill: color, opacity: '0.7', stroke: 'white', 'stroke-width': 1.5 }));
+            // Value sector
+            var vx1o = cx + segR * Math.cos(startAngle + 0.04);
+            var vy1o = cy + segR * Math.sin(startAngle + 0.04);
+            var vx2o = cx + segR * Math.cos(endAngle - 0.04);
+            var vy2o = cy + segR * Math.sin(endAngle - 0.04);
+            var path = 'M' + tx1i + ',' + ty1i + ' L' + vx1o + ',' + vy1o +
+                ' A' + segR + ',' + segR + ' 0 0,1 ' + vx2o + ',' + vy2o +
+                ' L' + tx2i + ',' + ty2i +
+                ' A' + innerR + ',' + innerR + ' 0 0,0 ' + tx1i + ',' + ty1i + 'Z';
+
+            children.push(el('path', { d: path, fill: color, opacity: '0.7' }));
 
             // Label
-            var lR = R + 18;
+            var lR = R + 14;
             var lx = cx + lR * Math.cos(midAngle);
             var ly = cy + lR * Math.sin(midAngle);
-            children.push(el('text', { x: lx, y: ly - 4, 'text-anchor': 'middle', fill: 'var(--text-primary)', 'font-size': '10', 'font-weight': '600', 'font-family': 'Noto Kufi Arabic' }, d.name));
-            children.push(el('text', { x: lx, y: ly + 9, 'text-anchor': 'middle', fill: color, 'font-size': '10', 'font-weight': '700', 'font-family': 'Rubik' }, d.value + '%'));
+            children.push(el('text', { x: lx, y: ly - 4, 'text-anchor': 'middle', fill: '#2B2D42', 'font-size': '9', 'font-weight': '700', 'font-family': 'Noto Kufi Arabic, sans-serif' }, d.name));
+            children.push(el('text', { x: lx, y: ly + 7, 'text-anchor': 'middle', fill: color, 'font-size': '9', 'font-weight': '700', 'font-family': 'Rubik, sans-serif' }, d.value + '%'));
         });
 
         var s = svg(size, size, '0 0 ' + size + ' ' + size, children);
@@ -394,7 +424,7 @@ window.App.SVGCharts = (function() {
         var dayNames = data.dayNames || ['سبت', 'أحد', 'اثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة'];
         var maxCount = data.maxPrayers || 5;
 
-        var cellSize = 18, gap = 3, labelW = 50, padT = 5;
+        var cellSize = 14, gap = 3, labelW = 50, padT = 5;
         var weeks = Math.ceil(grid.length / 7);
         var W = labelW + weeks * (cellSize + gap) + 20;
         var H = 7 * (cellSize + gap) + padT + 30;
@@ -419,7 +449,7 @@ window.App.SVGCharts = (function() {
                 : intensity <= 0.8 ? 'rgba(45,106,79,0.7)'
                 : '#2D6A4F';
 
-            children.push(el('rect', { x: x, y: y, width: cellSize, height: cellSize, rx: 4, fill: color }));
+            children.push(el('rect', { x: x, y: y, width: cellSize, height: cellSize, rx: 3, fill: color }));
         });
 
         // Scale legend at bottom

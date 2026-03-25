@@ -309,7 +309,7 @@ body {
     bottom: 0; left: 0; right: 0;
     height: 64px;
     padding-bottom: env(safe-area-inset-bottom, 0px);
-    background: rgba(255,255,255,0.85);
+    background: var(--tab-bg, rgba(245,243,239,0.92));
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-top: 1px solid rgba(0,0,0,0.06);
@@ -349,14 +349,24 @@ body {
     font-weight: 600;
 }
 
-.tab-item.active::before {
-    content: '';
-    position: absolute;
-    top: 2px;
-    width: 20px;
-    height: 3px;
-    background: var(--green-deep);
-    border-radius: 3px;
+.tab-item .tab-icon-wrap {
+    width: 36px; height: 28px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab-item.active .tab-icon-wrap {
+    width: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    box-shadow: 0 2px 8px rgba(45,106,79,0.3);
+}
+
+.tab-item.active .tab-icon-wrap .material-symbols-rounded {
+    color: #fff !important;
 }
 
 /* ==================== MAIN TOGGLE (Section Switcher - hidden, using tab bar) ==================== */
@@ -613,18 +623,22 @@ body {
 .prayers-container {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 0;
+    background: rgba(255,255,255,0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 12px 10px;
+    border: 1px solid rgba(0,0,0,0.04);
 }
 
 .prayer-section {
     border: none;
-    border-radius: 20px;
-    padding: 16px;
+    border-radius: 0;
+    padding: 0 6px 8px;
+    margin-bottom: 6px;
     transition: all 0.2s;
-    background: rgba(255,255,255,0.55);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    background: transparent;
     position: relative;
     overflow: hidden;
 }
@@ -632,16 +646,18 @@ body {
 .prayer-section::before { display: none !important; }
 
 .prayer-section:hover {
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    box-shadow: none;
 }
 
 .prayer-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 14px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(0,0,0,0.06);
+    margin-bottom: 8px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 14px;
+    border: 1px solid rgba(0,0,0,0.04);
     position: relative;
     z-index: 1;
 }
@@ -656,7 +672,7 @@ body {
 }
 
 .prayer-name .prayer-icon-badge {
-    width: 32px; height: 32px;
+    width: 34px; height: 34px;
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -665,11 +681,11 @@ body {
     font-size: 18px;
 }
 
-.prayer-name .prayer-icon-badge.fajr-icon { background: linear-gradient(135deg, var(--fajr), #C48A92); }
-.prayer-name .prayer-icon-badge.dhuhr-icon { background: linear-gradient(135deg, var(--dhuhr), #D4A03C); }
-.prayer-name .prayer-icon-badge.asr-icon { background: linear-gradient(135deg, var(--asr), #C4832E); }
-.prayer-name .prayer-icon-badge.maghrib-icon { background: linear-gradient(135deg, var(--maghrib), #9A5640); }
-.prayer-name .prayer-icon-badge.isha-icon { background: linear-gradient(135deg, var(--isha), #3A4A6A); }
+.prayer-name .prayer-icon-badge.fajr-icon { background: linear-gradient(135deg, #E8B4B8, #D4A0A7); }
+.prayer-name .prayer-icon-badge.dhuhr-icon { background: linear-gradient(135deg, #F0C75E, #E8B84A); }
+.prayer-name .prayer-icon-badge.asr-icon { background: linear-gradient(135deg, #E8A849, #D4943A); }
+.prayer-name .prayer-icon-badge.maghrib-icon { background: linear-gradient(135deg, #C47A5A, #B0664A); }
+.prayer-name .prayer-icon-badge.isha-icon { background: linear-gradient(135deg, #5B6B8A, #4A5A7A); }
 
 .prayer-counter {
     font-size: 0.8em;
@@ -699,9 +715,11 @@ body {
 
 /* ==================== DAY CIRCLES (Rounded Squares with Badge) ==================== */
 .days-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-    gap: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: flex-start;
+    padding: 0 6px 8px;
     position: relative;
     z-index: 1;
 }
@@ -772,9 +790,9 @@ body {
 
 /* === Prayed (Munfarid) === */
 .day-box.checked {
-    background: linear-gradient(135deg, var(--green-deep), var(--green-light));
-    border-color: transparent;
-    box-shadow: 0 2px 6px rgba(45,106,79,0.2);
+    background: linear-gradient(135deg, var(--green-mid), var(--green-light));
+    border: 2px solid transparent;
+    box-shadow: 0 2px 8px rgba(64,145,108,0.35);
 }
 
 .day-box.checked .day-number { color: white; }
@@ -810,9 +828,9 @@ body {
 
 /* === Congregation === */
 .day-box.congregation {
-    background: linear-gradient(135deg, var(--green-deep), var(--green-light)) !important;
-    border: 2px solid var(--gold) !important;
-    box-shadow: 0 2px 8px rgba(212,160,60,0.3);
+    background: linear-gradient(135deg, var(--green-mid), var(--green-light)) !important;
+    border: 2.5px solid var(--gold) !important;
+    box-shadow: 0 2px 10px rgba(212,160,60,0.4), 0 2px 8px rgba(64,145,108,0.2);
 }
 
 .day-box.congregation .day-number { color: white !important; }
@@ -846,7 +864,8 @@ body {
 /* === Qada === */
 .day-box.qada {
     background: linear-gradient(135deg, var(--red), var(--red-light));
-    border-color: transparent;
+    border: 2px solid transparent;
+    box-shadow: 0 2px 8px rgba(193,87,78,0.35);
 }
 
 .day-box.qada .day-number { color: white; }
@@ -985,15 +1004,17 @@ body {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(0,0,0,0.04);
-    border-radius: 20px;
+    border-radius: 18px;
     padding: 16px;
     cursor: pointer;
     transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
 }
 
 .month-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
 }
 
 .month-card h3 {
@@ -1085,8 +1106,17 @@ body {
     font-family: 'Noto Kufi Arabic', sans-serif;
 }
 
-.month-progress {
-    margin-bottom: 6px;
+.month-progress { margin-bottom: 12px; }
+.month-progress .progress-bar {
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(0,0,0,0.04);
+    overflow: hidden;
+}
+.month-progress .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .month-stats {
@@ -1134,7 +1164,8 @@ body {
 }
 
 .month-card.current-month {
-    border: 2px solid rgba(45,106,79,0.3);
+    background: rgba(45,106,79,0.06);
+    border: 1.5px solid rgba(45,106,79,0.2);
 }
 
 .month-detail-header {
@@ -1322,11 +1353,11 @@ body {
     align-items: center;
     gap: 14px;
     padding: 14px 16px;
-    background: rgba(255,255,255,0.55);
+    background: rgba(255,255,255,0.6);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(0,0,0,0.04);
-    border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.05);
+    border-radius: 18px;
     cursor: pointer;
     transition: all 0.2s;
 }
@@ -1337,8 +1368,8 @@ body {
 }
 
 .profile-avatar {
-    width: 44px; height: 44px;
-    border-radius: 12px;
+    width: 50px; height: 50px;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1347,10 +1378,10 @@ body {
     flex-shrink: 0;
 }
 
-.profile-avatar.male { background: linear-gradient(135deg, var(--green-deep), var(--green-light)); }
-.profile-avatar.female { background: linear-gradient(135deg, var(--purple), var(--purple-light)); }
-.profile-avatar.child-male { background: linear-gradient(135deg, var(--blue), #38BDF8); }
-.profile-avatar.child-female { background: linear-gradient(135deg, #F472B6, #EC4899); }
+.profile-avatar.male { background: linear-gradient(135deg, #2D6A4F, #40916C); }
+.profile-avatar.female { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
+.profile-avatar.child-male { background: linear-gradient(135deg, #0EA5E9, #38BDF8); }
+.profile-avatar.child-female { background: linear-gradient(135deg, #EC4899, #F472B6); }
 
 .profile-info { flex: 1; }
 .profile-info .name { font-weight: 700; color: var(--text-primary); font-size: 1em; }
@@ -1380,9 +1411,9 @@ body {
 .add-profile-btn {
     width: 100%;
     padding: 14px;
-    background: transparent;
+    background: rgba(45,106,79,0.03);
     color: var(--green-deep);
-    border: 2px dashed rgba(45,106,79,0.3);
+    border: 2px dashed rgba(45,106,79,0.25);
     border-radius: 16px;
     cursor: pointer;
     font-size: 0.9em;
@@ -1419,11 +1450,11 @@ body {
 .form-group input, .form-group select {
     width: 100%;
     padding: 12px 14px;
-    border: 1px solid rgba(0,0,0,0.08);
+    border: 1.5px solid rgba(0,0,0,0.08);
     border-radius: 12px;
     font-size: 0.95em;
     font-family: 'Noto Kufi Arabic', sans-serif;
-    background: white;
+    background: rgba(255,255,255,0.8);
     color: var(--text-primary);
 }
 
@@ -1456,17 +1487,25 @@ body {
 .gender-option:hover { border-color: rgba(0,0,0,0.12); }
 
 .gender-option.selected[data-gender="male"] {
-    border-color: var(--green-deep);
-    background: rgba(45,106,79,0.06);
+    border: 2px solid transparent;
+    background: linear-gradient(135deg, #2D6A4F, #40916C);
+    color: white;
+    box-shadow: 0 4px 16px rgba(45,106,79,0.25);
+    transform: scale(1.02);
 }
 
 .gender-option.selected[data-gender="female"] {
-    border-color: var(--purple);
-    background: rgba(139,92,246,0.06);
+    border: 2px solid transparent;
+    background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+    color: white;
+    box-shadow: 0 4px 16px rgba(139,92,246,0.25);
+    transform: scale(1.02);
 }
 
 .gender-option .icon { font-size: 1.8em; margin-bottom: 4px; }
 .gender-option .label { font-weight: 700; font-size: 0.85em; }
+.gender-option.selected .icon { color: white; }
+.gender-option.selected .label { color: white; }
 
 .form-buttons {
     display: flex;
@@ -1487,13 +1526,18 @@ body {
 }
 
 .form-btn.save {
-    background: linear-gradient(135deg, var(--green-deep), var(--green-light));
+    background: linear-gradient(135deg, #2D6A4F, #40916C);
     color: white;
+    box-shadow: 0 6px 20px rgba(45,106,79,0.25);
+    padding: 15px;
+    border-radius: 16px;
 }
 
 .form-btn.cancel {
     background: rgba(0,0,0,0.04);
     color: var(--text-secondary);
+    border-radius: 14px;
+    border: 1.5px solid rgba(0,0,0,0.08);
 }
 
 .form-btn:hover { transform: translateY(-1px); }
@@ -1750,13 +1794,13 @@ body {
 
 .confirm-box {
     background: white;
-    border-radius: 20px;
+    border-radius: 24px;
     border: none;
     padding: 28px 24px;
     max-width: 360px;
     width: 100%;
     text-align: center;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
     transform: scale(0.95);
     transition: transform 0.25s;
 }
@@ -1804,7 +1848,7 @@ body {
 }
 
 @keyframes fadeSlideIn {
-    from { opacity: 0; transform: translateY(8px); }
+    from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
@@ -2000,9 +2044,9 @@ body {
 
 .ps-close-btn {
     width: 36px; height: 36px;
-    border-radius: 50%;
+    border-radius: 12px;
     border: none;
-    background: rgba(0,0,0,0.04);
+    background: rgba(255,255,255,0.6);
     color: var(--text-secondary);
     cursor: pointer;
     display: flex;
@@ -2015,7 +2059,7 @@ body {
 .ps-close-btn:hover { background: rgba(0,0,0,0.08); }
 
 .ps-profile-card {
-    background: linear-gradient(135deg, var(--green-deep), var(--green-light));
+    background: linear-gradient(135deg, #2D6A4F, #40916C);
     border-radius: 20px;
     padding: 20px;
     margin-bottom: 20px;
@@ -2023,12 +2067,16 @@ body {
     align-items: center;
     gap: 14px;
     color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(45,106,79,0.2);
 }
 
 .ps-profile-card .ps-avatar {
-    width: 52px; height: 52px;
-    border-radius: 14px;
-    background: rgba(255,255,255,0.2);
+    width: 56px; height: 56px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.25);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2040,10 +2088,10 @@ body {
 .ps-profile-card .ps-details { font-size: 0.8em; opacity: 0.8; margin-top: 2px; }
 
 .ps-profile-card .ps-edit-btn {
-    width: 36px; height: 36px;
-    border-radius: 10px;
-    border: none;
-    background: rgba(255,255,255,0.2);
+    width: 38px; height: 38px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.15);
     color: white;
     cursor: pointer;
     display: flex;
@@ -2071,8 +2119,8 @@ body {
 .ps-menu-item {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 14px 18px;
+    gap: 12px;
+    padding: 13px 16px;
     cursor: pointer;
     transition: all 0.15s;
     border-bottom: 1px solid rgba(0,0,0,0.03);
@@ -2082,8 +2130,8 @@ body {
 .ps-menu-item:hover { background: rgba(0,0,0,0.02); }
 
 .ps-menu-item .ps-icon {
-    width: 36px; height: 36px;
-    border-radius: 10px;
+    width: 38px; height: 38px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2295,16 +2343,16 @@ body {
 
 /* ==================== NEXT PRAYER CARD ==================== */
 .next-prayer-card {
-    display: flex;
-    align-items: center;
-    gap: 12px;
     padding: 12px 16px;
-    margin-bottom: 12px;
+    border-radius: 16px;
+    margin-bottom: 14px;
     background: rgba(255,255,255,0.55);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-radius: 16px;
     border: 1px solid rgba(0,0,0,0.04);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .npc-icon {

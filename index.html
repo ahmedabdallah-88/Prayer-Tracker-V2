@@ -46,36 +46,32 @@
     <!-- Theme dropdown (absolute positioned from shell bar) -->
     <div class="theme-options" id="themeOptions" style="position:fixed;top:calc(56px + env(safe-area-inset-top, 0px));right:60px;z-index:10001;">
         <button class="theme-option active" data-theme="green" onclick="setTheme('green')">
-            <span class="theme-dot" style="background: linear-gradient(135deg, #0f4c3a, #d4af37);"></span>
+            <span class="theme-dot" style="background: linear-gradient(135deg, #2D6A4F, #D4A03C);"></span>
             <span data-t="green_gold">أخضر وذهبي</span>
         </button>
         <button class="theme-option" data-theme="navy" onclick="setTheme('navy')">
-            <span class="theme-dot" style="background: linear-gradient(135deg, #0d1b2a, #c0c0c0);"></span>
+            <span class="theme-dot" style="background: linear-gradient(135deg, #1B2A4A, #A8B4C4);"></span>
             <span data-t="navy_silver">كحلي وفضي</span>
         </button>
         <button class="theme-option" data-theme="purple" onclick="setTheme('purple')">
-            <span class="theme-dot" style="background: linear-gradient(135deg, #2d1b4e, #d4af37);"></span>
+            <span class="theme-dot" style="background: linear-gradient(135deg, #5B21B6, #D4A03C);"></span>
             <span data-t="purple_gold">بنفسجي وذهبي</span>
         </button>
         <button class="theme-option" data-theme="feminine" onclick="setTheme('feminine')">
-            <span class="theme-dot" style="background: linear-gradient(135deg, #8e3564, #e8a4b8);"></span>
+            <span class="theme-dot" style="background: linear-gradient(135deg, #9D174D, #D4A03C);"></span>
             <span data-t="pink">وردي</span>
         </button>
         <button class="theme-option" data-theme="sky" onclick="setTheme('sky')">
-            <span class="theme-dot" style="background: linear-gradient(135deg, #0369a1, #bae6fd);"></span>
+            <span class="theme-dot" style="background: linear-gradient(135deg, #0C4A6E, #F59E0B);"></span>
             <span data-t="sky_blue">أزرق سماوي</span>
         </button>
         <button class="theme-option" data-theme="dark" onclick="setTheme('dark')">
-            <span class="theme-dot" style="background: linear-gradient(135deg, #0a0a0a, #d4af37);"></span>
+            <span class="theme-dot" style="background: linear-gradient(135deg, #1A1A1E, #D4A03C);"></span>
             <span data-t="dark_mode">دارك مود</span>
         </button>
         <button class="theme-option" data-theme="olive" onclick="setTheme('olive')">
-            <span class="theme-dot" style="background: linear-gradient(135deg, #4a5529, #d4c5a0);"></span>
+            <span class="theme-dot" style="background: linear-gradient(135deg, #3D5A3E, #C8B56E);"></span>
             <span data-t="olive_cream">زيتوني</span>
-        </button>
-        <button class="theme-option" data-theme="fiori" onclick="setTheme('fiori')">
-            <span class="theme-dot" style="background: linear-gradient(135deg, #354a5f, #0a6ed1);"></span>
-            <span data-t="fiori_theme">كوارتز</span>
         </button>
     </div>
 
@@ -957,19 +953,19 @@
     <!-- Tab Bar (4 tabs) -->
     <div class="tab-bar" id="tabBar">
         <button class="tab-item active" onclick="switchTab('fard')" id="tabFard">
-            <span class="tab-icon"><span class="material-symbols-rounded">mosque</span></span>
+            <div class="tab-icon-wrap"><span class="tab-icon"><span class="material-symbols-rounded">mosque</span></span></div>
             <span class="tab-label" data-t="fard_short">الفرائض</span>
         </button>
         <button class="tab-item" onclick="switchTab('sunnah')" id="tabSunnah">
-            <span class="tab-icon"><span class="material-symbols-rounded">auto_awesome</span></span>
+            <div class="tab-icon-wrap"><span class="tab-icon"><span class="material-symbols-rounded">auto_awesome</span></span></div>
             <span class="tab-label" data-t="sunnah_short">السنن</span>
         </button>
         <button class="tab-item" onclick="switchTab('fasting')" id="tabFasting">
-            <span class="tab-icon"><span class="material-symbols-rounded">nights_stay</span></span>
+            <div class="tab-icon-wrap"><span class="tab-icon"><span class="material-symbols-rounded">nights_stay</span></span></div>
             <span class="tab-label" data-t="fasting_short">الصيام</span>
         </button>
         <button class="tab-item" onclick="switchTab('azkar')" id="tabAzkar">
-            <span class="tab-icon"><span class="material-symbols-rounded">menu_book</span></span>
+            <div class="tab-icon-wrap"><span class="tab-icon"><span class="material-symbols-rounded">menu_book</span></span></div>
             <span class="tab-label" data-t="azkar_short">الأذكار</span>
         </button>
     </div>
