@@ -116,10 +116,11 @@ window.App.SVGCharts = (function() {
     function streakFlameBars(container, data) {
         container.innerHTML = '';
         var prayers = data.prayers || [];
-        var maxBest = Math.max.apply(null, prayers.map(function(p) { return Math.max(p.best, 1); }));
-        var topStreak = prayers.reduce(function(a, b) { return a.current > b.current ? a : b; }, prayers[0]);
+        var NS = 'http://www.w3.org/2000/svg';
+        var R = 38, SW = 7, W = 100, H = 60;
+        var halfCirc = Math.PI * R;
+        var cx = 50, cy = 52;
 
-        // Gradient map by color
         var gradients = {
             '#D4A0A7': 'linear-gradient(135deg, #E8B4B8, #D4A0A7)',
             '#E8B84A': 'linear-gradient(135deg, #F0C75E, #E8B84A)',
@@ -128,123 +129,127 @@ window.App.SVGCharts = (function() {
             '#4A5A7A': 'linear-gradient(135deg, #5B6B8A, #4A5A7A)'
         };
 
-        // --- Flame bars area ---
-        var barsRow = document.createElement('div');
-        barsRow.style.cssText = 'display:flex;align-items:flex-end;justify-content:center;gap:12px;height:200px;padding:20px 8px 0;position:relative;overflow:visible;';
+        function buildGauge(p) {
+            var card = document.createElement('div');
+            card.style.cssText = 'padding:10px 4px 8px;border-radius:14px;background:' + p.color + '0F;display:flex;flex-direction:column;align-items:center;';
 
-        // Horizontal guide lines
-        [0.25, 0.5, 0.75, 1].forEach(function(pct) {
-            var line = document.createElement('div');
-            line.style.cssText = 'position:absolute;left:0;right:0;bottom:' + (pct * 100) + '%;height:1px;background:rgba(0,0,0,0.03);pointer-events:none;';
-            barsRow.appendChild(line);
-        });
+            var pct = p.best > 0 ? Math.min(p.current / p.best, 1) : 0;
+            var bestOffset = 0;
+            var curOffset = halfCirc * (1 - pct);
 
-        prayers.forEach(function(p, i) {
-            var currentH = maxBest > 0 ? (p.current / maxBest) * 100 : 0;
-            var bestH = maxBest > 0 ? (p.best / maxBest) * 100 : 0;
-            var isAtBest = p.current === p.best && p.current > 0;
-            var isTop = topStreak && p.name === topStreak.name;
+            // SVG half-circle
+            var s = document.createElementNS(NS, 'svg');
+            s.setAttribute('width', W);
+            s.setAttribute('height', H);
+            s.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+            s.style.overflow = 'visible';
 
-            var col = document.createElement('div');
-            col.style.cssText = 'flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative;overflow:visible;';
+            // Track arc
+            var track = document.createElementNS(NS, 'path');
+            var arcD = 'M ' + (cx - R) + ' ' + cy + ' A ' + R + ' ' + R + ' 0 0 1 ' + (cx + R) + ' ' + cy;
+            track.setAttribute('d', arcD);
+            track.setAttribute('fill', 'none');
+            track.setAttribute('stroke', 'rgba(0,0,0,0.05)');
+            track.setAttribute('stroke-width', SW);
+            track.setAttribute('stroke-linecap', 'round');
+            s.appendChild(track);
 
-            // Ghost (best) bar
+            // Best arc (full half-circle at 25% opacity)
             if (p.best > 0) {
-                var ghost = document.createElement('div');
-                ghost.style.cssText = 'position:absolute;bottom:0;width:70%;max-width:40px;height:' + bestH + '%;border-radius:12px 12px 6px 6px;background:' + p.color + '10;border:2px dashed ' + p.color + ';border-bottom:none;overflow:visible;transition:height 0.8s cubic-bezier(0.4,0,0.2,1);transition-delay:' + (i * 80) + 'ms;';
-                // Best label on top
-                var bestLbl = document.createElement('div');
-                bestLbl.style.cssText = 'position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:' + p.color + ';font-family:Rubik,sans-serif;white-space:nowrap;';
-                bestLbl.textContent = p.best;
-                ghost.appendChild(bestLbl);
-                col.appendChild(ghost);
+                var bestArc = document.createElementNS(NS, 'path');
+                bestArc.setAttribute('d', arcD);
+                bestArc.setAttribute('fill', 'none');
+                bestArc.setAttribute('stroke', p.color);
+                bestArc.setAttribute('stroke-opacity', '0.25');
+                bestArc.setAttribute('stroke-width', SW);
+                bestArc.setAttribute('stroke-linecap', 'round');
+                bestArc.setAttribute('stroke-dasharray', halfCirc);
+                bestArc.setAttribute('stroke-dashoffset', bestOffset);
+                s.appendChild(bestArc);
             }
 
-            // Current flame bar
-            if (currentH > 0) {
-                var flame = document.createElement('div');
-                var minH = currentH > 0 ? Math.max(currentH, 10) : 0;
-                var shadow = isTop
-                    ? '0 -8px 24px ' + p.color + '50, 0 4px 12px ' + p.color + '30'
-                    : '0 4px 12px ' + p.color + '25';
-                flame.style.cssText = 'position:relative;z-index:1;width:70%;max-width:40px;height:' + minH + '%;min-height:20px;border-radius:14px 14px 6px 6px;background:linear-gradient(180deg,' + p.color + 'ee,' + p.color + ');box-shadow:' + shadow + ';transition:height 1s cubic-bezier(0.4,0,0.2,1);transition-delay:' + (i * 100) + 'ms;overflow:visible;';
-
-                // Flame tip glow
-                if (currentH > 15) {
-                    var glow = document.createElement('div');
-                    glow.style.cssText = 'position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:60%;height:12px;border-radius:50%;background:radial-gradient(ellipse,' + p.color + '40,transparent);filter:blur(4px);';
-                    flame.appendChild(glow);
-                }
-
-                // Current number inside bar
-                var numWrap = document.createElement('div');
-                var numTop = currentH > 30 ? '8px' : '-22px';
-                numWrap.style.cssText = 'position:absolute;top:' + numTop + ';left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;';
-                if (isAtBest) {
-                    var fireIcon = document.createElement('span');
-                    fireIcon.className = 'material-symbols-rounded';
-                    fireIcon.style.cssText = 'font-size:14px;color:' + (currentH > 30 ? '#fff' : '#D4A03C') + ';font-variation-settings:"FILL" 1,"wght" 500;margin-bottom:1px;';
-                    fireIcon.textContent = 'local_fire_department';
-                    numWrap.appendChild(fireIcon);
-                }
-                var numSpan = document.createElement('span');
-                numSpan.style.cssText = 'font-size:15px;font-weight:800;color:' + (currentH > 30 ? '#fff' : '#2B2D42') + ';font-family:Rubik,sans-serif;line-height:1;' + (currentH > 30 ? 'text-shadow:0 1px 3px rgba(0,0,0,0.2);' : '');
-                numSpan.textContent = p.current;
-                numWrap.appendChild(numSpan);
-                flame.appendChild(numWrap);
-                col.appendChild(flame);
-            } else {
-                // No current bar — show "0" in prayer color below ghost bar
-                var zeroLbl = document.createElement('div');
-                zeroLbl.style.cssText = 'position:relative;z-index:1;font-size:15px;font-weight:800;color:' + p.color + ';font-family:Rubik,sans-serif;line-height:1;margin-bottom:4px;';
-                zeroLbl.textContent = '0';
-                col.appendChild(zeroLbl);
+            // Current arc
+            if (p.current > 0) {
+                var curArc = document.createElementNS(NS, 'path');
+                curArc.setAttribute('d', arcD);
+                curArc.setAttribute('fill', 'none');
+                curArc.setAttribute('stroke', p.color);
+                curArc.setAttribute('stroke-width', SW);
+                curArc.setAttribute('stroke-linecap', 'round');
+                curArc.setAttribute('stroke-dasharray', halfCirc);
+                curArc.setAttribute('stroke-dashoffset', curOffset);
+                curArc.style.transition = 'stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1)';
+                s.appendChild(curArc);
             }
 
-            barsRow.appendChild(col);
-        });
+            // Center number
+            var numEl = document.createElementNS(NS, 'text');
+            numEl.setAttribute('x', cx);
+            numEl.setAttribute('y', cy - 8);
+            numEl.setAttribute('text-anchor', 'middle');
+            numEl.setAttribute('fill', p.current > 0 ? p.color : '#B8BCC8');
+            numEl.setAttribute('font-size', '18');
+            numEl.setAttribute('font-weight', '800');
+            numEl.setAttribute('font-family', 'Rubik, sans-serif');
+            numEl.textContent = p.current;
+            s.appendChild(numEl);
 
-        container.appendChild(barsRow);
+            card.appendChild(s);
 
-        // --- Prayer icons row ---
-        var iconsRow = document.createElement('div');
-        iconsRow.style.cssText = 'display:flex;justify-content:center;gap:12px;margin-top:12px;';
-
-        prayers.forEach(function(p) {
-            var iconCol = document.createElement('div');
-            iconCol.style.cssText = 'flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;';
-
-            // Gradient square background
+            // Gradient icon square
             var iconBg = document.createElement('div');
-            var grad = gradients[p.color] || ('linear-gradient(135deg, ' + p.color + ', ' + p.color + ')');
-            iconBg.style.cssText = 'width:30px;height:30px;border-radius:9px;background:' + grad + ';display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px ' + p.color + '25;';
+            var grad = gradients[p.color] || ('linear-gradient(135deg,' + p.color + ',' + p.color + ')');
+            iconBg.style.cssText = 'width:24px;height:24px;border-radius:7px;background:' + grad + ';display:flex;align-items:center;justify-content:center;margin-top:2px;';
             var icon = document.createElement('span');
             icon.className = 'material-symbols-rounded';
-            icon.style.cssText = 'font-size:15px;color:#fff;font-variation-settings:"FILL" 1,"wght" 500;';
+            icon.style.cssText = 'font-size:13px;color:#fff;font-variation-settings:"FILL" 1,"wght" 500;';
             icon.textContent = p.icon;
             iconBg.appendChild(icon);
-            iconCol.appendChild(iconBg);
+            card.appendChild(iconBg);
 
             // Prayer name
-            var nameSpan = document.createElement('span');
-            nameSpan.style.cssText = 'font-size:10px;font-weight:700;color:#2B2D42;font-family:"Noto Kufi Arabic",sans-serif;';
-            nameSpan.textContent = p.name;
-            iconCol.appendChild(nameSpan);
+            var name = document.createElement('div');
+            name.style.cssText = 'font-size:10px;font-weight:700;color:#2B2D42;font-family:"Noto Kufi Arabic",sans-serif;margin-top:3px;';
+            name.textContent = p.name;
+            card.appendChild(name);
 
-            iconsRow.appendChild(iconCol);
-        });
+            // Best line
+            var bestLine = document.createElement('div');
+            bestLine.style.cssText = 'font-size:9px;font-weight:600;color:#8D99AE;font-family:Rubik,sans-serif;margin-top:2px;display:flex;align-items:center;gap:2px;';
+            if (p.current > 0 && p.current >= p.best) {
+                var fire = document.createElement('span');
+                fire.className = 'material-symbols-rounded';
+                fire.style.cssText = 'font-size:11px;color:#D4A03C;font-variation-settings:"FILL" 1,"wght" 500;';
+                fire.textContent = 'local_fire_department';
+                bestLine.appendChild(fire);
+            }
+            var bestText = document.createTextNode('\u0623\u0641\u0636\u0644: ' + p.best);
+            bestLine.appendChild(bestText);
+            card.appendChild(bestLine);
 
-        container.appendChild(iconsRow);
+            return card;
+        }
 
-        // --- Legend ---
-        if (data.legendLabels) {
-            var leg = document.createElement('div');
-            leg.style.cssText = 'display:flex;justify-content:center;gap:16px;margin-top:12px;padding:6px 0;';
-            leg.innerHTML =
-                '<div style="display:flex;align-items:center;gap:5px;"><div style="width:14px;height:10px;border-radius:4px;background:linear-gradient(180deg,#40916C,#52B788);"></div><span style="font-size:10px;color:#8D99AE;font-weight:600;">' + (data.legendLabels.current || 'الحالية') + '</span></div>' +
-                '<div style="display:flex;align-items:center;gap:5px;"><div style="width:14px;height:10px;border-radius:4px;background:rgba(0,0,0,0.04);border:1px dashed rgba(0,0,0,0.1);"></div><span style="font-size:10px;color:#8D99AE;font-weight:600;">' + (data.legendLabels.best || 'الأفضل') + '</span></div>' +
-                '<div style="display:flex;align-items:center;gap:5px;"><span class="material-symbols-rounded" style="font-size:12px;color:#D4A03C;font-variation-settings:\'FILL\' 1,\'wght\' 500;">local_fire_department</span><span style="font-size:10px;color:#8D99AE;font-weight:600;">' + (data.legendLabels.record || 'رقم قياسي') + '</span></div>';
-            container.appendChild(leg);
+        // Row 1: 3 gauges (فجر، ظهر، عصر)
+        var row1 = document.createElement('div');
+        row1.style.cssText = 'display:flex;gap:8px;margin-bottom:8px;';
+        for (var i = 0; i < 3 && i < prayers.length; i++) {
+            var g = buildGauge(prayers[i]);
+            g.style.flex = '1';
+            row1.appendChild(g);
+        }
+        container.appendChild(row1);
+
+        // Row 2: 2 gauges centered (مغرب، عشاء)
+        if (prayers.length > 3) {
+            var row2 = document.createElement('div');
+            row2.style.cssText = 'display:flex;gap:8px;justify-content:center;';
+            for (var j = 3; j < prayers.length; j++) {
+                var g2 = buildGauge(prayers[j]);
+                g2.style.flex = '0 1 calc(33.33% - 4px)';
+                row2.appendChild(g2);
+            }
+            container.appendChild(row2);
         }
     }
 
