@@ -194,16 +194,6 @@
                 </div>
 
 
-                <!-- Next Prayer Countdown -->
-                <div class="next-prayer-card" id="nextPrayerCard" style="display:none;">
-                    <div class="npc-icon"><span class="material-symbols-rounded">hourglass_top</span></div>
-                    <div class="npc-info">
-                        <div class="npc-label">الصلاة القادمة</div>
-                        <div class="npc-name" id="nextPrayerName"></div>
-                    </div>
-                    <div class="npc-timer" id="nextPrayerTimer">--:--</div>
-                </div>
-
                 <!-- Prayer Times Bar (compact, no header text) -->
                 <div class="prayer-times-compact" id="prayerTimesBar">
                     <span id="prayerTimesLocation" style="display:none"></span>
@@ -217,6 +207,34 @@
                         <div class="pt-item" data-prayer="isha"><div class="pt-icon"><span class="material-symbols-rounded">dark_mode</span></div><div class="pt-name">العشاء</div><div class="pt-time">--:--</div></div>
                     </div>
                     <div id="nextPrayerInfo" style="display:none;"></div>
+                </div>
+
+                <!-- Next Prayer Countdown -->
+                <div id="nextPrayerCountdown" style="display:none;
+                    padding: 12px 16px;
+                    border-radius: 16px;
+                    margin-bottom: 14px;
+                    background: rgba(255,255,255,0.55);
+                    backdrop-filter: blur(12px);
+                    -webkit-backdrop-filter: blur(12px);
+                    border: 1px solid rgba(0,0,0,0.04);
+                    display: none;
+                    align-items: center;
+                    gap: 10px;">
+                    <div style="width: 36px; height: 36px; border-radius: 10px;
+                        background: rgba(45,106,79,0.08);
+                        display: flex; align-items: center; justify-content: center;
+                        flex-shrink: 0;">
+                        <span class="material-symbols-rounded" style="font-size: 18px; color: #2D6A4F;
+                            font-variation-settings: 'FILL' 1, 'wght' 500;">hourglass_top</span>
+                    </div>
+                    <div style="flex: 1;">
+                        <div id="npcLabel" style="font-size: 11px; color: #8D99AE; font-weight: 600;">الصلاة القادمة</div>
+                        <div id="npcName" style="font-size: 14px; font-weight: 700; color: #2B2D42;"></div>
+                    </div>
+                    <div id="npcTimer" style="font-size: 20px; font-weight: 800; color: #2D6A4F;
+                        font-family: 'Rubik', sans-serif; font-variant-numeric: tabular-nums;
+                        letter-spacing: 1px; margin-inline-start: auto;">--:--:--</div>
                 </div>
 
                 <!-- Smart Reminder -->

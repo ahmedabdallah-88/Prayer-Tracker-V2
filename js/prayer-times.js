@@ -397,6 +397,63 @@ window.App.PrayerTimes = (function() {
         if (typeof window.updateNotifButton === 'function') {
             window.updateNotifButton();
         }
+
+        // Update next prayer countdown card
+        renderNextPrayerCountdown();
+    }
+
+    // ==================== NEXT PRAYER COUNTDOWN ====================
+
+    var countdownInterval = null;
+
+    function renderNextPrayerCountdown() {
+        var el = document.getElementById('nextPrayerCountdown');
+        if (!el) return;
+
+        var state = getCurrentPrayerState();
+        if (!state || !state.next) {
+            el.style.display = 'none';
+            if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+            return;
+        }
+
+        var currentLang = getCurrentLang();
+        var nameEl = document.getElementById('npcName');
+        var timerEl = document.getElementById('npcTimer');
+        var labelEl = document.getElementById('npcLabel');
+
+        if (nameEl) nameEl.textContent = getPrayerName(state.next.id);
+        if (labelEl) labelEl.textContent = currentLang === 'ar' ? '\u0627\u0644\u0635\u0644\u0627\u0629 \u0627\u0644\u0642\u0627\u062F\u0645\u0629' : 'Next Prayer';
+
+        el.style.display = 'flex';
+
+        // Clear previous interval
+        if (countdownInterval) clearInterval(countdownInterval);
+
+        function updateTimer() {
+            var now = new Date();
+            var nowSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+            var targetSec = state.next.time * 60;
+            var diff = targetSec - nowSec;
+            if (diff < 0) diff += 86400;
+
+            var h = Math.floor(diff / 3600);
+            var m = Math.floor((diff % 3600) / 60);
+            var s = diff % 60;
+
+            var timeStr = h + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+            if (timerEl) timerEl.textContent = timeStr;
+
+            // When countdown reaches zero, re-fetch state
+            if (diff <= 0) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+                setTimeout(function() { renderNextPrayerCountdown(); }, 1000);
+            }
+        }
+
+        updateTimer();
+        countdownInterval = setInterval(updateTimer, 1000);
     }
 
     // ==================== REFRESH ====================
@@ -459,6 +516,7 @@ window.App.PrayerTimes = (function() {
         getCurrentPrayerState: getCurrentPrayerState,
         getPrayerName: getPrayerName,
         renderPrayerTimes: renderPrayerTimes,
+        renderNextPrayerCountdown: renderNextPrayerCountdown,
         refreshPrayerTimes: refreshPrayerTimes,
         startPrayerTimesMonitor: startPrayerTimesMonitor
     };

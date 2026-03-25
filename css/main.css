@@ -2376,62 +2376,6 @@ body {
     text-align: center;
 }
 
-/* ==================== NEXT PRAYER CARD ==================== */
-.next-prayer-card {
-    padding: 12px 16px;
-    border-radius: 16px;
-    margin-bottom: 14px;
-    background: rgba(255,255,255,0.55);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(0,0,0,0.04);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.npc-icon {
-    width: 36px; height: 36px;
-    border-radius: 10px;
-    background: rgba(45,106,79,0.08);
-    color: #2D6A4F;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.npc-icon .material-symbols-rounded {
-    font-size: 18px;
-    font-variation-settings: 'FILL' 1, 'wght' 500;
-}
-
-.npc-info {
-    flex: 1;
-}
-
-.npc-label {
-    font-size: 11px;
-    color: #8D99AE;
-    font-weight: 600;
-}
-
-.npc-name {
-    font-size: 14px;
-    font-weight: 700;
-    color: #2B2D42;
-}
-
-.npc-timer {
-    font-size: 20px;
-    font-weight: 800;
-    color: #2D6A4F;
-    font-family: 'Rubik', sans-serif;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 1px;
-    margin-inline-start: auto;
-}
-
 /* ==================== PRAYER TIMES COMPACT ==================== */
 .prayer-times-compact {
     margin-bottom: 14px;
