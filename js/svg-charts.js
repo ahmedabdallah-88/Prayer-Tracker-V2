@@ -504,7 +504,7 @@ window.App.SVGCharts = (function() {
         var days = data.days || []; // [{name, value}] 7 items
         if (days.length !== 7) return;
 
-        var size = 180, cx = 90, cy = 90, R = 80, innerR = 30;
+        var size = 240, cx = 120, cy = 120, R = 70, innerR = 26;
         var children = [];
 
         // Center circle
@@ -520,7 +520,7 @@ window.App.SVGCharts = (function() {
             var midAngle = startAngle + segAngle / 2;
             var segR = innerR + ((d.value / 100) * (R - innerR));
 
-            var color = d.value >= 90 ? '#2D6A4F' : d.value >= 75 ? '#40916C' : d.value >= 60 ? '#D4A03C' : '#C1574E';
+            var color = d.value >= 90 ? '#2D6A4F' : d.value >= 75 ? '#40916C' : d.value >= 60 ? '#52B788' : '#D4A03C';
 
             // Segment path
             var x1i = cx + innerR * Math.cos(startAngle);
@@ -560,7 +560,7 @@ window.App.SVGCharts = (function() {
             children.push(el('path', { d: path, fill: color, opacity: '0.7' }));
 
             // Label
-            var lR = R + 14;
+            var lR = R + 30;
             var lx = cx + lR * Math.cos(midAngle);
             var ly = cy + lR * Math.sin(midAngle);
             children.push(el('text', { x: lx, y: ly - 4, 'text-anchor': 'middle', fill: '#2B2D42', 'font-size': '9', 'font-weight': '700', 'font-family': 'Noto Kufi Arabic, sans-serif' }, d.name));

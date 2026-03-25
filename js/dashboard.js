@@ -266,7 +266,9 @@ window.App.Dashboard = (function() {
         var heatEl = document.getElementById(type + 'Heatmap');
         if (heatEl && type === 'fard') {
             var heatGrid = gatherHeatmapData(hYear);
-            var heatDayNames = (Config.T['day_names'][currentLang] || []).slice(0, 7);
+            var heatDayNames = currentLang === 'ar'
+                ? ['\u0623\u062d\u062f', '\u0625\u062b\u0646', '\u062b\u0644\u062b', '\u0623\u0631\u0628\u0639', '\u062e\u0645\u0633', '\u062c\u0645\u0639', '\u0633\u0628\u062a']
+                : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             Charts.congregationHeatmap(heatEl, {
                 grid: heatGrid,
                 dayNames: heatDayNames,
