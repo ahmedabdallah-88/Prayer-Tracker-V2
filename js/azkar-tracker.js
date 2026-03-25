@@ -47,8 +47,10 @@ window.App.Azkar = (function() {
 
     function updateAzkarTracker() {
         _init();
-        var month = parseInt(document.getElementById('azkarTrackerMonth').value);
-        var year = parseInt(document.getElementById('azkarTrackerYear').value);
+        var monthEl = document.getElementById('azkarTrackerMonth');
+        var yearEl = document.getElementById('azkarTrackerYear');
+        var month = monthEl ? parseInt(monthEl.value) : Hijri.getCurrentHijriMonth();
+        var year = yearEl ? parseInt(yearEl.value) : Hijri.getCurrentHijriYear();
         var daysInMonth = Hijri.getHijriDaysInMonth(year, month);
         var data = getAzkarData(year, month);
         var catData = data[currentCategory] || {};
@@ -63,6 +65,7 @@ window.App.Azkar = (function() {
         if (daysPill) daysPill.textContent = daysInMonth;
 
         var grid = document.getElementById('azkarDaysGrid');
+        if (!grid) return;
         grid.innerHTML = '';
 
         var todayH = Hijri.getTodayHijri();
@@ -114,27 +117,35 @@ window.App.Azkar = (function() {
         }
         var rate = possible > 0 ? Math.round((completed / possible) * 100) : 0;
 
-        document.getElementById('azkarCompleted').textContent = completed;
-        document.getElementById('azkarTotal').textContent = daysInMonth;
-        document.getElementById('azkarRate').textContent = rate + '%';
-        document.getElementById('azkarCounter').textContent = completed + ' / ' + daysInMonth;
+        var elComp = document.getElementById('azkarCompleted');
+        var elTotal = document.getElementById('azkarTotal');
+        var elRate = document.getElementById('azkarRate');
+        var elCtr = document.getElementById('azkarCounter');
+        if (elComp) elComp.textContent = completed;
+        if (elTotal) elTotal.textContent = daysInMonth;
+        if (elRate) elRate.textContent = rate + '%';
+        if (elCtr) elCtr.textContent = completed + ' / ' + daysInMonth;
     }
 
     function changeAzkarMonth(delta) {
-        var month = parseInt(document.getElementById('azkarTrackerMonth').value);
-        var year = parseInt(document.getElementById('azkarTrackerYear').value);
+        var mEl = document.getElementById('azkarTrackerMonth');
+        var yEl = document.getElementById('azkarTrackerYear');
+        var month = mEl ? parseInt(mEl.value) : Hijri.getCurrentHijriMonth();
+        var year = yEl ? parseInt(yEl.value) : Hijri.getCurrentHijriYear();
         month += delta;
         if (month > 12) { month = 1; year++; }
         else if (month < 1) { month = 12; year--; }
-        document.getElementById('azkarTrackerMonth').value = month;
-        document.getElementById('azkarTrackerYear').value = year;
+        if (mEl) mEl.value = month;
+        if (yEl) yEl.value = year;
         updateAzkarTracker();
     }
 
     function markAllAzkar() {
         _init();
-        var month = parseInt(document.getElementById('azkarTrackerMonth').value);
-        var year = parseInt(document.getElementById('azkarTrackerYear').value);
+        var mEl2 = document.getElementById('azkarTrackerMonth');
+        var yEl2 = document.getElementById('azkarTrackerYear');
+        var month = mEl2 ? parseInt(mEl2.value) : Hijri.getCurrentHijriMonth();
+        var year = yEl2 ? parseInt(yEl2.value) : Hijri.getCurrentHijriYear();
         var daysInMonth = Hijri.getHijriDaysInMonth(year, month);
         var data = getAzkarData(year, month);
         if (!data[currentCategory]) data[currentCategory] = {};
@@ -157,8 +168,10 @@ window.App.Azkar = (function() {
         _init();
         return window.App.UI.showConfirm(I18n.t('confirm_clear')).then(function(confirmed) {
             if (!confirmed) return;
-            var month = parseInt(document.getElementById('azkarTrackerMonth').value);
-            var year = parseInt(document.getElementById('azkarTrackerYear').value);
+            var mEl = document.getElementById('azkarTrackerMonth');
+            var yEl = document.getElementById('azkarTrackerYear');
+            var month = mEl ? parseInt(mEl.value) : Hijri.getCurrentHijriMonth();
+            var year = yEl ? parseInt(yEl.value) : Hijri.getCurrentHijriYear();
             var data = getAzkarData(year, month);
             data[currentCategory] = {};
             saveAzkarData(year, month, data);
@@ -181,11 +194,13 @@ window.App.Azkar = (function() {
             if (subTabs) { var t = subTabs.querySelectorAll('.sub-tab'); if (t[0]) t[0].classList.add('active'); }
             updateAzkarTracker();
         } else if (view === 'yearly') {
-            document.getElementById('azkarYearlyView').classList.add('active');
+            var azYearlyView = document.getElementById('azkarYearlyView');
+            if (azYearlyView) azYearlyView.classList.add('active');
             if (subTabs) { var t2 = subTabs.querySelectorAll('.sub-tab'); if (t2[1]) t2[1].classList.add('active'); }
             updateAzkarYearly();
         } else if (view === 'dashboard') {
-            document.getElementById('azkarDashboardView').classList.add('active');
+            var azDashView = document.getElementById('azkarDashboardView');
+            if (azDashView) azDashView.classList.add('active');
             if (subTabs) { var t3 = subTabs.querySelectorAll('.sub-tab'); if (t3[2]) t3[2].classList.add('active'); }
             updateAzkarDashboard();
         }
@@ -196,9 +211,11 @@ window.App.Azkar = (function() {
     function updateAzkarYearly() {
         _init();
         var currentLang = I18n.getCurrentLang();
-        var yearVal = parseInt(document.getElementById('azkarYearlyYear').value);
+        var yearEl = document.getElementById('azkarYearlyYear');
+        var yearVal = yearEl ? parseInt(yearEl.value) : Hijri.getCurrentHijriYear();
         var todayH = Hijri.getTodayHijri();
         var grid = document.getElementById('azkarMonthsGrid');
+        if (!grid) return;
         grid.innerHTML = '';
 
         var summaryEl = document.getElementById('azkarYearlySummary');
@@ -264,7 +281,8 @@ window.App.Azkar = (function() {
         _init();
         var Charts = window.App.SVGCharts;
         var currentLang = I18n.getCurrentLang();
-        var hYear = parseInt(document.getElementById('azkarDashboardYear').value);
+        var dashYearEl = document.getElementById('azkarDashboardYear');
+        var hYear = dashYearEl ? parseInt(dashYearEl.value) : Hijri.getCurrentHijriYear();
         var todayH = Hijri.getTodayHijri();
 
         // Gather stats
@@ -298,12 +316,13 @@ window.App.Azkar = (function() {
         var mornRate = totalDays > 0 ? Math.round((totalMorn / totalDays) * 100) : 0;
         var eveRate = totalDays > 0 ? Math.round((totalEve / totalDays) * 100) : 0;
 
-        // Stat cards
-        document.getElementById('azkarDashMornRate').textContent = mornRate + '%';
-        document.getElementById('azkarDashEveRate').textContent = eveRate + '%';
-        document.getElementById('azkarDashBothCount').textContent = totalBoth;
-        document.getElementById('azkarDashBestMonth').textContent = bestMonth.month > 0 ? Hijri.getHijriMonthName(bestMonth.month - 1) : '-';
-        document.getElementById('azkarDashBestPct').textContent = bestMonth.pct + '%';
+        // Stat cards (null-safe)
+        var _s = function(id, txt) { var el = document.getElementById(id); if (el) el.textContent = txt; };
+        _s('azkarDashMornRate', mornRate + '%');
+        _s('azkarDashEveRate', eveRate + '%');
+        _s('azkarDashBothCount', totalBoth);
+        _s('azkarDashBestMonth', bestMonth.month > 0 ? Hijri.getHijriMonthName(bestMonth.month - 1) : '-');
+        _s('azkarDashBestPct', bestMonth.pct + '%');
 
         // Mountain chart (two layers: morning=blue, evening=indigo)
         var mtnEl = document.getElementById('azkarMountainChart');

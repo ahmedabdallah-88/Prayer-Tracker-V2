@@ -136,7 +136,8 @@ window.App.Dashboard = (function() {
 
     function updateDashboard(type) {
         var Charts = window.App.SVGCharts;
-        var hYear = parseInt(document.getElementById(type + 'DashboardYear').value);
+        var dashYearEl = document.getElementById(type + 'DashboardYear');
+        var hYear = dashYearEl ? parseInt(dashYearEl.value) : Storage.getCurrentYear();
         Storage.setCurrentYear(hYear);
         Storage.loadAllData(type);
 
@@ -147,30 +148,31 @@ window.App.Dashboard = (function() {
         var currentLang = I18n.getCurrentLang();
         var todayH = Hijri.getTodayHijri();
 
-        // --- Update stat cards ---
-        document.getElementById(type + 'YearTotalCompleted').textContent = yearStats.completed;
-        document.getElementById(type + 'YearTotalPossible').textContent = yearStats.total;
-        document.getElementById(type + 'YearCompletionRate').textContent = yearStats.percentage + '%';
+        // --- Update stat cards (null-safe) ---
+        var _set = function(id, txt) { var el = document.getElementById(id); if (el) el.textContent = txt; };
+        _set(type + 'YearTotalCompleted', yearStats.completed);
+        _set(type + 'YearTotalPossible', yearStats.total);
+        _set(type + 'YearCompletionRate', yearStats.percentage + '%');
 
         var bestMonth = { month: 0, percentage: 0 };
         for (var m = 1; m <= 12; m++) {
             var ms = Storage.getMonthStats(type, m, hYear);
             if (ms.percentage > bestMonth.percentage) bestMonth = { month: m, percentage: ms.percentage };
         }
-        document.getElementById(type + 'BestMonth').textContent = bestMonth.month > 0 ? Config.monthNames[bestMonth.month - 1] : '-';
-        document.getElementById(type + 'BestMonthRate').textContent = bestMonth.percentage + '%';
+        _set(type + 'BestMonth', bestMonth.month > 0 ? Config.monthNames[bestMonth.month - 1] : '-');
+        _set(type + 'BestMonthRate', bestMonth.percentage + '%');
 
         var bestPrayer = prayerStats.reduce(function(best, p) { return p.completion > best.completion ? p : best; }, { name: '-', completion: 0 });
-        document.getElementById(type + 'BestPrayer').textContent = bestPrayer.name;
-        document.getElementById(type + 'BestPrayerRate').textContent = bestPrayer.completion + '%';
+        _set(type + 'BestPrayer', bestPrayer.name);
+        _set(type + 'BestPrayerRate', bestPrayer.completion + '%');
 
         // Congregation stats (fard only)
         if (type === 'fard') {
             var yearCong = 0, yearComp = 0;
             prayerStats.forEach(function(p) { yearCong += p.congCount; yearComp += p.completed; });
             var congRate = yearComp > 0 ? Math.round((yearCong / yearComp) * 100) : 0;
-            document.getElementById('fardYearCongRate').textContent = congRate + '%';
-            document.getElementById('fardYearCongCount').textContent = yearCong + ' ' + I18n.t('congregation') + ' / ' + yearComp;
+            _set('fardYearCongRate', congRate + '%');
+            _set('fardYearCongCount', yearCong + ' ' + I18n.t('congregation') + ' / ' + yearComp);
         }
 
         // --- RENDER SVG CHARTS ---
@@ -287,7 +289,8 @@ window.App.Dashboard = (function() {
         if (!container) return;
 
         var currentYear = Storage.getCurrentYear();
-        var year = parseInt(document.getElementById('fardDashboardYear').value) || currentYear;
+        var dashYrEl = document.getElementById('fardDashboardYear');
+        var year = (dashYrEl ? parseInt(dashYrEl.value) : 0) || currentYear;
         var stored = localStorage.getItem('salah_periods_' + Storage.getProfilePrefix() + 'h' + year);
         var periods = stored ? JSON.parse(stored) : [];
 

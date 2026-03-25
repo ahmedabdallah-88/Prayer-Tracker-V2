@@ -36,7 +36,8 @@ window.App.Female = (function() {
     }
 
     function toggleExemptMode(type) {
-        exemptMode[type] = document.getElementById(type + 'ExemptMode').checked;
+        var chk = document.getElementById(type + 'ExemptMode');
+        exemptMode[type] = chk ? chk.checked : false;
         if (typeof window.renderTrackerMonth === 'function') window.renderTrackerMonth(type);
     }
 

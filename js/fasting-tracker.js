@@ -45,13 +45,16 @@ window.App.Fasting = (function() {
             try { document.querySelector('#fastingSection .toggle-btn:nth-child(1)').classList.add('active'); } catch(e) {}
             updateVoluntaryFasting();
         } else if (view === 'ramadan') {
-            document.getElementById('fastingRamadanView').classList.add('active');
+            var ramView = document.getElementById('fastingRamadanView');
+            if (ramView) ramView.classList.add('active');
             try { document.querySelector('#fastingSection .toggle-btn:nth-child(2)').classList.add('active'); } catch(e) {}
             updateFastingView();
         } else if (view === 'dashboard') {
-            document.getElementById('fastingDashboardView').classList.add('active');
+            var fastDashView = document.getElementById('fastingDashboardView');
+            if (fastDashView) fastDashView.classList.add('active');
             try { document.querySelector('#fastingSection .toggle-btn:nth-child(3)').classList.add('active'); } catch(e) {}
-            document.getElementById('fastingDashboardYear').value = window.App.Storage.getCurrentYear();
+            var fastDashYear = document.getElementById('fastingDashboardYear');
+            if (fastDashYear) fastDashYear.value = window.App.Storage.getCurrentYear();
             updateFastingDashboard();
         }
 
@@ -70,8 +73,10 @@ window.App.Fasting = (function() {
     // ==================== VOLUNTARY FASTING ====================
 
     function updateVoluntaryFasting() {
-        fastingMonth = parseInt(document.getElementById('fastingMonthSelect').value);
-        fastingYear = parseInt(document.getElementById('fastingYearVoluntary').value);
+        var monthEl = document.getElementById('fastingMonthSelect');
+        var yearEl = document.getElementById('fastingYearVoluntary');
+        if (monthEl) fastingMonth = parseInt(monthEl.value);
+        if (yearEl) fastingYear = parseInt(yearEl.value);
         var daysInMonth = window.App.Storage.getDaysInMonth(fastingMonth, fastingYear);
         var data = getVolFastingData(fastingYear, fastingMonth);
         var isFemale = window.App.Storage.getActiveProfile() && window.App.Storage.getActiveProfile().gender === 'female' && window.App.Storage.getActiveProfile().age >= 12;
@@ -86,6 +91,7 @@ window.App.Fasting = (function() {
         if (daysPill) daysPill.textContent = daysInMonth;
 
         var grid = document.getElementById('voluntaryFastingGrid');
+        if (!grid) return;
         grid.innerHTML = '';
 
         var fasted = 0, exemptCount = 0;
@@ -139,30 +145,38 @@ window.App.Fasting = (function() {
             grid.appendChild(dayBox);
         }
 
-        document.getElementById('volFastedCount').textContent = fasted;
-        document.getElementById('volExemptCount').textContent = exemptCount;
+        var elFasted = document.getElementById('volFastedCount');
+        var elExempt = document.getElementById('volExemptCount');
+        var elRate = document.getElementById('volFastRate');
+        var elCounter = document.getElementById('volFastingCounter');
+        if (elFasted) elFasted.textContent = fasted;
+        if (elExempt) elExempt.textContent = exemptCount;
         var possible = daysInMonth - exemptCount;
         var rate = possible > 0 ? Math.round((fasted / possible) * 100) : 0;
-        document.getElementById('volFastRate').textContent = rate + '%';
-        document.getElementById('volFastingCounter').textContent = fasted + ' / ' + daysInMonth;
+        if (elRate) elRate.textContent = rate + '%';
+        if (elCounter) elCounter.textContent = fasted + ' / ' + daysInMonth;
     }
 
     function changeFastingMonth(delta) {
-        fastingMonth = parseInt(document.getElementById('fastingMonthSelect').value);
-        fastingYear = parseInt(document.getElementById('fastingYearVoluntary').value);
+        var mEl = document.getElementById('fastingMonthSelect');
+        var yEl = document.getElementById('fastingYearVoluntary');
+        if (mEl) fastingMonth = parseInt(mEl.value);
+        if (yEl) fastingYear = parseInt(yEl.value);
         fastingMonth += delta;
         if (fastingMonth > 12) { fastingMonth = 1; fastingYear++; }
         else if (fastingMonth < 1) { fastingMonth = 12; fastingYear--; }
-        document.getElementById('fastingMonthSelect').value = fastingMonth;
-        document.getElementById('fastingYearVoluntary').value = fastingYear;
+        if (mEl) mEl.value = fastingMonth;
+        if (yEl) yEl.value = fastingYear;
         updateVoluntaryFasting();
     }
 
     function resetVoluntaryFasting() {
         return window.App.UI.showConfirm(window.App.I18n.t('confirm_clear')).then(function(confirmed) {
             if (!confirmed) return;
-            fastingMonth = parseInt(document.getElementById('fastingMonthSelect').value);
-            fastingYear = parseInt(document.getElementById('fastingYearVoluntary').value);
+            var rMEl = document.getElementById('fastingMonthSelect');
+            var rYEl = document.getElementById('fastingYearVoluntary');
+            if (rMEl) fastingMonth = parseInt(rMEl.value);
+            if (rYEl) fastingYear = parseInt(rYEl.value);
             localStorage.removeItem(getVolFastingKey(fastingYear, fastingMonth));
             updateVoluntaryFasting();
         });
@@ -171,7 +185,8 @@ window.App.Fasting = (function() {
     // ==================== FASTING DASHBOARD ====================
 
     function updateFastingDashboard() {
-        var year = parseInt(document.getElementById('fastingDashboardYear').value) || window.App.Hijri.getCurrentHijriYear();
+        var fdYearEl = document.getElementById('fastingDashboardYear');
+        var year = (fdYearEl ? parseInt(fdYearEl.value) : 0) || window.App.Hijri.getCurrentHijriYear();
 
         var totalVol = 0;
         var bestMonth = { month: 0, days: 0 };
@@ -187,18 +202,24 @@ window.App.Fasting = (function() {
             }
         }
 
-        document.getElementById('fastDashVolTotal').textContent = totalVol;
-        document.getElementById('fastDashBestMonth').textContent = bestMonth.month > 0 ? window.App.Hijri.getHijriMonthName(bestMonth.month - 1) : '-';
-        document.getElementById('fastDashBestMonthDays').textContent = bestMonth.days + ' \u064A\u0648\u0645';
-        document.getElementById('fastDashAvg').textContent = Math.round(totalVol / 12);
+        var elVolTotal = document.getElementById('fastDashVolTotal');
+        var elBestMonth = document.getElementById('fastDashBestMonth');
+        var elBestDays = document.getElementById('fastDashBestMonthDays');
+        var elAvg = document.getElementById('fastDashAvg');
+        if (elVolTotal) elVolTotal.textContent = totalVol;
+        if (elBestMonth) elBestMonth.textContent = bestMonth.month > 0 ? window.App.Hijri.getHijriMonthName(bestMonth.month - 1) : '-';
+        if (elBestDays) elBestDays.textContent = bestMonth.days + ' \u064A\u0648\u0645';
+        if (elAvg) elAvg.textContent = Math.round(totalVol / 12);
 
         // Ramadan stats
         var ramadanData = getFastingData(year);
         var ramadanDays = window.App.Hijri.getHijriDaysInMonth(year, 9);
         var ramadanFasted = 0;
         Object.values(ramadanData).forEach(function(v) { if (v === 'fasted') ramadanFasted++; });
-        document.getElementById('fastDashRamadan').textContent = ramadanFasted + '/' + ramadanDays;
-        document.getElementById('fastDashRamadanRate').textContent = Math.round((ramadanFasted / ramadanDays) * 100) + '%';
+        var elRamadan = document.getElementById('fastDashRamadan');
+        var elRamadanRate = document.getElementById('fastDashRamadanRate');
+        if (elRamadan) elRamadan.textContent = ramadanFasted + '/' + ramadanDays;
+        if (elRamadanRate) elRamadanRate.textContent = Math.round((ramadanFasted / ramadanDays) * 100) + '%';
 
         // Monthly chart (SVG bar chart)
         var chartContainer = document.getElementById('fastingMonthlyChart');
@@ -214,9 +235,11 @@ window.App.Fasting = (function() {
     // ==================== RAMADAN FASTING VIEW ====================
 
     function updateFastingView() {
-        var year = parseInt(document.getElementById('fastingYearInput').value) || window.App.Hijri.getCurrentHijriYear();
+        var yearEl = document.getElementById('fastingYearInput');
+        var year = (yearEl ? parseInt(yearEl.value) : 0) || window.App.Hijri.getCurrentHijriYear();
         var data = getFastingData(year);
         var grid = document.getElementById('fastingGrid');
+        if (!grid) return;
         grid.innerHTML = '';
 
         // Ramadan is always Hijri month 9 - get its days
@@ -248,12 +271,17 @@ window.App.Fasting = (function() {
             grid.appendChild(box);
         }
 
-        document.getElementById('fastingDaysFasted').textContent = fasted;
-        document.getElementById('fastingDaysExempt').textContent = exempt;
-        document.getElementById('fastingDaysMissed').textContent = missed;
+        var elDaysFasted = document.getElementById('fastingDaysFasted');
+        var elDaysExempt = document.getElementById('fastingDaysExempt');
+        var elDaysMissed = document.getElementById('fastingDaysMissed');
+        var elDaysOwed = document.getElementById('fastingDaysOwed');
+        var elFastCounter = document.getElementById('fastingCounter');
+        if (elDaysFasted) elDaysFasted.textContent = fasted;
+        if (elDaysExempt) elDaysExempt.textContent = exempt;
+        if (elDaysMissed) elDaysMissed.textContent = missed;
         var isFemaleRamadan = window.App.Storage.getActiveProfile() && window.App.Storage.getActiveProfile().gender === 'female' && window.App.Storage.getActiveProfile().age >= 12;
-        document.getElementById('fastingDaysOwed').textContent = isFemaleRamadan ? (exempt + missed) : missed;
-        document.getElementById('fastingCounter').textContent = fasted + ' / ' + ramadanDays;
+        if (elDaysOwed) elDaysOwed.textContent = isFemaleRamadan ? (exempt + missed) : missed;
+        if (elFastCounter) elFastCounter.textContent = fasted + ' / ' + ramadanDays;
     }
 
     function cycleFastingDay(year, day) {

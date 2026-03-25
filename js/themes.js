@@ -3,7 +3,8 @@ window.App = window.App || {};
 window.App.Themes = (function() {
 
     function toggleThemeMenu() {
-        document.getElementById('themeOptions').classList.toggle('show');
+        var el = document.getElementById('themeOptions');
+        if (el) el.classList.toggle('show');
     }
 
     // Close theme menu on outside click

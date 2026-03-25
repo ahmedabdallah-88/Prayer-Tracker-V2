@@ -56,7 +56,9 @@ window.App.Profiles = (function() {
     // --------------- profile screen ---------------
 
     function showProfileScreen() {
-        document.getElementById('profileOverlay').classList.remove('hidden');
+        var overlay = document.getElementById('profileOverlay');
+        if (!overlay) return;
+        overlay.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
         document.body.style.position = 'fixed';
         document.body.style.width = '100%';
@@ -80,7 +82,8 @@ window.App.Profiles = (function() {
     }
 
     function hideProfileScreen() {
-        document.getElementById('profileOverlay').classList.add('hidden');
+        var overlay = document.getElementById('profileOverlay');
+        if (overlay) overlay.classList.add('hidden');
         var scrollY = document.body.style.top;
         document.body.style.overflow = '';
         document.body.style.position = '';
@@ -98,6 +101,7 @@ window.App.Profiles = (function() {
 
     function renderProfilesList() {
         var list = document.getElementById('profilesList');
+        if (!list) return;
         var profiles = getProfiles();
         list.innerHTML = '';
 
@@ -147,22 +151,27 @@ window.App.Profiles = (function() {
 
     function showProfileForm(editId) {
         var form = document.getElementById('profileForm');
-        form.classList.add('show');
-        document.getElementById('addProfileBtn').style.display = 'none';
+        if (form) form.classList.add('show');
+        var addBtn = document.getElementById('addProfileBtn');
+        if (addBtn) addBtn.style.display = 'none';
+
+        var editIdEl = document.getElementById('editProfileId');
+        var nameEl = document.getElementById('profileName');
+        var ageEl = document.getElementById('profileAge');
 
         if (editId) {
             var profiles = getProfiles();
             var p = profiles.find(function(x) { return x.id === editId; });
             if (p) {
-                document.getElementById('editProfileId').value = p.id;
-                document.getElementById('profileName').value = p.name;
-                document.getElementById('profileAge').value = p.age;
+                if (editIdEl) editIdEl.value = p.id;
+                if (nameEl) nameEl.value = p.name;
+                if (ageEl) ageEl.value = p.age;
                 selectGender(p.gender);
             }
         } else {
-            document.getElementById('editProfileId').value = '';
-            document.getElementById('profileName').value = '';
-            document.getElementById('profileAge').value = '';
+            if (editIdEl) editIdEl.value = '';
+            if (nameEl) nameEl.value = '';
+            if (ageEl) ageEl.value = '';
             selectedGender = '';
             document.querySelectorAll('.gender-option').forEach(function(o) {
                 o.classList.remove('selected');
@@ -171,8 +180,10 @@ window.App.Profiles = (function() {
     }
 
     function hideProfileForm() {
-        document.getElementById('profileForm').classList.remove('show');
-        document.getElementById('addProfileBtn').style.display = '';
+        var form = document.getElementById('profileForm');
+        if (form) form.classList.remove('show');
+        var addBtn = document.getElementById('addProfileBtn');
+        if (addBtn) addBtn.style.display = '';
     }
 
     // --------------- save ---------------
@@ -379,8 +390,10 @@ window.App.Profiles = (function() {
         // Show/hide female features
         var isFemale = activeProfile.gender === 'female' && activeProfile.age >= 12;
 
-        document.getElementById('fardExemptBar').style.display = isFemale ? 'flex' : 'none';
-        document.getElementById('sunnahExemptBar').style.display = isFemale ? 'flex' : 'none';
+        var fardExBar = document.getElementById('fardExemptBar');
+        var sunExBar = document.getElementById('sunnahExemptBar');
+        if (fardExBar) fardExBar.style.display = isFemale ? 'flex' : 'none';
+        if (sunExBar) sunExBar.style.display = isFemale ? 'flex' : 'none';
         // Show Ramadan exempt features for females
         var ramadanBtn = document.getElementById('ramadanViewBtn');
         if (ramadanBtn) ramadanBtn.style.display = '';
@@ -396,14 +409,20 @@ window.App.Profiles = (function() {
         if (fardPeriodDash) fardPeriodDash.style.display = isFemale ? '' : 'none';
 
         // Reset exempt modes
-        exemptMode = { fard: false, sunnah: false };
+        if (window.App.Female && window.App.Female.getExemptMode) {
+            var em = window.App.Female.getExemptMode();
+            em.fard = false;
+            em.sunnah = false;
+        }
         var fardCheck = document.getElementById('fardExemptMode');
         var sunnahCheck = document.getElementById('sunnahExemptMode');
         if (fardCheck) fardCheck.checked = false;
         if (sunnahCheck) sunnahCheck.checked = false;
 
-        updateExemptInfo('fard');
-        updateExemptInfo('sunnah');
+        if (window.App.Female && window.App.Female.updateExemptInfo) {
+            window.App.Female.updateExemptInfo('fard');
+            window.App.Female.updateExemptInfo('sunnah');
+        }
 
         // From _origApplyProfileUI override: update shell bar
         if (typeof window.updateShellBar === 'function') {

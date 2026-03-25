@@ -82,23 +82,31 @@ window.App.Tracker = (function() {
             }
         } else if (section === 'fasting') {
             // Fasting override branch
-            document.getElementById('fastingSection').classList.add('active');
-            document.getElementById('fastingToggleBtn').classList.add('active');
+            var fastSec = document.getElementById('fastingSection');
+            var fastBtn = document.getElementById('fastingToggleBtn');
+            if (fastSec) fastSec.classList.add('active');
+            if (fastBtn) fastBtn.classList.add('active');
 
             var todayH = Hijri.getTodayHijri();
-            document.getElementById('fastingYearInput').value = Hijri.getCurrentHijriYear();
-            document.getElementById('fastingMonthSelect').value = todayH.month;
-            document.getElementById('fastingYearVoluntary').value = Hijri.getCurrentHijriYear();
+            var fYearInput = document.getElementById('fastingYearInput');
+            var fMonthSel = document.getElementById('fastingMonthSelect');
+            var fYearVol = document.getElementById('fastingYearVoluntary');
+            if (fYearInput) fYearInput.value = Hijri.getCurrentHijriYear();
+            if (fMonthSel) fMonthSel.value = todayH.month;
+            if (fYearVol) fYearVol.value = Hijri.getCurrentHijriYear();
 
             if (typeof window.switchFastingView === 'function') {
                 window.switchFastingView('voluntary');
             }
         } else if (section === 'fard') {
-            document.getElementById('fardSection').classList.add('active');
+            var fardSec = document.getElementById('fardSection');
+            if (fardSec) fardSec.classList.add('active');
             try { document.querySelector('.main-toggle-btn:nth-child(1)').classList.add('active'); } catch(e) {}
             var todayHF = Hijri.getTodayHijri();
-            var hMonth = parseInt(document.getElementById('fardTrackerMonthSelect').value) || todayHF.month;
-            var hYear  = parseInt(document.getElementById('fardTrackerYearInput').value) || todayHF.year;
+            var fardMonthEl = document.getElementById('fardTrackerMonthSelect');
+            var fardYearEl = document.getElementById('fardTrackerYearInput');
+            var hMonth = (fardMonthEl ? parseInt(fardMonthEl.value) : 0) || todayHF.month;
+            var hYear  = (fardYearEl ? parseInt(fardYearEl.value) : 0) || todayHF.year;
             Hijri.setCurrentHijriMonth(hMonth);
             Hijri.setCurrentHijriYear(hYear);
             Storage.setCurrentMonth(hMonth);
@@ -107,11 +115,14 @@ window.App.Tracker = (function() {
             updateTrackerView('fard');
         } else {
             // sunnah
-            document.getElementById('sunnahSection').classList.add('active');
+            var sunSec = document.getElementById('sunnahSection');
+            if (sunSec) sunSec.classList.add('active');
             try { document.querySelector('.main-toggle-btn:nth-child(2)').classList.add('active'); } catch(e) {}
             var todayHS = Hijri.getTodayHijri();
-            var hMonthS = parseInt(document.getElementById('sunnahTrackerMonthSelect').value) || todayHS.month;
-            var hYearS  = parseInt(document.getElementById('sunnahTrackerYearInput').value) || todayHS.year;
+            var sunMonthEl = document.getElementById('sunnahTrackerMonthSelect');
+            var sunYearEl = document.getElementById('sunnahTrackerYearInput');
+            var hMonthS = (sunMonthEl ? parseInt(sunMonthEl.value) : 0) || todayHS.month;
+            var hYearS  = (sunYearEl ? parseInt(sunYearEl.value) : 0) || todayHS.year;
             Hijri.setCurrentHijriMonth(hMonthS);
             Hijri.setCurrentHijriYear(hYearS);
             Storage.setCurrentMonth(hMonthS);
@@ -142,23 +153,28 @@ window.App.Tracker = (function() {
         document.querySelectorAll('#' + prefix + 'Section .toggle-btn').forEach(function(b) { b.classList.remove('active'); });
 
         if (view === 'tracker') {
-            document.getElementById(prefix + 'TrackerView').classList.add('active');
+            var trkView = document.getElementById(prefix + 'TrackerView');
+            if (trkView) trkView.classList.add('active');
             try { document.querySelector('#' + prefix + 'Section .toggle-btn:nth-child(1)').classList.add('active'); } catch(e) {}
             var todayH = Hijri.getTodayHijri();
-            var hMonth = parseInt(document.getElementById(prefix + 'TrackerMonthSelect').value) || todayH.month;
-            var hYear  = parseInt(document.getElementById(prefix + 'TrackerYearInput').value) || todayH.year;
+            var mSelEl = document.getElementById(prefix + 'TrackerMonthSelect');
+            var yInpEl = document.getElementById(prefix + 'TrackerYearInput');
+            var hMonth = (mSelEl ? parseInt(mSelEl.value) : 0) || todayH.month;
+            var hYear  = (yInpEl ? parseInt(yInpEl.value) : 0) || todayH.year;
             Hijri.setCurrentHijriMonth(hMonth);
             Hijri.setCurrentHijriYear(hYear);
             Storage.setCurrentMonth(hMonth);
             Storage.setCurrentYear(hYear);
-            document.getElementById(prefix + 'TrackerMonthSelect').value = hMonth;
-            document.getElementById(prefix + 'TrackerYearInput').value = hYear;
+            if (mSelEl) mSelEl.value = hMonth;
+            if (yInpEl) yInpEl.value = hYear;
             Storage.loadAllData(type);
             updateTrackerView(type);
         } else if (view === 'yearly') {
-            document.getElementById(prefix + 'YearlyView').classList.add('active');
+            var yrlyView = document.getElementById(prefix + 'YearlyView');
+            if (yrlyView) yrlyView.classList.add('active');
             try { document.querySelector('#' + prefix + 'Section .toggle-btn:nth-child(2)').classList.add('active'); } catch(e) {}
-            var yearlyYear = parseInt(document.getElementById(prefix + 'YearlyYear').value);
+            var yrlyEl = document.getElementById(prefix + 'YearlyYear');
+            var yearlyYear = yrlyEl ? parseInt(yrlyEl.value) : Hijri.getCurrentHijriYear();
             Hijri.setCurrentHijriYear(yearlyYear);
             Storage.setCurrentYear(yearlyYear);
             Storage.loadAllData(type);
@@ -166,9 +182,11 @@ window.App.Tracker = (function() {
                 window.updateYearlyView(type);
             }
         } else if (view === 'dashboard') {
-            document.getElementById(prefix + 'DashboardView').classList.add('active');
+            var dshView = document.getElementById(prefix + 'DashboardView');
+            if (dshView) dshView.classList.add('active');
             try { document.querySelector('#' + prefix + 'Section .toggle-btn:nth-child(3)').classList.add('active'); } catch(e) {}
-            var dashYear = parseInt(document.getElementById(prefix + 'DashboardYear').value);
+            var dshEl = document.getElementById(prefix + 'DashboardYear');
+            var dashYear = dshEl ? parseInt(dshEl.value) : Hijri.getCurrentHijriYear();
             Hijri.setCurrentHijriYear(dashYear);
             Storage.setCurrentYear(dashYear);
             Storage.loadAllData(type);
@@ -196,8 +214,10 @@ window.App.Tracker = (function() {
         var Hijri = _getHijri();
         var Storage = _getStorage();
 
-        var hMonth = parseInt(document.getElementById(type + 'TrackerMonthSelect').value);
-        var hYear  = parseInt(document.getElementById(type + 'TrackerYearInput').value);
+        var utMonthEl = document.getElementById(type + 'TrackerMonthSelect');
+        var utYearEl = document.getElementById(type + 'TrackerYearInput');
+        var hMonth = utMonthEl ? parseInt(utMonthEl.value) : Hijri.getCurrentHijriMonth();
+        var hYear  = utYearEl ? parseInt(utYearEl.value) : Hijri.getCurrentHijriYear();
         Hijri.setCurrentHijriMonth(hMonth);
         Hijri.setCurrentHijriYear(hYear);
         Storage.setCurrentMonth(hMonth);
@@ -236,6 +256,7 @@ window.App.Tracker = (function() {
         var I18n    = _getI18n();
 
         var container = document.getElementById(type + 'TrackerPrayersContainer');
+        if (!container) return;
         container.innerHTML = '';
 
         var prayers     = Storage.getPrayersArray(type);
@@ -458,11 +479,14 @@ window.App.Tracker = (function() {
             totalCompleted += completed;
         });
 
-        document.getElementById(type + 'TrackerTotalCompleted').textContent = totalCompleted;
-        document.getElementById(type + 'TrackerTotalRemaining').textContent = Math.max(0, totalPossible - totalCompleted);
+        var elCompleted = document.getElementById(type + 'TrackerTotalCompleted');
+        var elRemaining = document.getElementById(type + 'TrackerTotalRemaining');
+        var elRate = document.getElementById(type + 'TrackerCompletionRate');
+        if (elCompleted) elCompleted.textContent = totalCompleted;
+        if (elRemaining) elRemaining.textContent = Math.max(0, totalPossible - totalCompleted);
 
         var rate = totalPossible > 0 ? Math.round((totalCompleted / totalPossible) * 100) : 0;
-        document.getElementById(type + 'TrackerCompletionRate').textContent = rate + '%';
+        if (elRate) elRate.textContent = rate + '%';
     }
 
     // ==================== changeTrackerMonth ====================
@@ -499,8 +523,10 @@ window.App.Tracker = (function() {
             }
         }
 
-        document.getElementById(type + 'TrackerMonthSelect').value = hMonth;
-        document.getElementById(type + 'TrackerYearInput').value = hYear;
+        var elMonth = document.getElementById(type + 'TrackerMonthSelect');
+        var elYear = document.getElementById(type + 'TrackerYearInput');
+        if (elMonth) elMonth.value = hMonth;
+        if (elYear) elYear.value = hYear;
         Storage.loadAllData(type);
         updateTrackerView(type);
     }

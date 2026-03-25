@@ -96,7 +96,7 @@ window.App.Storage = (function() {
         try {
             localStorage.setItem(key, JSON.stringify(dataObj[month]));
         } catch(e) {
-            showToast(t('storage_full'), 'error');
+            if (window.App.UI && window.App.UI.showToast) window.App.UI.showToast('Storage full', 'error');
             console.error('Storage full:', e);
         }
     }
@@ -106,12 +106,13 @@ window.App.Storage = (function() {
         var prayers = getPrayersArray(type);
         var daysInMonth = getDaysInMonth(month, year);
         var isFemale = activeProfile && activeProfile.gender === 'female' && activeProfile.age >= 12;
-        var exemptData = isFemale ? getExemptDays(year, month) : {};
+        var Female = window.App.Female;
+        var exemptData = (isFemale && Female) ? Female.getExemptDays(year, month) : {};
         var completed = 0;
         var total = 0;
 
         prayers.forEach(function(prayer) {
-            var exemptCount = isFemale ? getExemptCountForPrayer(year, month, prayer.id) : 0;
+            var exemptCount = (isFemale && Female) ? Female.getExemptCountForPrayer(year, month, prayer.id) : 0;
             total += daysInMonth - exemptCount;
             if (dataObj[month] && dataObj[month][prayer.id]) {
                 completed += Object.values(dataObj[month][prayer.id]).filter(function(v) { return v; }).length;
@@ -151,7 +152,7 @@ window.App.Storage = (function() {
 
     function saveCongregationData(year, month, data) {
         try { localStorage.setItem(getCongregationKey(year, month), JSON.stringify(data)); }
-        catch(e) { showToast(t('storage_full'), 'error'); }
+        catch(e) { if (window.App.UI && window.App.UI.showToast) window.App.UI.showToast('Storage full', 'error'); }
     }
 
     // ==================== QADA DATA ====================
@@ -163,7 +164,7 @@ window.App.Storage = (function() {
 
     function saveQadaData(year, month, data) {
         try { localStorage.setItem(getQadaKey(year, month), JSON.stringify(data)); }
-        catch(e) { showToast(t('storage_full'), 'error'); }
+        catch(e) { if (window.App.UI && window.App.UI.showToast) window.App.UI.showToast('Storage full', 'error'); }
     }
 
     // ==================== FASTING DATA ====================
@@ -175,7 +176,7 @@ window.App.Storage = (function() {
 
     function saveFastingData(year, data) {
         try { localStorage.setItem(getFastingKey(year), JSON.stringify(data)); }
-        catch(e) { showToast(t('storage_full'), 'error'); }
+        catch(e) { if (window.App.UI && window.App.UI.showToast) window.App.UI.showToast('Storage full', 'error'); }
     }
 
     // ==================== VOLUNTARY FASTING DATA ====================
@@ -187,7 +188,7 @@ window.App.Storage = (function() {
 
     function saveVolFastingData(year, month, data) {
         try { localStorage.setItem(getVolFastingKey(year, month), JSON.stringify(data)); }
-        catch(e) { showToast(t('storage_full'), 'error'); }
+        catch(e) { if (window.App.UI && window.App.UI.showToast) window.App.UI.showToast('Storage full', 'error'); }
     }
 
     // ==================== BASE INIT ====================

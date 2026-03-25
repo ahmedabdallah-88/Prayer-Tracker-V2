@@ -1,5 +1,5 @@
-// Prayer Tracker PWA — Service Worker v60 (Design Fix V2)
-const CACHE_NAME = 'salah-tracker-v60';
+// Prayer Tracker PWA — Service Worker v61 (Design Fix V2)
+const CACHE_NAME = 'salah-tracker-v61';
 const ASSETS = [
     './',
     './index.html',
@@ -49,7 +49,7 @@ const ASSETS = [
 
 // ==================== INSTALL ====================
 self.addEventListener('install', event => {
-    console.log('[SW] Installing v60...');
+    console.log('[SW] Installing v61...');
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => cache.addAll(ASSETS))
@@ -59,7 +59,7 @@ self.addEventListener('install', event => {
 
 // ==================== ACTIVATE ====================
 self.addEventListener('activate', event => {
-    console.log('[SW] Activating v60...');
+    console.log('[SW] Activating v61...');
     event.waitUntil(
         caches.keys().then(keys => {
             return Promise.all(

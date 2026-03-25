@@ -435,14 +435,8 @@
                             App.Storage.setCurrentMonth(todayH.month);
                             App.Storage.setCurrentYear(todayH.year);
 
-                            document.getElementById('fardTrackerMonthSelect').value = todayH.month;
-                            document.getElementById('fardTrackerYearInput').value = todayH.year;
-                            document.getElementById('sunnahTrackerMonthSelect').value = todayH.month;
-                            document.getElementById('sunnahTrackerYearInput').value = todayH.year;
-                            document.getElementById('fardDashboardYear').value = todayH.year;
-                            document.getElementById('fardYearlyYear').value = todayH.year;
-                            document.getElementById('sunnahDashboardYear').value = todayH.year;
-                            document.getElementById('sunnahYearlyYear').value = todayH.year;
+                            ['fardTrackerMonthSelect','sunnahTrackerMonthSelect'].forEach(function(id) { var el = document.getElementById(id); if (el) el.value = todayH.month; });
+                            ['fardTrackerYearInput','sunnahTrackerYearInput','fardDashboardYear','fardYearlyYear','sunnahDashboardYear','sunnahYearlyYear'].forEach(function(id) { var el = document.getElementById(id); if (el) el.value = todayH.year; });
 
                             loadAllData('fard');
                             loadAllData('sunnah');
@@ -493,15 +487,11 @@
                     App.Storage.setCurrentMonth(todayH.month);
                     App.Storage.setCurrentYear(todayH.year);
 
-                    // Update ALL month/year selects
-                    document.getElementById('fardTrackerMonthSelect').value = todayH.month;
-                    document.getElementById('fardTrackerYearInput').value = todayH.year;
-                    document.getElementById('sunnahTrackerMonthSelect').value = todayH.month;
-                    document.getElementById('sunnahTrackerYearInput').value = todayH.year;
-                    document.getElementById('fardDashboardYear').value = todayH.year;
-                    document.getElementById('fardYearlyYear').value = todayH.year;
-                    document.getElementById('sunnahDashboardYear').value = todayH.year;
-                    document.getElementById('sunnahYearlyYear').value = todayH.year;
+                    // Update ALL month/year selects (null-safe)
+                    var _ids = ['fardTrackerMonthSelect','sunnahTrackerMonthSelect'];
+                    _ids.forEach(function(id) { var el = document.getElementById(id); if (el) el.value = todayH.month; });
+                    var _yids = ['fardTrackerYearInput','sunnahTrackerYearInput','fardDashboardYear','fardYearlyYear','sunnahDashboardYear','sunnahYearlyYear'];
+                    _yids.forEach(function(id) { var el = document.getElementById(id); if (el) el.value = todayH.year; });
 
                     // Reload data
                     loadAllData('fard');

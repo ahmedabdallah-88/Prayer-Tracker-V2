@@ -8,12 +8,14 @@ window.App.YearOverview = (function() {
         var I18n = window.App.I18n;
         var currentLang = I18n.getCurrentLang();
 
-        var yearVal = parseInt(document.getElementById(type + 'YearlyYear').value);
+        var yearEl = document.getElementById(type + 'YearlyYear');
+        var yearVal = yearEl ? parseInt(yearEl.value) : Hijri.getCurrentHijriYear();
         Hijri.setCurrentHijriYear(yearVal);
         Storage.setCurrentYear(yearVal);
         Storage.loadAllData(type);
 
         var grid = document.getElementById(type + 'MonthsGrid');
+        if (!grid) return;
         grid.innerHTML = '';
 
         var todayH = Hijri.getTodayHijri();
@@ -116,17 +118,22 @@ window.App.YearOverview = (function() {
 
         Storage.setCurrentMonth(month);
         Hijri.setCurrentHijriMonth(month);
-        document.getElementById(type + 'CurrentMonthTitle').textContent = Hijri.formatHijriMonthHeader(Hijri.getCurrentHijriYear(), month);
+        var titleEl = document.getElementById(type + 'CurrentMonthTitle');
+        if (titleEl) titleEl.textContent = Hijri.formatHijriMonthHeader(Hijri.getCurrentHijriYear(), month);
 
-        document.getElementById(type + 'YearlyView').classList.remove('active');
-        document.getElementById(type + 'MonthlyView').classList.add('active');
+        var yrlyView = document.getElementById(type + 'YearlyView');
+        var mthlyView = document.getElementById(type + 'MonthlyView');
+        if (yrlyView) yrlyView.classList.remove('active');
+        if (mthlyView) mthlyView.classList.add('active');
 
         renderMonthDetail(type);
     }
 
     function backToYearly(type) {
-        document.getElementById(type + 'MonthlyView').classList.remove('active');
-        document.getElementById(type + 'YearlyView').classList.add('active');
+        var mView = document.getElementById(type + 'MonthlyView');
+        var yView = document.getElementById(type + 'YearlyView');
+        if (mView) mView.classList.remove('active');
+        if (yView) yView.classList.add('active');
         updateYearlyView(type);
     }
 
@@ -137,6 +144,7 @@ window.App.YearOverview = (function() {
         var Female = window.App.Female;
 
         var container = document.getElementById(type + 'PrayersContainer');
+        if (!container) return;
         container.innerHTML = '';
 
         var prayers = Storage.getPrayersArray(type);
@@ -264,6 +272,7 @@ window.App.YearOverview = (function() {
 
     function resetMonth(type) {
         var Storage = window.App.Storage;
+        var Hijri = window.App.Hijri;
         var hMonth = Hijri.getCurrentHijriMonth();
 
         window.App.UI.showConfirm(window.App.I18n.t('confirm_clear')).then(function(confirmed) {
