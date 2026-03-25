@@ -73,6 +73,23 @@
     }
 
     // ================================================================
+    // restoreHijriOverrides — import global Hijri calendar overrides
+    // ================================================================
+    function restoreHijriOverrides(imported) {
+        // Restore salah_hijri_days_* keys (29/30 day overrides per month)
+        var keys = Object.keys(imported);
+        for (var i = 0; i < keys.length; i++) {
+            if (keys[i].startsWith('salah_hijri_days_')) {
+                localStorage.setItem(keys[i], JSON.stringify(imported[keys[i]]));
+            }
+        }
+        // Restore salah_hijri_overrides (custom month start dates)
+        if (imported['salah_hijri_overrides'] !== undefined) {
+            localStorage.setItem('salah_hijri_overrides', JSON.stringify(imported['salah_hijri_overrides']));
+        }
+    }
+
+    // ================================================================
     // exportData — merged version (profile-aware, Web Share + fallback)
     // ================================================================
     function exportData() {
@@ -109,6 +126,20 @@
 
         var theme = localStorage.getItem('salah_tracker_theme');
         if (theme) allData['_theme'] = theme;
+
+        // Hijri calendar overrides (global, not profile-specific)
+        for (var ih = 0; ih < localStorage.length; ih++) {
+            var hKey = localStorage.key(ih);
+            if (hKey && hKey.startsWith('salah_hijri_days_')) {
+                try { allData[hKey] = JSON.parse(localStorage.getItem(hKey)); }
+                catch(e) { allData[hKey] = localStorage.getItem(hKey); }
+            }
+        }
+        var hijriOverrides = localStorage.getItem('salah_hijri_overrides');
+        if (hijriOverrides) {
+            try { allData['salah_hijri_overrides'] = JSON.parse(hijriOverrides); }
+            catch(e) { allData['salah_hijri_overrides'] = hijriOverrides; }
+        }
 
         if (Object.keys(allData).length <= 1) {
             showToast(t('no_data'), 'warning');
@@ -424,6 +455,9 @@
                                 loadTheme();
                             }
 
+                            // Restore Hijri calendar overrides (global)
+                            restoreHijriOverrides(imported);
+
                             // Hide profile screen
                             hideProfileScreen();
                             applyProfileUI();
@@ -479,6 +513,9 @@
                         localStorage.setItem('salah_tracker_theme', imported['_theme']);
                         loadTheme();
                     }
+
+                    // Restore Hijri calendar overrides (global)
+                    restoreHijriOverrides(imported);
 
                     // Full reload: reset state to today's Hijri date
                     var todayH = getTodayHijri();
