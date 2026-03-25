@@ -347,6 +347,9 @@ window.App.Tracker = (function() {
             for (var day = 1; day <= daysInMonth; day++) {
                 var dayBox = document.createElement('div');
                 dayBox.className = 'day-box';
+                dayBox.setAttribute('role', 'button');
+                dayBox.setAttribute('tabindex', '0');
+                dayBox.setAttribute('aria-label', I18n.getPrayerName(prayer.id) + ' - ' + day);
 
                 dayBox.appendChild(createDualDayNum(day, hYear, hMonth));
 
@@ -668,25 +671,30 @@ window.App.Tracker = (function() {
 
         // Toggle: if most are marked, unmark all. Otherwise mark all.
         var shouldMark = markedCount < availableDays / 2;
+        var confirmKey = shouldMark ? 'confirm_batch_mark' : 'confirm_batch_unmark';
 
-        for (var day3 = 1; day3 <= daysInMonth; day3++) {
-            if (Hijri.isFutureDateHijri(day3, hMonth, hYear)) continue;
-            if (Female.isPrayerExempt(exemptData, prayerId, day3)) continue;
-            dataObj[hMonth][prayerId][day3] = shouldMark;
-        }
+        UI.showConfirm(I18n.t(confirmKey)).then(function(confirmed) {
+            if (!confirmed) return;
 
-        Storage.saveMonthData(type, hMonth);
-        renderTrackerMonth(type);
-        updateTrackerStats(type);
-        if (typeof window.renderStreaks === 'function') {
-            window.renderStreaks(type);
-        }
-        if (type === 'fard') {
-            if (typeof window.updateCongregationStats === 'function') window.updateCongregationStats();
-        }
+            for (var day3 = 1; day3 <= daysInMonth; day3++) {
+                if (Hijri.isFutureDateHijri(day3, hMonth, hYear)) continue;
+                if (Female.isPrayerExempt(exemptData, prayerId, day3)) continue;
+                dataObj[hMonth][prayerId][day3] = shouldMark;
+            }
 
-        var pName = I18n.getPrayerName(prayerId);
-        UI.showToast(pName + ': ' + availableDays, 'success', 1500);
+            Storage.saveMonthData(type, hMonth);
+            renderTrackerMonth(type);
+            updateTrackerStats(type);
+            if (typeof window.renderStreaks === 'function') {
+                window.renderStreaks(type);
+            }
+            if (type === 'fard') {
+                if (typeof window.updateCongregationStats === 'function') window.updateCongregationStats();
+            }
+
+            var pName = I18n.getPrayerName(prayerId);
+            UI.showToast(pName + ': ' + availableDays, 'success', 1500);
+        });
     }
 
     // ==================== toggleDay (year overview variant) ====================

@@ -1869,7 +1869,9 @@ body {
 
 .confirm-btn:hover { transform: translateY(-1px); }
 .confirm-btn.yes { background: var(--primary); color: white; }
+.confirm-btn.yes.danger { background: var(--danger); color: white; }
 .confirm-btn.no { background: rgba(0,0,0,0.04); color: var(--text-secondary); }
+.confirm-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 
 /* ==================== SECTION/VIEW TRANSITIONS ==================== */
 .section, .view {
@@ -1988,9 +1990,89 @@ body {
 .nav-btn:focus-visible,
 .action-btn:focus-visible,
 .batch-btn:focus-visible,
-.tab-item:focus-visible {
+.tab-item:focus-visible,
+.month-card:focus-visible,
+.shell-btn:focus-visible,
+.theme-option:focus-visible,
+.gender-option:focus-visible,
+.profile-card:focus-visible,
+.toggle-btn:focus-visible,
+.form-btn:focus-visible,
+.nav-circle:focus-visible {
     outline: 3px solid var(--primary);
     outline-offset: 2px;
+}
+
+/* ==================== NOTIFICATION ONBOARDING CARD ==================== */
+.notif-onboard-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    margin: 8px 0 12px;
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    border: 1px solid rgba(var(--primary-rgb), 0.12);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.notif-onboard-card.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+.notif-onboard-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(var(--primary-rgb), 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.notif-onboard-text {
+    flex: 1;
+    min-width: 150px;
+}
+.notif-onboard-title {
+    font-weight: 700;
+    font-size: 0.95em;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+.notif-onboard-body {
+    font-size: 0.82em;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+.notif-onboard-actions {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+.notif-onboard-btn {
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: none;
+    font-size: 0.85em;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    transition: transform 0.15s;
+}
+.notif-onboard-btn:active { transform: scale(0.97); }
+.notif-onboard-btn.enable {
+    background: var(--primary);
+    color: white;
+    flex: 1;
+}
+.notif-onboard-btn.later {
+    background: rgba(0,0,0,0.04);
+    color: var(--text-secondary);
 }
 
 /* ==================== TOUCH DEVICE OVERRIDES ==================== */

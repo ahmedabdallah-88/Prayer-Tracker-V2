@@ -187,25 +187,38 @@ window.App.Azkar = (function() {
             maxDay = todayH.day;
         }
 
+        // Check if will mark or unmark
+        var willUnmark = true;
         cats.forEach(function(cat) {
-            if (!data[cat]) data[cat] = {};
-            // Toggle: if all marked, unmark all; otherwise mark all
-            var allMarked = true;
+            if (!data[cat]) { willUnmark = false; return; }
             for (var d = 1; d <= maxDay; d++) {
-                if (!data[cat][d]) { allMarked = false; break; }
-            }
-            if (allMarked) {
-                data[cat] = {};
-            } else {
-                for (var d2 = 1; d2 <= maxDay; d2++) {
-                    data[cat][d2] = true;
-                }
+                if (!data[cat][d]) { willUnmark = false; return; }
             }
         });
+        var confirmKey = willUnmark ? 'confirm_batch_azkar_unmark' : 'confirm_batch_azkar_mark';
 
-        saveAzkarData(year, month, data);
-        window.App.UI.hapticFeedback('success');
-        updateAzkarTracker();
+        window.App.UI.showConfirm(I18n.t(confirmKey)).then(function(confirmed) {
+            if (!confirmed) return;
+
+            cats.forEach(function(cat) {
+                if (!data[cat]) data[cat] = {};
+                var allMarked = true;
+                for (var d = 1; d <= maxDay; d++) {
+                    if (!data[cat][d]) { allMarked = false; break; }
+                }
+                if (allMarked) {
+                    data[cat] = {};
+                } else {
+                    for (var d2 = 1; d2 <= maxDay; d2++) {
+                        data[cat][d2] = true;
+                    }
+                }
+            });
+
+            saveAzkarData(year, month, data);
+            window.App.UI.hapticFeedback('success');
+            updateAzkarTracker();
+        });
     }
 
     function resetAzkar() {

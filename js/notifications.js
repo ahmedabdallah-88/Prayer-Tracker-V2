@@ -394,7 +394,56 @@ window.App.Notifications = (function() {
         });
     }
 
-    // ==================== PUBLIC API ====================
+    // ==================== ONBOARDING CARD ====================
+
+    function showOnboardingCard() {
+        // Only show once, and only if notifications not already enabled
+        if (notificationsEnabled) return;
+        if (localStorage.getItem('salah_notif_onboard_dismissed')) return;
+        if (!('Notification' in window)) return;
+
+        var card = document.createElement('div');
+        card.id = 'notifOnboardCard';
+        card.className = 'notif-onboard-card';
+        card.setAttribute('role', 'alert');
+        card.innerHTML =
+            '<div class="notif-onboard-icon"><span class="material-symbols-rounded" style="font-size:28px;color:var(--primary);">notifications_active</span></div>' +
+            '<div class="notif-onboard-text">' +
+                '<div class="notif-onboard-title">' + t('notif_onboard_title') + '</div>' +
+                '<div class="notif-onboard-body">' + t('notif_onboard_body') + '</div>' +
+            '</div>' +
+            '<div class="notif-onboard-actions">' +
+                '<button class="notif-onboard-btn enable" id="_notifEnable">' + t('notif_onboard_enable') + '</button>' +
+                '<button class="notif-onboard-btn later" id="_notifLater">' + t('notif_onboard_later') + '</button>' +
+            '</div>';
+
+        // Insert at top of main content
+        var container = document.getElementById('mainContent');
+        if (container) {
+            container.insertBefore(card, container.firstChild);
+        } else {
+            document.body.appendChild(card);
+        }
+
+        requestAnimationFrame(function() {
+            requestAnimationFrame(function() { card.classList.add('show'); });
+        });
+
+        card.querySelector('#_notifEnable').onclick = function() {
+            dismissOnboarding(card);
+            togglePrayerNotifications();
+        };
+
+        card.querySelector('#_notifLater').onclick = function() {
+            dismissOnboarding(card);
+        };
+    }
+
+    function dismissOnboarding(card) {
+        localStorage.setItem('salah_notif_onboard_dismissed', 'true');
+        card.classList.remove('show');
+        setTimeout(function() { card.remove(); }, 300);
+    }
 
     return {
         updateNotifButton: updateNotifButton,
@@ -405,6 +454,7 @@ window.App.Notifications = (function() {
         checkPrayerTimeNotifications: checkPrayerTimeNotifications,
         startPrayerTimesMonitor: startPrayerTimesMonitor,
         scheduleSWNotifications: scheduleSWNotifications,
+        showOnboardingCard: showOnboardingCard,
         isEnabled: function() { return notificationsEnabled; },
         setEnabled: function(v) { notificationsEnabled = v; },
         resetNotifSentToday: function() { notifSentToday = {}; }

@@ -91,14 +91,27 @@ window.App.Main = (function() {
                 window.App.UI.checkPrayerReminders();
             }
         }, 1000);
+
+        // Notification onboarding card (first-launch prompt)
+        setTimeout(function() {
+            if (window.App.Notifications && window.App.Notifications.showOnboardingCard) {
+                window.App.Notifications.showOnboardingCard();
+            }
+        }, 2000);
     }
 
     // ==================== FIORI: switchTab ====================
 
     function switchTab(tab) {
-        document.querySelectorAll('.tab-item').forEach(function(t) { t.classList.remove('active'); });
+        document.querySelectorAll('.tab-item').forEach(function(t) {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+        });
         var tabEl = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
-        if (tabEl) tabEl.classList.add('active');
+        if (tabEl) {
+            tabEl.classList.add('active');
+            tabEl.setAttribute('aria-selected', 'true');
+        }
         if (typeof window.switchSection === 'function') {
             window.switchSection(tab);
         }

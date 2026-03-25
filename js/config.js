@@ -376,7 +376,32 @@ window.App.Config = {
         'fasting_exempt_label': { ar: '\u0648\u0636\u0639 \u062a\u062d\u062f\u064a\u062f \u0623\u064a\u0627\u0645 \u0627\u0644\u062d\u064a\u0636', en: 'Period marking mode' },
 
         // Period history
-        'period_history_title': { ar: '\u0633\u062c\u0644 \u0627\u0644\u062f\u0648\u0631\u0629 \u0627\u0644\u0634\u0647\u0631\u064a\u0629', en: 'Period History' }
+        'period_history_title': { ar: '\u0633\u062c\u0644 \u0627\u0644\u062f\u0648\u0631\u0629 \u0627\u0644\u0634\u0647\u0631\u064a\u0629', en: 'Period History' },
+
+        // Confirmation dialogs (Feature 5)
+        'confirm_batch_mark': { ar: '\u0647\u0644 \u062a\u0631\u064a\u062f \u062a\u0639\u0644\u064a\u0645 \u062c\u0645\u064a\u0639 \u0623\u064a\u0627\u0645 \u0647\u0630\u0647 \u0627\u0644\u0635\u0644\u0627\u0629\u061f', en: 'Mark all days for this prayer?' },
+        'confirm_batch_unmark': { ar: '\u0647\u0644 \u062a\u0631\u064a\u062f \u0625\u0644\u063a\u0627\u0621 \u062a\u0639\u0644\u064a\u0645 \u062c\u0645\u064a\u0639 \u0623\u064a\u0627\u0645 \u0647\u0630\u0647 \u0627\u0644\u0635\u0644\u0627\u0629\u061f', en: 'Unmark all days for this prayer?' },
+        'confirm_batch_azkar_mark': { ar: '\u0647\u0644 \u062a\u0631\u064a\u062f \u062a\u0639\u0644\u064a\u0645 \u062c\u0645\u064a\u0639 \u0627\u0644\u0623\u064a\u0627\u0645\u061f', en: 'Mark all days?' },
+        'confirm_batch_azkar_unmark': { ar: '\u0647\u0644 \u062a\u0631\u064a\u062f \u0625\u0644\u063a\u0627\u0621 \u062a\u0639\u0644\u064a\u0645 \u062c\u0645\u064a\u0639 \u0627\u0644\u0623\u064a\u0627\u0645\u061f', en: 'Unmark all days?' },
+        'confirm_delete_profile': { ar: '\u0647\u0644 \u0623\u0646\u062a \u0645\u062a\u0623\u0643\u062f \u0645\u0646 \u062d\u0630\u0641 \u0647\u0630\u0627 \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0634\u062e\u0635\u064a\u061f\n\u0633\u064a\u062a\u0645 \u062d\u0630\u0641 \u062c\u0645\u064a\u0639 \u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a \u0646\u0647\u0627\u0626\u064a\u0627\u064b.', en: 'Are you sure you want to delete this profile?\nAll data will be permanently deleted.' },
+
+        // Accessibility (Feature 1)
+        'aria_theme_menu': { ar: '\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0645\u0638\u0647\u0631', en: 'Theme menu' },
+        'aria_profile_settings': { ar: '\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0634\u062e\u0635\u064a', en: 'Profile settings' },
+        'aria_prev_month': { ar: '\u0627\u0644\u0634\u0647\u0631 \u0627\u0644\u0633\u0627\u0628\u0642', en: 'Previous month' },
+        'aria_next_month': { ar: '\u0627\u0644\u0634\u0647\u0631 \u0627\u0644\u062a\u0627\u0644\u064a', en: 'Next month' },
+        'aria_close': { ar: '\u0625\u063a\u0644\u0627\u0642', en: 'Close' },
+
+        // Offline fallback (Feature 3)
+        'offline_title': { ar: '\u0623\u0646\u062a \u063a\u064a\u0631 \u0645\u062a\u0635\u0644', en: 'You are offline' },
+        'offline_body': { ar: '\u0644\u0627 \u064a\u0648\u062c\u062f \u0627\u062a\u0635\u0627\u0644 \u0628\u0627\u0644\u0625\u0646\u062a\u0631\u0646\u062a \u0648\u0644\u0645 \u064a\u062a\u0645 \u062a\u062d\u0645\u064a\u0644 \u0627\u0644\u062a\u0637\u0628\u064a\u0642 \u0628\u0639\u062f.\n\u0623\u0639\u062f \u0627\u0644\u0645\u062d\u0627\u0648\u0644\u0629 \u0639\u0646\u062f \u0627\u0644\u0627\u062a\u0635\u0627\u0644.', en: 'No internet connection and the app has not been cached yet.\nPlease try again when connected.' },
+        'offline_retry': { ar: '\u0625\u0639\u0627\u062f\u0629 \u0627\u0644\u0645\u062d\u0627\u0648\u0644\u0629', en: 'Retry' },
+
+        // Notification onboarding (Feature 4)
+        'notif_onboard_title': { ar: '\u062a\u0630\u0643\u064a\u0631 \u0627\u0644\u0635\u0644\u0627\u0629', en: 'Prayer Reminders' },
+        'notif_onboard_body': { ar: '\u0641\u0639\u0651\u0644 \u0627\u0644\u062a\u0646\u0628\u064a\u0647\u0627\u062a \u0644\u062a\u0630\u0643\u064a\u0631\u0643 \u0642\u0628\u0644 \u0648\u0628\u0639\u062f \u0643\u0644 \u0635\u0644\u0627\u0629', en: 'Enable notifications to get reminded before and after each prayer' },
+        'notif_onboard_enable': { ar: '\u062a\u0641\u0639\u064a\u0644 \u0627\u0644\u062a\u0646\u0628\u064a\u0647\u0627\u062a', en: 'Enable Notifications' },
+        'notif_onboard_later': { ar: '\u0644\u0627\u062d\u0642\u0627\u064b', en: 'Maybe Later' }
     }
 
 };

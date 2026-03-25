@@ -24,7 +24,8 @@ window.App.UI = (function() {
         }, duration);
     }
 
-    function showConfirm(msg) {
+    function showConfirm(msg, opts) {
+        opts = opts || {};
         return new Promise(function(resolve) {
             // Prevent stacking
             var existing = document.querySelector('.confirm-overlay');
@@ -33,26 +34,46 @@ window.App.UI = (function() {
             var tFunc = window.App.I18n ? window.App.I18n.t : function(k) { return k; };
             var overlay = document.createElement('div');
             overlay.className = 'confirm-overlay';
+            overlay.setAttribute('role', 'alertdialog');
+            overlay.setAttribute('aria-modal', 'true');
+            overlay.setAttribute('aria-label', msg);
+
+            var dangerClass = opts.danger ? ' danger' : '';
             overlay.innerHTML =
-                '<div class="confirm-box">' +
+                '<div class="confirm-box' + dangerClass + '">' +
                     '<div class="confirm-msg">' + msg + '</div>' +
                     '<div class="confirm-buttons">' +
-                        '<button class="confirm-btn yes" id="_cfYes">' + tFunc('yes') + '</button>' +
+                        '<button class="confirm-btn yes' + dangerClass + '" id="_cfYes">' + tFunc('yes') + '</button>' +
                         '<button class="confirm-btn no" id="_cfNo">' + tFunc('no_word') + '</button>' +
                     '</div>' +
                 '</div>';
             document.body.appendChild(overlay);
 
             requestAnimationFrame(function() {
-                requestAnimationFrame(function() { overlay.classList.add('show'); });
+                requestAnimationFrame(function() {
+                    overlay.classList.add('show');
+                    // Focus the No button by default for destructive actions
+                    var focusBtn = opts.danger ? overlay.querySelector('#_cfNo') : overlay.querySelector('#_cfYes');
+                    if (focusBtn) focusBtn.focus();
+                });
             });
 
+            var cleaned = false;
             var cleanup = function(result) {
+                if (cleaned) return;
+                cleaned = true;
                 overlay.classList.remove('show');
                 document.body.style.overflow = '';
+                document.removeEventListener('keydown', keyHandler);
                 setTimeout(function() { overlay.remove(); }, 250);
                 resolve(result);
             };
+
+            var keyHandler = function(e) {
+                if (e.key === 'Escape') { cleanup(false); }
+                else if (e.key === 'Enter') { cleanup(true); }
+            };
+            document.addEventListener('keydown', keyHandler);
 
             // Lock body scroll
             document.body.style.overflow = 'hidden';
@@ -277,6 +298,17 @@ window.App.UI = (function() {
         var dayBox = e.target.closest('.day-box:not(.disabled)');
         if (dayBox) {
             animateDayBox(dayBox);
+        }
+    });
+
+    // Keyboard support: Enter/Space triggers day-box, month-card, and other role="button" elements
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            var target = e.target;
+            if (target && target.getAttribute('role') === 'button' && target.tagName !== 'BUTTON') {
+                e.preventDefault();
+                target.click();
+            }
         }
     });
 

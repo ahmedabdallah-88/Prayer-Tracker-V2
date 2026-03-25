@@ -35,9 +35,9 @@
             </div>
         </div>
         <div class="shell-bar-actions">
-            <button class="shell-btn" onclick="toggleThemeMenu()" id="shellThemeBtn" title="Theme"><span class="material-symbols-rounded" style="font-size:20px;">palette</span></button>
+            <button class="shell-btn" onclick="toggleThemeMenu()" id="shellThemeBtn" aria-label="Theme" aria-haspopup="true" aria-expanded="false"><span class="material-symbols-rounded" style="font-size:20px;">palette</span></button>
             <button class="shell-btn" onclick="toggleLang()" id="langBtn" role="button" aria-label="Switch language">EN</button>
-            <button class="shell-btn" onclick="openProfileSettings()" id="shellProfileBtn" style="display:none;" title="Profile">
+            <button class="shell-btn" onclick="openProfileSettings()" id="shellProfileBtn" style="display:none;" aria-label="Profile settings">
                 <span class="material-symbols-rounded" style="font-size:20px;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">person</span>
             </button>
         </div>
@@ -134,6 +134,14 @@
         </div>
     </div>
 
+
+    <noscript>
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;text-align:center;font-family:'Noto Kufi Arabic',sans-serif;background:#F5F3EF;color:#2B2D42;">
+            <div style="font-size:48px;margin-bottom:16px;">&#x1F54C;</div>
+            <h2 style="font-size:1.3em;margin-bottom:8px;">متتبع الصلاة</h2>
+            <p style="color:#8D99AE;max-width:300px;">هذا التطبيق يحتاج JavaScript للعمل.<br>This app requires JavaScript to run.</p>
+        </div>
+    </noscript>
 
     <a href="#mainContent" class="skip-link" data-t="skip_to_content">تخطي إلى المحتوى</a>
     <div class="offline-bar" id="offlineBar" role="alert" data-t="offline_msg"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">wifi_off</span> أنت غير متصل بالإنترنت — التطبيق يعمل بدون اتصال</div>
@@ -702,7 +710,7 @@
         </div>
 
         <!-- ==================== AZKAR SECTION ==================== -->
-        <div id="azkarSection" class="section">
+        <div id="azkarSection" class="section" role="tabpanel" aria-label="Azkar">
             <!-- Sub-tabs -->
             <div class="sub-tabs" id="azkarSubTabs">
                 <button class="sub-tab active" onclick="switchAzkarView('tracker')"><span class="material-symbols-rounded" style="font-size:16px;">grid_view</span> <span data-t="azkar_tracker">التتبع</span></button>
@@ -799,28 +807,28 @@
 
     <input type="file" id="importFile" style="display:none;" accept=".json" onchange="handleImport(event)">
 
-    <script src="js/config.js?v=84"></script>
-    <script src="js/storage.js?v=84"></script>
-    <script src="js/hijri-calendar.js?v=84"></script>
-    <script src="js/ui-utils.js?v=84"></script>
-    <script src="js/i18n.js?v=84"></script>
-    <script src="js/themes.js?v=84"></script>
-    <script src="js/profiles.js?v=84"></script>
-    <script src="js/female-features.js?v=84"></script>
-    <script src="js/fard-tracker.js?v=84"></script>
-    <script src="js/sunnah-tracker.js?v=84"></script>
-    <script src="js/jamaah-tracker.js?v=84"></script>
-    <script src="js/weekly-view.js?v=84"></script>
-    <script src="js/fasting-tracker.js?v=84"></script>
-    <script src="js/prayer-times.js?v=84"></script>
-    <script src="js/notifications.js?v=84"></script>
-    <script src="js/azkar-tracker.js?v=84"></script>
-    <script src="js/svg-charts.js?v=84"></script>
-    <script src="js/qada-report.js?v=84"></script>
-    <script src="js/dashboard.js?v=84"></script>
-    <script src="js/year-overview.js?v=84"></script>
-    <script src="js/data-io.js?v=84"></script>
-    <script src="js/app.js?v=84"></script>
+    <script src="js/config.js?v=85"></script>
+    <script src="js/storage.js?v=85"></script>
+    <script src="js/hijri-calendar.js?v=85"></script>
+    <script src="js/ui-utils.js?v=85"></script>
+    <script src="js/i18n.js?v=85"></script>
+    <script src="js/themes.js?v=85"></script>
+    <script src="js/profiles.js?v=85"></script>
+    <script src="js/female-features.js?v=85"></script>
+    <script src="js/fard-tracker.js?v=85"></script>
+    <script src="js/sunnah-tracker.js?v=85"></script>
+    <script src="js/jamaah-tracker.js?v=85"></script>
+    <script src="js/weekly-view.js?v=85"></script>
+    <script src="js/fasting-tracker.js?v=85"></script>
+    <script src="js/prayer-times.js?v=85"></script>
+    <script src="js/notifications.js?v=85"></script>
+    <script src="js/azkar-tracker.js?v=85"></script>
+    <script src="js/svg-charts.js?v=85"></script>
+    <script src="js/qada-report.js?v=85"></script>
+    <script src="js/dashboard.js?v=85"></script>
+    <script src="js/year-overview.js?v=85"></script>
+    <script src="js/data-io.js?v=85"></script>
+    <script src="js/app.js?v=85"></script>
 
     <!-- Profile Settings Overlay -->
     <div class="profile-settings-overlay" id="profileSettingsOverlay">
@@ -946,20 +954,20 @@
     </div>
 
     <!-- Tab Bar (4 tabs) -->
-    <div class="tab-bar" id="tabBar">
-        <button class="tab-item active" onclick="switchTab('fard')" id="tabFard">
+    <div class="tab-bar" id="tabBar" role="tablist" aria-label="Main navigation">
+        <button class="tab-item active" onclick="switchTab('fard')" id="tabFard" role="tab" aria-selected="true" aria-controls="fardSection" data-t-aria="aria_tab_fard">
             <div class="tab-icon-wrap"><span class="tab-icon"><span class="material-symbols-rounded">mosque</span></span></div>
             <span class="tab-label" data-t="fard_short">الفرائض</span>
         </button>
-        <button class="tab-item" onclick="switchTab('sunnah')" id="tabSunnah">
+        <button class="tab-item" onclick="switchTab('sunnah')" id="tabSunnah" role="tab" aria-selected="false" aria-controls="sunnahSection" data-t-aria="aria_tab_sunnah">
             <div class="tab-icon-wrap"><span class="tab-icon"><span class="material-symbols-rounded">auto_awesome</span></span></div>
             <span class="tab-label" data-t="sunnah_short">السنن</span>
         </button>
-        <button class="tab-item" onclick="switchTab('fasting')" id="tabFasting">
+        <button class="tab-item" onclick="switchTab('fasting')" id="tabFasting" role="tab" aria-selected="false" aria-controls="fastingSection" data-t-aria="aria_tab_fasting">
             <div class="tab-icon-wrap"><span class="tab-icon"><span class="material-symbols-rounded">nights_stay</span></span></div>
             <span class="tab-label" data-t="fasting_short">الصيام</span>
         </button>
-        <button class="tab-item" onclick="switchTab('azkar')" id="tabAzkar">
+        <button class="tab-item" onclick="switchTab('azkar')" id="tabAzkar" role="tab" aria-selected="false" aria-controls="azkarSection" data-t-aria="aria_tab_azkar">
             <div class="tab-icon-wrap"><span class="tab-icon"><span class="material-symbols-rounded">menu_book</span></span></div>
             <span class="tab-label" data-t="azkar_short">الأذكار</span>
         </button>
