@@ -40,7 +40,7 @@ window.App.Dashboard = (function() {
                 }
             }
             var pct = total > 0 ? Math.round((completed / total) * 100) : 0;
-            var congPct = total > 0 ? Math.round((congCount / total) * 100) : 0;
+            var congPct = completed > 0 ? Math.round((congCount / completed) * 100) : 0;
             results.push({
                 id: prayer.id,
                 name: I18n.getPrayerName(prayer.id),
