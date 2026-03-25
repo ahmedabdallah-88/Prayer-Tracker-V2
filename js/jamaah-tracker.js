@@ -64,7 +64,6 @@ window.App.Jamaah = (function() {
         var bestStreak = 0;
         var tempStreak = 0;
 
-        var useCongregation = false; // Streak tracks completion, not congregation
         var checkDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 0, 0);
         var todayH = Hijri.gregorianToHijri(checkDate);
 
@@ -75,24 +74,8 @@ window.App.Jamaah = (function() {
 
         function isDayChecked(hYear, hMonth, hDay) {
             if (hDay < 1) return false;
-
-            if (useCongregation) {
-                var congKey = Storage.getCongregationKey(hYear, hMonth);
-                var stored = localStorage.getItem(congKey);
-                if (stored) {
-                    var parsed = JSON.parse(stored);
-                    if (parsed[prayerId] && (parsed[prayerId][String(hDay)] || parsed[prayerId][hDay])) return true;
-                }
-                return false;
-            } else {
-                var key = Storage.getStorageKey(type, hMonth, hYear);
-                var stored2 = localStorage.getItem(key);
-                if (stored2) {
-                    var parsed2 = JSON.parse(stored2);
-                    if (parsed2[prayerId] && (parsed2[prayerId][String(hDay)] || parsed2[prayerId][hDay])) return true;
-                }
-                return false;
-            }
+            var congData = Storage.getCongregationData(hYear, hMonth);
+            return congData && congData[prayerId] && (congData[prayerId][String(hDay)] === true || congData[prayerId][hDay] === true);
         }
 
         var startFromToday = false;
