@@ -545,78 +545,74 @@ window.App.SVGCharts = (function() {
         container.appendChild(card);
     }
 
-    // ==================== 6. WEEKLY RHYTHM (Radial chart) ====================
+    // ==================== 6. WEEKLY RHYTHM (Sorted horizontal bars) ====================
 
     function weeklyRhythm(container, data) {
         container.innerHTML = '';
-        var days = data.days || []; // [{name, value}] 7 items
+        var days = data.days || [];
         if (days.length !== 7) return;
 
-        var size = 240, cx = 120, cy = 120, R = 70, innerR = 26;
-        var children = [];
-
-        // Center circle
+        var sorted = days.slice().sort(function(a, b) { return b.value - a.value; });
         var avg = Math.round(days.reduce(function(s, d) { return s + d.value; }, 0) / 7);
-        children.push(el('circle', { cx: cx, cy: cy, r: innerR - 2, fill: '#F5F3EF' }));
-        children.push(el('text', { x: cx, y: cy - 3, 'text-anchor': 'middle', fill: '#8D99AE', 'font-size': '8', 'font-weight': '600', 'font-family': 'Noto Kufi Arabic, sans-serif' }, 'متوسط'));
-        children.push(el('text', { x: cx, y: cy + 10, 'text-anchor': 'middle', fill: '#2B2D42', 'font-size': '14', 'font-weight': '800', 'font-family': 'Rubik, sans-serif' }, avg + '%'));
 
-        var segAngle = (2 * Math.PI) / 7;
-        days.forEach(function(d, i) {
-            var startAngle = segAngle * i - Math.PI / 2;
-            var endAngle = startAngle + segAngle;
-            var midAngle = startAngle + segAngle / 2;
-            var segR = innerR + ((d.value / 100) * (R - innerR));
+        function getColor(v) {
+            return v >= 90 ? '#2D6A4F' : v >= 75 ? '#40916C' : v >= 60 ? '#D4A03C' : '#C1574E';
+        }
 
-            var color = d.value >= 90 ? '#2D6A4F' : d.value >= 75 ? '#40916C' : d.value >= 60 ? '#52B788' : '#D4A03C';
+        // Card
+        var card = document.createElement('div');
+        card.style.cssText = 'background:rgba(255,255,255,0.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:20px;border:1px solid rgba(0,0,0,0.04);padding:16px 14px;';
 
-            // Segment path
-            var x1i = cx + innerR * Math.cos(startAngle);
-            var y1i = cy + innerR * Math.sin(startAngle);
-            var x1o = cx + segR * Math.cos(startAngle);
-            var y1o = cy + segR * Math.sin(startAngle);
-            var x2i = cx + innerR * Math.cos(endAngle);
-            var y2i = cy + innerR * Math.sin(endAngle);
-            var x2o = cx + segR * Math.cos(endAngle);
-            var y2o = cy + segR * Math.sin(endAngle);
+        // Header
+        var hdr = document.createElement('div');
+        hdr.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;';
+        var hdrLeft = document.createElement('div');
+        hdrLeft.style.cssText = 'display:flex;align-items:center;gap:6px;';
+        hdrLeft.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;color:#2D6A4F;">date_range</span>' +
+            '<span style="font-size:14px;font-weight:700;color:#2B2D42;font-family:\'Noto Kufi Arabic\',sans-serif;">\u0646\u0645\u0637 \u0627\u0644\u062c\u0645\u0627\u0639\u0629 \u0627\u0644\u0623\u0633\u0628\u0648\u0639\u064a</span>';
+        hdr.appendChild(hdrLeft);
+        var badge = document.createElement('div');
+        badge.style.cssText = 'padding:3px 10px;border-radius:8px;background:rgba(45,106,79,0.08);';
+        badge.innerHTML = '<span style="font-size:12px;font-weight:800;color:#2D6A4F;font-family:Rubik,sans-serif;">' + avg + '%</span>';
+        hdr.appendChild(badge);
+        card.appendChild(hdr);
 
-            // Track (full extent)
-            var tx1o = cx + R * Math.cos(startAngle + 0.04);
-            var ty1o = cy + R * Math.sin(startAngle + 0.04);
-            var tx2o = cx + R * Math.cos(endAngle - 0.04);
-            var ty2o = cy + R * Math.sin(endAngle - 0.04);
-            var tx1i = cx + innerR * Math.cos(startAngle + 0.04);
-            var ty1i = cy + innerR * Math.sin(startAngle + 0.04);
-            var tx2i = cx + innerR * Math.cos(endAngle - 0.04);
-            var ty2i = cy + innerR * Math.sin(endAngle - 0.04);
-            var trackPath = 'M' + tx1i + ',' + ty1i + ' L' + tx1o + ',' + ty1o +
-                ' A' + R + ',' + R + ' 0 0,1 ' + tx2o + ',' + ty2o +
-                ' L' + tx2i + ',' + ty2i +
-                ' A' + innerR + ',' + innerR + ' 0 0,0 ' + tx1i + ',' + ty1i + 'Z';
-            children.push(el('path', { d: trackPath, fill: 'rgba(0,0,0,0.02)' }));
+        // Bars
+        sorted.forEach(function(d, i) {
+            var isTop = i === 0;
+            var color = getColor(d.value);
 
-            // Value sector
-            var vx1o = cx + segR * Math.cos(startAngle + 0.04);
-            var vy1o = cy + segR * Math.sin(startAngle + 0.04);
-            var vx2o = cx + segR * Math.cos(endAngle - 0.04);
-            var vy2o = cy + segR * Math.sin(endAngle - 0.04);
-            var path = 'M' + tx1i + ',' + ty1i + ' L' + vx1o + ',' + vy1o +
-                ' A' + segR + ',' + segR + ' 0 0,1 ' + vx2o + ',' + vy2o +
-                ' L' + tx2i + ',' + ty2i +
-                ' A' + innerR + ',' + innerR + ' 0 0,0 ' + tx1i + ',' + ty1i + 'Z';
+            var row = document.createElement('div');
+            row.style.cssText = 'display:flex;align-items:center;gap:8px;' +
+                (i < 6 ? 'margin-bottom:8px;' : '') +
+                'padding:' + (isTop ? '6px 8px' : '2px 8px') + ';' +
+                'border-radius:' + (isTop ? '10px' : '0') + ';' +
+                'background:' + (isTop ? 'rgba(45,106,79,0.03)' : 'transparent') + ';';
 
-            children.push(el('path', { d: path, fill: color, opacity: '0.7' }));
+            // Day name
+            var nameSpan = document.createElement('span');
+            nameSpan.style.cssText = 'width:42px;font-size:11px;font-weight:' + (isTop ? '800' : '600') + ';color:' + (isTop ? '#2D6A4F' : '#2B2D42') + ';text-align:right;flex-shrink:0;font-family:"Noto Kufi Arabic",sans-serif;';
+            nameSpan.textContent = d.name;
+            row.appendChild(nameSpan);
 
-            // Label
-            var lR = R + 30;
-            var lx = cx + lR * Math.cos(midAngle);
-            var ly = cy + lR * Math.sin(midAngle);
-            children.push(el('text', { x: lx, y: ly - 4, 'text-anchor': 'middle', fill: '#2B2D42', 'font-size': '9', 'font-weight': '700', 'font-family': 'Noto Kufi Arabic, sans-serif' }, d.name));
-            children.push(el('text', { x: lx, y: ly + 7, 'text-anchor': 'middle', fill: color, 'font-size': '9', 'font-weight': '700', 'font-family': 'Rubik, sans-serif' }, d.value + '%'));
+            // Bar track
+            var track = document.createElement('div');
+            track.style.cssText = 'flex:1;height:12px;border-radius:6px;background:rgba(0,0,0,0.03);overflow:hidden;';
+            var fill = document.createElement('div');
+            fill.style.cssText = 'width:' + d.value + '%;height:100%;border-radius:6px;background:linear-gradient(270deg,' + color + ',' + color + 'bb);';
+            track.appendChild(fill);
+            row.appendChild(track);
+
+            // Percentage
+            var pctSpan = document.createElement('span');
+            pctSpan.style.cssText = 'width:32px;font-size:12px;font-weight:800;color:' + color + ';font-family:Rubik,sans-serif;text-align:left;flex-shrink:0;';
+            pctSpan.textContent = d.value + '%';
+            row.appendChild(pctSpan);
+
+            card.appendChild(row);
         });
 
-        var s = svg(size, size, '0 0 ' + size + ' ' + size, children);
-        container.appendChild(s);
+        container.appendChild(card);
     }
 
     // ==================== 7. CONGREGATION HEATMAP ====================

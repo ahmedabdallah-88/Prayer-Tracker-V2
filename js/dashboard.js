@@ -85,7 +85,9 @@ window.App.Dashboard = (function() {
     function gatherWeeklyData(hYear) {
         var prayers = Storage.getPrayersArray('fard');
         var currentLang = I18n.getCurrentLang();
-        var dayNames = Config.T['day_names'][currentLang];
+        var shortNames = currentLang === 'ar'
+            ? ['\u0623\u062d\u062f', '\u0625\u062b\u0646\u064a\u0646', '\u062b\u0644\u0627\u062b\u0627\u0621', '\u0623\u0631\u0628\u0639\u0627\u0621', '\u062e\u0645\u064a\u0633', '\u062c\u0645\u0639\u0629', '\u0633\u0628\u062a']
+            : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         var weekTotals = [0,0,0,0,0,0,0];
         var weekCong = [0,0,0,0,0,0,0];
 
@@ -104,7 +106,7 @@ window.App.Dashboard = (function() {
             }
         }
 
-        return dayNames.map(function(name, i) {
+        return shortNames.map(function(name, i) {
             var maxPossible = weekTotals[i] * prayers.length;
             return { name: name, value: maxPossible > 0 ? Math.round((weekCong[i] / maxPossible) * 100) : 0 };
         });
