@@ -459,12 +459,12 @@ window.App.SVGCharts = (function() {
 
             // Bar track + fill
             var barWrap = document.createElement('div');
-            barWrap.style.cssText = 'position:relative;height:18px;border-radius:9px;background:rgba(0,0,0,0.04);overflow:visible;margin:0 4px 0 36px;';
+            barWrap.style.cssText = 'position:relative;height:18px;border-radius:9px;background:rgba(0,0,0,0.04);overflow:visible;margin-inline-start:36px;margin-inline-end:4px;';
 
             // Congregation bar (behind, gold)
             if (showCong && (p.congregation || 0) > 0) {
                 var congBar = document.createElement('div');
-                congBar.style.cssText = 'position:absolute;top:0;left:0;height:100%;width:' + (p.congregation || 0) + '%;border-radius:9px;background:linear-gradient(90deg,#D4A03C,#E8B84A);opacity:0.4;';
+                congBar.style.cssText = 'position:absolute;top:0;inset-inline-start:0;height:100%;width:' + (p.congregation || 0) + '%;border-radius:9px;background:linear-gradient(90deg,#D4A03C,#E8B84A);opacity:0.4;';
                 barWrap.appendChild(congBar);
             }
 
@@ -472,12 +472,12 @@ window.App.SVGCharts = (function() {
             var compW = p.completion || 0;
             if (compW > 0) {
                 var compBar = document.createElement('div');
-                compBar.style.cssText = 'position:absolute;top:0;left:0;height:100%;width:' + compW + '%;border-radius:9px;background:linear-gradient(90deg,' + p.color + ',' + p.color + 'cc);';
+                compBar.style.cssText = 'position:absolute;top:0;inset-inline-start:0;height:100%;width:' + compW + '%;border-radius:9px;background:linear-gradient(90deg,' + p.color + ',' + p.color + 'cc);';
                 barWrap.appendChild(compBar);
 
                 // Lollipop dot — prayer color
                 var dot = document.createElement('div');
-                dot.style.cssText = 'position:absolute;top:50%;left:' + compW + '%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:' + p.color + ';border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.15);z-index:1;';
+                dot.style.cssText = 'position:absolute;top:50%;inset-inline-start:' + compW + '%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:' + p.color + ';border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.15);z-index:1;';
                 barWrap.appendChild(dot);
             }
 
@@ -486,7 +486,7 @@ window.App.SVGCharts = (function() {
             // Congregation info below bar
             if (showCong && p.congCount !== undefined) {
                 var congInfo = document.createElement('div');
-                congInfo.style.cssText = 'display:flex;align-items:center;gap:4px;margin:0 4px 0 36px;';
+                congInfo.style.cssText = 'display:flex;align-items:center;gap:4px;margin-inline-start:36px;margin-inline-end:4px;';
                 congInfo.innerHTML = '<span class="material-symbols-rounded" style="font-size:12px;color:#D4A03C;font-variation-settings:\'FILL\' 1;">mosque</span><span style="font-size:10px;color:#D4A03C;font-weight:600;font-family:\'Noto Kufi Arabic\',sans-serif;">جماعة: ' + (p.congregation || 0) + '% (' + p.congCount + ')</span>';
                 row.appendChild(congInfo);
             }
