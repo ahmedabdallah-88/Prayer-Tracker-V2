@@ -115,57 +115,135 @@ window.App.SVGCharts = (function() {
 
     function streakFlameBars(container, data) {
         container.innerHTML = '';
-        var prayers = data.prayers || []; // [{name, icon, color, current, best}]
+        var prayers = data.prayers || [];
         var maxBest = Math.max.apply(null, prayers.map(function(p) { return Math.max(p.best, 1); }));
-        var barW = 36, gap = 16, chartH = 180, padBot = 60, padTop = 30;
-        var totalW = prayers.length * (barW + gap) - gap + 40;
-        var children = [];
+        var topStreak = prayers.reduce(function(a, b) { return a.current > b.current ? a : b; }, prayers[0]);
 
-        prayers.forEach(function(p, i) {
-            var x = 20 + i * (barW + gap);
-            var bestH = (p.best / maxBest) * (chartH - padTop);
-            var curH = (p.current / maxBest) * (chartH - padTop);
-            var bestY = chartH - bestH;
-            var curY = chartH - curH;
+        // Gradient map by color
+        var gradients = {
+            '#D4A0A7': 'linear-gradient(135deg, #E8B4B8, #D4A0A7)',
+            '#E8B84A': 'linear-gradient(135deg, #F0C75E, #E8B84A)',
+            '#D4943A': 'linear-gradient(135deg, #E8A849, #D4943A)',
+            '#B0664A': 'linear-gradient(135deg, #C47A5A, #B0664A)',
+            '#4A5A7A': 'linear-gradient(135deg, #5B6B8A, #4A5A7A)'
+        };
 
-            // Ghost (best) bar — visible dashed outline
-            if (p.best > 0) {
-                children.push(el('rect', { x: x, y: bestY, width: barW, height: bestH, rx: 12, fill: 'rgba(0,0,0,0.04)', stroke: p.color + '40', 'stroke-width': 1.5, 'stroke-dasharray': '4 3' }));
-                // Best value label at top of ghost bar
-                children.push(el('text', { x: x + barW / 2, y: bestY - 6, 'text-anchor': 'middle', fill: '#8D99AE', 'font-size': '11', 'font-weight': '600', 'font-family': 'Rubik' }, '' + p.best));
-            }
-            // Current bar
-            var grad = el('linearGradient', { id: 'sg' + i, x1: '0', y1: '1', x2: '0', y2: '0' });
-            grad.appendChild(el('stop', { offset: '0%', 'stop-color': p.color + 'cc' }));
-            grad.appendChild(el('stop', { offset: '100%', 'stop-color': p.color }));
-            children.push(el('defs', {}, [grad]));
-            if (curH > 0) {
-                children.push(el('rect', { x: x, y: curY, width: barW, height: curH, rx: 14, fill: 'url(#sg' + i + ')' }));
-            }
-            // Fire icon if current == best and > 0
-            if (p.current > 0 && p.current >= p.best) {
-                children.push(el('text', { x: x + barW / 2, y: curY - 4, 'text-anchor': 'middle', fill: '#D4A03C', 'font-size': '16', 'font-family': 'Material Symbols Rounded' }, 'local_fire_department'));
-            }
-            // Value label — white on filled bar, colored text when no bar
-            var valY = curH > 20 ? curY + curH / 2 + 5 : chartH - 6;
-            var valFill = curH > 20 ? 'white' : p.color;
-            children.push(el('text', { x: x + barW / 2, y: valY, 'text-anchor': 'middle', fill: valFill, 'font-size': '13', 'font-weight': '700', 'font-family': 'Rubik' }, '' + p.current));
-            // Prayer icon + name below
-            children.push(el('text', { x: x + barW / 2, y: chartH + 20, 'text-anchor': 'middle', fill: p.color, 'font-size': '18', 'font-family': 'Material Symbols Rounded' }, p.icon));
-            children.push(el('text', { x: x + barW / 2, y: chartH + 38, 'text-anchor': 'middle', fill: 'var(--text-muted)', 'font-size': '9', 'font-family': 'Noto Kufi Arabic' }, p.name));
+        // --- Flame bars area ---
+        var barsRow = document.createElement('div');
+        barsRow.style.cssText = 'display:flex;align-items:flex-end;justify-content:center;gap:12px;height:200px;padding:0 8px;position:relative;';
+
+        // Horizontal guide lines
+        [0.25, 0.5, 0.75, 1].forEach(function(pct) {
+            var line = document.createElement('div');
+            line.style.cssText = 'position:absolute;left:0;right:0;bottom:' + (pct * 100) + '%;height:1px;background:rgba(0,0,0,0.03);pointer-events:none;';
+            barsRow.appendChild(line);
         });
 
-        var s = svg(totalW, chartH + padBot, '0 0 ' + totalW + ' ' + (chartH + padBot), children);
-        container.appendChild(s);
+        prayers.forEach(function(p, i) {
+            var currentH = maxBest > 0 ? (p.current / maxBest) * 100 : 0;
+            var bestH = maxBest > 0 ? (p.best / maxBest) * 100 : 0;
+            var isAtBest = p.current === p.best && p.current > 0;
+            var isTop = topStreak && p.name === topStreak.name;
 
-        // Legend
+            var col = document.createElement('div');
+            col.style.cssText = 'flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative;';
+
+            // Ghost (best) bar
+            if (p.best > 0) {
+                var ghost = document.createElement('div');
+                ghost.style.cssText = 'position:absolute;bottom:0;width:70%;max-width:40px;height:' + bestH + '%;border-radius:12px 12px 6px 6px;background:rgba(0,0,0,0.03);border:1px dashed rgba(0,0,0,0.06);border-bottom:none;transition:height 0.8s cubic-bezier(0.4,0,0.2,1);transition-delay:' + (i * 80) + 'ms;';
+                // Best label on top
+                var bestLbl = document.createElement('div');
+                bestLbl.style.cssText = 'position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;color:#B8BCC8;font-family:Rubik,sans-serif;white-space:nowrap;';
+                bestLbl.textContent = p.best;
+                ghost.appendChild(bestLbl);
+                col.appendChild(ghost);
+            }
+
+            // Current flame bar
+            if (currentH > 0) {
+                var flame = document.createElement('div');
+                var minH = currentH > 0 ? Math.max(currentH, 10) : 0;
+                var shadow = isTop
+                    ? '0 -8px 24px ' + p.color + '50, 0 4px 12px ' + p.color + '30'
+                    : '0 4px 12px ' + p.color + '25';
+                flame.style.cssText = 'position:relative;z-index:1;width:70%;max-width:40px;height:' + minH + '%;min-height:20px;border-radius:14px 14px 6px 6px;background:linear-gradient(180deg,' + p.color + 'ee,' + p.color + ');box-shadow:' + shadow + ';transition:height 1s cubic-bezier(0.4,0,0.2,1);transition-delay:' + (i * 100) + 'ms;overflow:visible;';
+
+                // Flame tip glow
+                if (currentH > 15) {
+                    var glow = document.createElement('div');
+                    glow.style.cssText = 'position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:60%;height:12px;border-radius:50%;background:radial-gradient(ellipse,' + p.color + '40,transparent);filter:blur(4px);';
+                    flame.appendChild(glow);
+                }
+
+                // Current number inside bar
+                var numWrap = document.createElement('div');
+                var numTop = currentH > 30 ? '8px' : '-22px';
+                numWrap.style.cssText = 'position:absolute;top:' + numTop + ';left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;';
+                if (isAtBest) {
+                    var fireIcon = document.createElement('span');
+                    fireIcon.className = 'material-symbols-rounded';
+                    fireIcon.style.cssText = 'font-size:14px;color:' + (currentH > 30 ? '#fff' : '#D4A03C') + ';font-variation-settings:"FILL" 1,"wght" 500;margin-bottom:1px;';
+                    fireIcon.textContent = 'local_fire_department';
+                    numWrap.appendChild(fireIcon);
+                }
+                var numSpan = document.createElement('span');
+                numSpan.style.cssText = 'font-size:15px;font-weight:800;color:' + (currentH > 30 ? '#fff' : '#2B2D42') + ';font-family:Rubik,sans-serif;line-height:1;' + (currentH > 30 ? 'text-shadow:0 1px 3px rgba(0,0,0,0.2);' : '');
+                numSpan.textContent = p.current;
+                numWrap.appendChild(numSpan);
+                flame.appendChild(numWrap);
+                col.appendChild(flame);
+            } else {
+                // No current bar — show "0" below ghost bar
+                var zeroLbl = document.createElement('div');
+                zeroLbl.style.cssText = 'position:relative;z-index:1;font-size:15px;font-weight:800;color:#B8BCC8;font-family:Rubik,sans-serif;line-height:1;margin-bottom:4px;';
+                zeroLbl.textContent = '0';
+                col.appendChild(zeroLbl);
+            }
+
+            barsRow.appendChild(col);
+        });
+
+        container.appendChild(barsRow);
+
+        // --- Prayer icons row ---
+        var iconsRow = document.createElement('div');
+        iconsRow.style.cssText = 'display:flex;justify-content:center;gap:12px;margin-top:12px;';
+
+        prayers.forEach(function(p) {
+            var iconCol = document.createElement('div');
+            iconCol.style.cssText = 'flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;';
+
+            // Gradient square background
+            var iconBg = document.createElement('div');
+            var grad = gradients[p.color] || ('linear-gradient(135deg, ' + p.color + ', ' + p.color + ')');
+            iconBg.style.cssText = 'width:30px;height:30px;border-radius:9px;background:' + grad + ';display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px ' + p.color + '25;';
+            var icon = document.createElement('span');
+            icon.className = 'material-symbols-rounded';
+            icon.style.cssText = 'font-size:15px;color:#fff;font-variation-settings:"FILL" 1,"wght" 500;';
+            icon.textContent = p.icon;
+            iconBg.appendChild(icon);
+            iconCol.appendChild(iconBg);
+
+            // Prayer name
+            var nameSpan = document.createElement('span');
+            nameSpan.style.cssText = 'font-size:10px;font-weight:700;color:#2B2D42;font-family:"Noto Kufi Arabic",sans-serif;';
+            nameSpan.textContent = p.name;
+            iconCol.appendChild(nameSpan);
+
+            iconsRow.appendChild(iconCol);
+        });
+
+        container.appendChild(iconsRow);
+
+        // --- Legend ---
         if (data.legendLabels) {
             var leg = document.createElement('div');
-            leg.className = 'svg-chart-legend';
+            leg.style.cssText = 'display:flex;justify-content:center;gap:16px;margin-top:12px;padding:6px 0;';
             leg.innerHTML =
-                '<div class="svg-legend-item"><span class="svg-legend-dot" style="background:var(--green-deep)"></span><span class="svg-legend-label">' + (data.legendLabels.current || 'الحالية') + '</span></div>' +
-                '<div class="svg-legend-item"><span class="svg-legend-dot" style="background:transparent;border:2px dashed var(--text-muted)"></span><span class="svg-legend-label">' + (data.legendLabels.best || 'الأفضل') + '</span></div>' +
-                '<div class="svg-legend-item"><span class="svg-legend-dot" style="background:#D4A03C"></span><span class="svg-legend-label">' + (data.legendLabels.record || 'رقم قياسي') + '</span></div>';
+                '<div style="display:flex;align-items:center;gap:5px;"><div style="width:14px;height:10px;border-radius:4px;background:linear-gradient(180deg,#40916C,#52B788);"></div><span style="font-size:10px;color:#8D99AE;font-weight:600;">' + (data.legendLabels.current || 'الحالية') + '</span></div>' +
+                '<div style="display:flex;align-items:center;gap:5px;"><div style="width:14px;height:10px;border-radius:4px;background:rgba(0,0,0,0.04);border:1px dashed rgba(0,0,0,0.1);"></div><span style="font-size:10px;color:#8D99AE;font-weight:600;">' + (data.legendLabels.best || 'الأفضل') + '</span></div>' +
+                '<div style="display:flex;align-items:center;gap:5px;"><span class="material-symbols-rounded" style="font-size:12px;color:#D4A03C;font-variation-settings:\'FILL\' 1,\'wght\' 500;">local_fire_department</span><span style="font-size:10px;color:#8D99AE;font-weight:600;">' + (data.legendLabels.record || 'رقم قياسي') + '</span></div>';
             container.appendChild(leg);
         }
     }
