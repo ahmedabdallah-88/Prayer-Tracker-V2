@@ -155,6 +155,15 @@ window.App.Dashboard = (function() {
             _set('fardYearCongCount', yearCong + ' ' + I18n.t('congregation') + ' / ' + yearComp);
         }
 
+        // Overall completion stats (sunnah)
+        if (type === 'sunnah') {
+            _set('sunnahYearCompRate', yearStats.percentage + '%');
+            var compLabel = currentLang === 'ar'
+                ? yearStats.completed + ' من ' + yearStats.total + ' صلاة'
+                : yearStats.completed + ' of ' + yearStats.total + ' prayers';
+            _set('sunnahYearCompCount', compLabel);
+        }
+
         // --- RENDER SVG CHARTS ---
 
         // 1. Orbital Progress

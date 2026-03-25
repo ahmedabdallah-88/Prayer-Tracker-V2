@@ -443,26 +443,49 @@
                     <button class="nav-circle" onclick="document.getElementById('sunnahDashboardYear').value=parseInt(document.getElementById('sunnahDashboardYear').value)-1;updateDashboard('sunnah')"><span class="material-symbols-rounded">chevron_left</span></button>
                 </div>
 
-                <div class="dashboard-grid">
-                    <div class="stat-card">
-                        <div class="label" data-t="sunnah_completed">إجمالي السنن المؤداة</div>
-                        <div class="value" id="sunnahYearTotalCompleted">0</div>
-                        <div class="sublabel">من أصل <span id="sunnahYearTotalPossible">0</span> سنة</div>
+                <!-- Hidden spans for JS compat -->
+                <span id="sunnahYearTotalCompleted" style="display:none">0</span>
+                <span id="sunnahYearTotalPossible" style="display:none">0</span>
+                <span id="sunnahYearCompletionRate" style="display:none">0%</span>
+
+                <div style="background:rgba(255,255,255,0.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:20px;padding:16px;border:1px solid rgba(0,0,0,0.04);margin-bottom:14px;">
+                    <!-- ROW 1: Best Month + Best Prayer -->
+                    <div style="display:flex;gap:10px;">
+                        <!-- Card 1: أفضل شهر -->
+                        <div style="flex:1;padding:14px 12px;border-radius:14px;background:rgba(45,106,79,0.05);border:1px solid rgba(45,106,79,0.08);display:flex;align-items:center;gap:10px;">
+                            <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#D4A03C,#E8B84A);box-shadow:0 3px 8px rgba(212,160,60,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span class="material-symbols-rounded" style="font-size:20px;color:#fff;font-variation-settings:'FILL' 1,'wght' 500;">emoji_events</span>
+                            </div>
+                            <div>
+                                <div style="font-size:10px;color:#8D99AE;font-weight:600;" data-t="best_month_label">أفضل شهر</div>
+                                <div id="sunnahBestMonth" style="font-size:15px;font-weight:800;color:#2B2D42;font-family:'Noto Kufi Arabic',sans-serif;">-</div>
+                                <div id="sunnahBestMonthRate" style="font-size:10px;color:#40916C;font-weight:700;">0%</div>
+                            </div>
+                        </div>
+                        <!-- Card 2: الأكثر انتظاماً -->
+                        <div style="flex:1;padding:14px 12px;border-radius:14px;background:rgba(45,106,79,0.05);border:1px solid rgba(45,106,79,0.08);display:flex;align-items:center;gap:10px;">
+                            <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#2D6A4F,#40916C);box-shadow:0 3px 8px rgba(45,106,79,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span class="material-symbols-rounded" style="font-size:20px;color:#fff;font-variation-settings:'FILL' 1,'wght' 500;">star</span>
+                            </div>
+                            <div>
+                                <div style="font-size:10px;color:#8D99AE;font-weight:600;" data-t="best_prayer">الأكثر انتظاماً</div>
+                                <div id="sunnahBestPrayer" style="font-size:15px;font-weight:800;color:#2B2D42;font-family:'Noto Kufi Arabic',sans-serif;">-</div>
+                                <div id="sunnahBestPrayerRate" style="font-size:10px;color:#40916C;font-weight:700;">0%</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="label">نسبة الإنجاز السنوية</div>
-                        <div class="value" id="sunnahYearCompletionRate">0%</div>
-                        <div class="sublabel">معدل الالتزام</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="label">أفضل شهر</div>
-                        <div class="value" id="sunnahBestMonth">-</div>
-                        <div class="sublabel" id="sunnahBestMonthRate">0%</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="label">السنة الأكثر انتظاماً</div>
-                        <div class="value" id="sunnahBestPrayer">-</div>
-                        <div class="sublabel" id="sunnahBestPrayerRate">0%</div>
+                    <!-- ROW 2: Overall Completion -->
+                    <div style="margin-top:10px;padding:14px 16px;border-radius:14px;background:rgba(45,106,79,0.05);border:1px solid rgba(45,106,79,0.08);display:flex;align-items:center;justify-content:space-between;">
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#2D6A4F,#40916C);box-shadow:0 3px 8px rgba(45,106,79,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span class="material-symbols-rounded" style="font-size:20px;color:#fff;font-variation-settings:'FILL' 1,'wght' 500;">verified</span>
+                            </div>
+                            <div>
+                                <div style="font-size:10px;color:#8D99AE;font-weight:600;">نسبة الإنجاز الكلي</div>
+                                <div id="sunnahYearCompCount" style="font-size:12px;color:#8D99AE;font-weight:500;">0</div>
+                            </div>
+                        </div>
+                        <div id="sunnahYearCompRate" style="font-size:28px;font-weight:800;color:#2D6A4F;font-family:'Rubik',sans-serif;font-variant-numeric:tabular-nums;">0%</div>
                     </div>
                 </div>
 
@@ -811,28 +834,28 @@
 
     <input type="file" id="importFile" style="display:none;" accept=".json" onchange="handleImport(event)">
 
-    <script src="js/config.js?v=77"></script>
-    <script src="js/storage.js?v=77"></script>
-    <script src="js/hijri-calendar.js?v=77"></script>
-    <script src="js/ui-utils.js?v=77"></script>
-    <script src="js/i18n.js?v=77"></script>
-    <script src="js/themes.js?v=77"></script>
-    <script src="js/profiles.js?v=77"></script>
-    <script src="js/female-features.js?v=77"></script>
-    <script src="js/fard-tracker.js?v=77"></script>
-    <script src="js/sunnah-tracker.js?v=77"></script>
-    <script src="js/jamaah-tracker.js?v=77"></script>
-    <script src="js/weekly-view.js?v=77"></script>
-    <script src="js/fasting-tracker.js?v=77"></script>
-    <script src="js/prayer-times.js?v=77"></script>
-    <script src="js/notifications.js?v=77"></script>
-    <script src="js/azkar-tracker.js?v=77"></script>
-    <script src="js/svg-charts.js?v=77"></script>
-    <script src="js/qada-report.js?v=77"></script>
-    <script src="js/dashboard.js?v=77"></script>
-    <script src="js/year-overview.js?v=77"></script>
-    <script src="js/data-io.js?v=77"></script>
-    <script src="js/app.js?v=77"></script>
+    <script src="js/config.js?v=78"></script>
+    <script src="js/storage.js?v=78"></script>
+    <script src="js/hijri-calendar.js?v=78"></script>
+    <script src="js/ui-utils.js?v=78"></script>
+    <script src="js/i18n.js?v=78"></script>
+    <script src="js/themes.js?v=78"></script>
+    <script src="js/profiles.js?v=78"></script>
+    <script src="js/female-features.js?v=78"></script>
+    <script src="js/fard-tracker.js?v=78"></script>
+    <script src="js/sunnah-tracker.js?v=78"></script>
+    <script src="js/jamaah-tracker.js?v=78"></script>
+    <script src="js/weekly-view.js?v=78"></script>
+    <script src="js/fasting-tracker.js?v=78"></script>
+    <script src="js/prayer-times.js?v=78"></script>
+    <script src="js/notifications.js?v=78"></script>
+    <script src="js/azkar-tracker.js?v=78"></script>
+    <script src="js/svg-charts.js?v=78"></script>
+    <script src="js/qada-report.js?v=78"></script>
+    <script src="js/dashboard.js?v=78"></script>
+    <script src="js/year-overview.js?v=78"></script>
+    <script src="js/data-io.js?v=78"></script>
+    <script src="js/app.js?v=78"></script>
 
     <!-- Profile Settings Overlay -->
     <div class="profile-settings-overlay" id="profileSettingsOverlay">
