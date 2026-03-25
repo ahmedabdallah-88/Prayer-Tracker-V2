@@ -351,10 +351,11 @@ window.App.SVGCharts = (function() {
         var n = prayers.length;
         if (n < 3) return;
 
-        var size = 220, cx = 110, cy = 110, R = 85;
+        var size = 280, cx = 140, cy = 140, R = 80;
+        var labelR = R + 35;
         var children = [];
 
-        // Grid rings (circles instead of polygons for cleaner look)
+        // Grid rings
         [25, 50, 75, 100].forEach(function(pct) {
             var r = (pct / 100) * R;
             children.push(el('circle', { cx: cx, cy: cy, r: r, fill: 'none', stroke: 'rgba(0,0,0,0.04)', 'stroke-width': 1 }));
@@ -367,9 +368,9 @@ window.App.SVGCharts = (function() {
         }
 
         function makePoly(vals, color, fillOpacity, strokeWidth) {
-            var pts = vals.map(function(v, i) {
+            var pts = vals.map(function(v, idx) {
                 var r = (v / 100) * R;
-                var angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+                var angle = (Math.PI * 2 * idx / n) - Math.PI / 2;
                 return (cx + r * Math.cos(angle)).toFixed(1) + ',' + (cy + r * Math.sin(angle)).toFixed(1);
             });
             children.push(el('polygon', { points: pts.join(' '), fill: color, 'fill-opacity': fillOpacity, stroke: color, 'stroke-width': strokeWidth, 'stroke-linejoin': 'round' }));
@@ -382,23 +383,23 @@ window.App.SVGCharts = (function() {
         // Completion polygon (green)
         makePoly(prayers.map(function(p) { return p.completion || 0; }), '#40916C', 0.12, 2);
 
-        // Data points on completion polygon
+        // Data points — colored per prayer
         prayers.forEach(function(p, i) {
             var v = p.completion || 0;
             var r = (v / 100) * R;
             var angle = (Math.PI * 2 * i / n) - Math.PI / 2;
             var px = cx + r * Math.cos(angle);
             var py = cy + r * Math.sin(angle);
-            children.push(el('circle', { cx: px, cy: py, r: 4, fill: '#40916C', stroke: '#fff', 'stroke-width': 2 }));
+            children.push(el('circle', { cx: px, cy: py, r: 4, fill: p.color, stroke: '#fff', 'stroke-width': 2 }));
         });
 
-        // Labels
+        // Labels — per-prayer color + individual percentage
         prayers.forEach(function(p, i) {
             var angle = (Math.PI * 2 * i / n) - Math.PI / 2;
-            var lx = cx + (R + 22) * Math.cos(angle);
-            var ly = cy + (R + 22) * Math.sin(angle);
+            var lx = cx + labelR * Math.cos(angle);
+            var ly = cy + labelR * Math.sin(angle);
             children.push(el('text', { x: lx, y: ly - 6, 'text-anchor': 'middle', fill: '#2B2D42', 'font-size': '11', 'font-weight': '700', 'font-family': 'Noto Kufi Arabic, sans-serif' }, p.name));
-            children.push(el('text', { x: lx, y: ly + 8, 'text-anchor': 'middle', fill: '#40916C', 'font-size': '10', 'font-weight': '700', 'font-family': 'Rubik, sans-serif' }, p.completion + '%'));
+            children.push(el('text', { x: lx, y: ly + 8, 'text-anchor': 'middle', fill: p.color, 'font-size': '10', 'font-weight': '700', 'font-family': 'Rubik, sans-serif' }, p.completion + '%'));
         });
 
         var s = svg(size, size, '0 0 ' + size + ' ' + size, children);
@@ -409,51 +410,91 @@ window.App.SVGCharts = (function() {
 
     function prayerLollipop(container, data) {
         container.innerHTML = '';
-        var prayers = data.prayers || []; // [{name, icon, color, completion, congregation, congCount}]
+        var prayers = data.prayers || [];
         var showCong = data.showCongregation !== false;
-        var barH = 20, rowH = 60, labelW = 80, barMaxW = 220;
-        var W = labelW + barMaxW + 40, H = prayers.length * rowH + 10;
-        var children = [];
 
-        prayers.forEach(function(p, i) {
-            var y = 10 + i * rowH;
-            var compW = (p.completion / 100) * barMaxW;
-            var congW = showCong ? ((p.congregation || 0) / 100) * barMaxW : 0;
+        var gradients = {
+            '#D4A0A7': ['#E8B4B8', '#D4A0A7'],
+            '#E8B84A': ['#F0C75E', '#E8B84A'],
+            '#D4943A': ['#E8A849', '#D4943A'],
+            '#B0664A': ['#C47A5A', '#B0664A'],
+            '#4A5A7A': ['#5B6B8A', '#4A5A7A']
+        };
 
-            // Prayer icon
-            children.push(el('text', { x: 10, y: y + 16, fill: p.color, 'font-size': '20', 'font-family': 'Material Symbols Rounded' }, p.icon));
+        var wrap = document.createElement('div');
+        wrap.style.cssText = 'display:flex;flex-direction:column;gap:14px;padding:4px 0;';
+
+        prayers.forEach(function(p) {
+            var row = document.createElement('div');
+            row.style.cssText = 'display:flex;flex-direction:column;gap:4px;';
+
+            // Top line: [icon] [name] ... [percentage]
+            var topLine = document.createElement('div');
+            topLine.style.cssText = 'display:flex;align-items:center;gap:8px;';
+
+            // Gradient icon square
+            var grad = gradients[p.color] || [[p.color, p.color]];
+            var iconBg = document.createElement('div');
+            iconBg.style.cssText = 'width:28px;height:28px;min-width:28px;border-radius:8px;background:linear-gradient(135deg,' + (grad[0] || p.color) + ',' + (grad[1] || p.color) + ');display:flex;align-items:center;justify-content:center;';
+            var icon = document.createElement('span');
+            icon.className = 'material-symbols-rounded';
+            icon.style.cssText = 'font-size:14px;color:#fff;font-variation-settings:"FILL" 1,"wght" 500;';
+            icon.textContent = p.icon;
+            iconBg.appendChild(icon);
+            topLine.appendChild(iconBg);
+
             // Prayer name
-            children.push(el('text', { x: 36, y: y + 16, fill: 'var(--text-primary)', 'font-size': '11', 'font-weight': '600', 'font-family': 'Noto Kufi Arabic' }, p.name));
+            var nameSpan = document.createElement('span');
+            nameSpan.style.cssText = 'font-size:12px;font-weight:700;color:#2B2D42;font-family:"Noto Kufi Arabic",sans-serif;flex:1;';
+            nameSpan.textContent = p.name;
+            topLine.appendChild(nameSpan);
 
-            var barY = y + 26;
-            // Track
-            children.push(el('rect', { x: labelW, y: barY, width: barMaxW, height: barH, rx: 10, fill: 'var(--border, rgba(0,0,0,0.04))' }));
-            // Congregation bar (behind)
-            if (showCong && congW > 0) {
-                children.push(el('rect', { x: labelW, y: barY, width: congW, height: barH, rx: 10, fill: 'var(--gold)', opacity: '0.5' }));
+            // Percentage
+            var pctSpan = document.createElement('span');
+            pctSpan.style.cssText = 'font-size:13px;font-weight:800;color:' + p.color + ';font-family:Rubik,sans-serif;min-width:40px;text-align:left;';
+            pctSpan.textContent = p.completion + '%';
+            topLine.appendChild(pctSpan);
+
+            row.appendChild(topLine);
+
+            // Bar track + fill
+            var barWrap = document.createElement('div');
+            barWrap.style.cssText = 'position:relative;height:18px;border-radius:9px;background:rgba(0,0,0,0.04);overflow:visible;margin:0 4px 0 36px;';
+
+            // Congregation bar (behind, gold)
+            if (showCong && (p.congregation || 0) > 0) {
+                var congBar = document.createElement('div');
+                congBar.style.cssText = 'position:absolute;top:0;left:0;height:100%;width:' + (p.congregation || 0) + '%;border-radius:9px;background:linear-gradient(90deg,#D4A03C,#E8B84A);opacity:0.4;';
+                barWrap.appendChild(congBar);
             }
+
             // Completion bar
+            var compW = p.completion || 0;
             if (compW > 0) {
-                var gradId = 'lolGrad' + i;
-                var grad = el('linearGradient', { id: gradId, x1: '0', y1: '0', x2: '1', y2: '0' });
-                grad.appendChild(el('stop', { offset: '0%', 'stop-color': p.color }));
-                grad.appendChild(el('stop', { offset: '100%', 'stop-color': p.color + 'cc' }));
-                children.push(el('defs', {}, [grad]));
-                children.push(el('rect', { x: labelW, y: barY, width: compW, height: barH, rx: 10, fill: 'url(#' + gradId + ')' }));
-                // Lollipop dot
-                children.push(el('circle', { cx: labelW + compW, cy: barY + barH / 2, r: 6, fill: p.color, stroke: 'white', 'stroke-width': 2 }));
+                var compBar = document.createElement('div');
+                compBar.style.cssText = 'position:absolute;top:0;left:0;height:100%;width:' + compW + '%;border-radius:9px;background:linear-gradient(90deg,' + p.color + ',' + p.color + 'cc);';
+                barWrap.appendChild(compBar);
+
+                // Lollipop dot — prayer color
+                var dot = document.createElement('div');
+                dot.style.cssText = 'position:absolute;top:50%;left:' + compW + '%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:' + p.color + ';border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.15);z-index:1;';
+                barWrap.appendChild(dot);
             }
-            // Completion % text
-            children.push(el('text', { x: labelW + barMaxW + 8, y: barY + 14, fill: 'var(--text-primary)', 'font-size': '12', 'font-weight': '700', 'font-family': 'Rubik' }, p.completion + '%'));
+
+            row.appendChild(barWrap);
 
             // Congregation info below bar
             if (showCong && p.congCount !== undefined) {
-                children.push(el('text', { x: labelW, y: barY + barH + 14, fill: 'var(--text-muted)', 'font-size': '9', 'font-family': 'Noto Kufi Arabic' }, 'جماعة: ' + (p.congregation || 0) + '% (' + p.congCount + ')'));
+                var congInfo = document.createElement('div');
+                congInfo.style.cssText = 'display:flex;align-items:center;gap:4px;margin:0 4px 0 36px;';
+                congInfo.innerHTML = '<span class="material-symbols-rounded" style="font-size:12px;color:#D4A03C;font-variation-settings:\'FILL\' 1;">mosque</span><span style="font-size:10px;color:#D4A03C;font-weight:600;font-family:\'Noto Kufi Arabic\',sans-serif;">جماعة: ' + (p.congregation || 0) + '% (' + p.congCount + ')</span>';
+                row.appendChild(congInfo);
             }
+
+            wrap.appendChild(row);
         });
 
-        var s = svg(W, H, '0 0 ' + W + ' ' + H, children);
-        container.appendChild(s);
+        container.appendChild(wrap);
     }
 
     // ==================== 6. WEEKLY RHYTHM (Radial chart) ====================
