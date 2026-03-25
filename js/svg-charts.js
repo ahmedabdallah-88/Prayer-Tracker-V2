@@ -130,7 +130,7 @@ window.App.SVGCharts = (function() {
 
         // --- Flame bars area ---
         var barsRow = document.createElement('div');
-        barsRow.style.cssText = 'display:flex;align-items:flex-end;justify-content:center;gap:12px;height:200px;padding:0 8px;position:relative;';
+        barsRow.style.cssText = 'display:flex;align-items:flex-end;justify-content:center;gap:12px;height:200px;padding:20px 8px 0;position:relative;overflow:visible;';
 
         // Horizontal guide lines
         [0.25, 0.5, 0.75, 1].forEach(function(pct) {
@@ -146,15 +146,15 @@ window.App.SVGCharts = (function() {
             var isTop = topStreak && p.name === topStreak.name;
 
             var col = document.createElement('div');
-            col.style.cssText = 'flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative;';
+            col.style.cssText = 'flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative;overflow:visible;';
 
             // Ghost (best) bar
             if (p.best > 0) {
                 var ghost = document.createElement('div');
-                ghost.style.cssText = 'position:absolute;bottom:0;width:70%;max-width:40px;height:' + bestH + '%;border-radius:12px 12px 6px 6px;background:rgba(0,0,0,0.03);border:1px dashed rgba(0,0,0,0.06);border-bottom:none;transition:height 0.8s cubic-bezier(0.4,0,0.2,1);transition-delay:' + (i * 80) + 'ms;';
+                ghost.style.cssText = 'position:absolute;bottom:0;width:70%;max-width:40px;height:' + bestH + '%;border-radius:12px 12px 6px 6px;background:' + p.color + '10;border:2px dashed ' + p.color + ';border-bottom:none;overflow:visible;transition:height 0.8s cubic-bezier(0.4,0,0.2,1);transition-delay:' + (i * 80) + 'ms;';
                 // Best label on top
                 var bestLbl = document.createElement('div');
-                bestLbl.style.cssText = 'position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;color:#B8BCC8;font-family:Rubik,sans-serif;white-space:nowrap;';
+                bestLbl.style.cssText = 'position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:' + p.color + ';font-family:Rubik,sans-serif;white-space:nowrap;';
                 bestLbl.textContent = p.best;
                 ghost.appendChild(bestLbl);
                 col.appendChild(ghost);
@@ -194,9 +194,9 @@ window.App.SVGCharts = (function() {
                 flame.appendChild(numWrap);
                 col.appendChild(flame);
             } else {
-                // No current bar — show "0" below ghost bar
+                // No current bar — show "0" in prayer color below ghost bar
                 var zeroLbl = document.createElement('div');
-                zeroLbl.style.cssText = 'position:relative;z-index:1;font-size:15px;font-weight:800;color:#B8BCC8;font-family:Rubik,sans-serif;line-height:1;margin-bottom:4px;';
+                zeroLbl.style.cssText = 'position:relative;z-index:1;font-size:15px;font-weight:800;color:' + p.color + ';font-family:Rubik,sans-serif;line-height:1;margin-bottom:4px;';
                 zeroLbl.textContent = '0';
                 col.appendChild(zeroLbl);
             }
