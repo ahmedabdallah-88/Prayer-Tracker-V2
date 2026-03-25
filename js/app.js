@@ -217,23 +217,28 @@ window.App.Main = (function() {
                             }
                         });
 
-                        // Check for SW update
+                        // Auto-apply SW update immediately (no manual click needed)
                         reg.addEventListener('updatefound', function() {
                             var newWorker = reg.installing;
                             newWorker.addEventListener('statechange', function() {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    var currentLang = window.App.I18n ? window.App.I18n.getCurrentLang() : 'ar';
-                                    var updateBar = document.createElement('div');
-                                    updateBar.id = 'updateBar';
-                                    updateBar.style.cssText = 'position:fixed;top:0;left:0;right:0;background:linear-gradient(135deg,#059669,#047857);color:white;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;z-index:10001;font-family:Cairo,sans-serif;font-size:0.9em;direction:rtl;box-shadow:0 4px 15px rgba(0,0,0,0.2);';
-                                    updateBar.innerHTML = '<span><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">refresh</span> ' +
-                                        (currentLang === 'ar' ? '\u062A\u062D\u062F\u064A\u062B \u062C\u062F\u064A\u062F \u0645\u062A\u0627\u062D' : 'Update available') + '</span>' +
-                                        '<button type="button" onclick="applyUpdate()" style="background:white;color:#047857;border:none;padding:6px 16px;border-radius:8px;font-weight:700;cursor:pointer;font-family:Cairo,sans-serif;">' +
-                                        (currentLang === 'ar' ? '\u062A\u062D\u062F\u064A\u062B \u0627\u0644\u0622\u0646' : 'Update now') + '</button>';
-                                    document.body.appendChild(updateBar);
+                                    console.log('[APP] New SW installed, sending SKIP_WAITING...');
+                                    newWorker.postMessage({ type: 'SKIP_WAITING' });
                                 }
                             });
                         });
+
+                        // Auto-reload when new SW takes control
+                        var swRefreshing = false;
+                        navigator.serviceWorker.addEventListener('controllerchange', function() {
+                            if (!swRefreshing) {
+                                swRefreshing = true;
+                                window.location.reload();
+                            }
+                        });
+
+                        // Force check for SW updates on every page load
+                        reg.update();
 
                         // Register periodic background sync
                         if ('periodicSync' in reg) {
