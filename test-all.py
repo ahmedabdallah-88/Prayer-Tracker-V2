@@ -281,7 +281,7 @@ test("sw: message handler exists", "self.addEventListener('message'" in sw_conte
 version_match = re.search(r"salah-tracker-v(\d+)", sw_content)
 test("sw: version number present", version_match is not None)
 if version_match:
-    test("sw: version is 76 (latest)", version_match.group(1) == '76',
+    test("sw: version is 77 (latest)", version_match.group(1) == '77',
          f"found v{version_match.group(1)}")
 
 # ============================================================
