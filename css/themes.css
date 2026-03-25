@@ -224,3 +224,167 @@
 
 [data-theme="dark"] .day-number { color: #E8E6E1; }
 [data-theme="dark"] .day-greg { color: #8A8A8E; }
+
+/* ─── Dark theme: additional component overrides ─── */
+
+/* 1. Chart cards and glassmorphism containers */
+[data-theme="dark"] .chart-card,
+[data-theme="dark"] .dashboard-grid .stat-card {
+    background: rgba(40,40,44,0.8);
+    border-color: rgba(255,255,255,0.06);
+}
+
+/* 2. Stats bar and counters */
+[data-theme="dark"] .stats-bar {
+    background: rgba(40,40,44,0.6);
+    border-color: rgba(255,255,255,0.06);
+}
+
+[data-theme="dark"] .counter-display {
+    color: #E8E6E1;
+}
+
+/* 3. Main toggle buttons (fard/sunnah/fasting/azkar tabs) */
+[data-theme="dark"] .main-toggle {
+    background: rgba(255,255,255,0.06);
+}
+
+[data-theme="dark"] .main-toggle-btn {
+    color: #8A8A8E;
+}
+
+[data-theme="dark"] .main-toggle-btn.active {
+    color: #E8E6E1;
+    background: rgba(255,255,255,0.1);
+}
+
+/* 4. Toggle group (category toggles like morning/evening) */
+[data-theme="dark"] .toggle-group {
+    background: rgba(255,255,255,0.06);
+}
+
+[data-theme="dark"] .toggle-btn {
+    color: #8A8A8E;
+}
+
+[data-theme="dark"] .toggle-btn.active {
+    background: rgba(255,255,255,0.1);
+    color: #E8E6E1;
+}
+
+/* 5. Action buttons */
+[data-theme="dark"] .btn-outline {
+    border-color: rgba(255,255,255,0.12);
+    color: #E8E6E1;
+}
+
+[data-theme="dark"] .btn-danger-outline {
+    border-color: rgba(239,68,68,0.3);
+}
+
+/* 6. Month navigation */
+[data-theme="dark"] .month-nav-compact {
+    background: rgba(40,40,44,0.8);
+    border-color: rgba(255,255,255,0.06);
+}
+
+[data-theme="dark"] .nav-circle {
+    background: rgba(255,255,255,0.08);
+    color: #E8E6E1;
+}
+
+[data-theme="dark"] .month-nav-label {
+    color: #E8E6E1;
+}
+
+[data-theme="dark"] .month-days-pill {
+    background: rgba(255,255,255,0.08);
+    color: #E8E6E1;
+}
+
+/* 7. Prayer section specifics */
+[data-theme="dark"] .prayer-header {
+    border-bottom-color: rgba(255,255,255,0.06);
+}
+
+[data-theme="dark"] .prayer-counter {
+    color: #8A8A8E;
+}
+
+[data-theme="dark"] .pct-pill {
+    color: white;
+}
+
+[data-theme="dark"] .cong-pill {
+    background: rgba(255,255,255,0.06);
+    color: #E8B84A;
+}
+
+/* 8. Stat cards text */
+[data-theme="dark"] .stat-card .label {
+    color: #8A8A8E;
+}
+
+[data-theme="dark"] .stat-card .sublabel {
+    color: #8A8A8E;
+}
+
+[data-theme="dark"] .stat-mini .stat-label {
+    color: #8A8A8E;
+}
+
+[data-theme="dark"] .stat-mini .stat-value {
+    color: #E8E6E1;
+}
+
+/* 9. Swipe hint and other UI */
+[data-theme="dark"] .swipe-hint {
+    color: #8A8A8E;
+}
+
+[data-theme="dark"] .click-hint {
+    color: #8A8A8E;
+}
+
+/* 10. Glassmorphism cards in JS-generated content (svg-charts) */
+[data-theme="dark"] #fardDualBarsCard > div,
+[data-theme="dark"] #sunnahDualBarsCard > div,
+[data-theme="dark"] #fardWeeklyRhythm > div {
+    background: rgba(40,40,44,0.8) !important;
+    border-color: rgba(255,255,255,0.06) !important;
+}
+
+/* 11. Fix scrollbar for dark */
+[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: #1A1A1E;
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: #3A3A3E;
+}
+
+/* 12. Badge and pill elements */
+[data-theme="dark"] .month-badge {
+    background: rgba(255,255,255,0.06);
+}
+
+[data-theme="dark"] .month-pct {
+    color: #E8E6E1;
+}
+
+[data-theme="dark"] .month-card-header h3 {
+    color: #E8E6E1;
+}
+
+[data-theme="dark"] .month-greg-ref {
+    color: #8A8A8E;
+}
+
+[data-theme="dark"] .progress-bar {
+    background: rgba(255,255,255,0.06);
+}
+
+/* 13. Streak section glassmorphism fix */
+[data-theme="dark"] .streak-section {
+    background: rgba(40,40,44,0.8);
+    border-color: rgba(255,255,255,0.06);
+}

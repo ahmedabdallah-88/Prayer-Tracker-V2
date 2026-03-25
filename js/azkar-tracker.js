@@ -1,6 +1,6 @@
 /**
  * azkar-tracker.js — Azkar (Morning/Evening Remembrance) Tracker
- * Handles tracker view, year overview, and dashboard for azkar section.
+ * Shows morning and evening as two prayer-like rows in a single view.
  */
 window.App = window.App || {};
 window.App.Azkar = (function() {
@@ -32,18 +32,14 @@ window.App.Azkar = (function() {
         localStorage.setItem(getAzkarKey(year, month), JSON.stringify(data));
     }
 
+    // ==================== CATEGORIES ====================
+
+    var categories = [
+        { id: 'morning', icon: 'light_mode', gradient: 'linear-gradient(135deg, #FBBF24, #F59E0B)', color: '#F59E0B' },
+        { id: 'evening', icon: 'nights_stay', gradient: 'linear-gradient(135deg, #818CF8, #6366F1)', color: '#6366F1' }
+    ];
+
     // ==================== TRACKER VIEW ====================
-
-    var currentCategory = 'morning'; // 'morning' or 'evening'
-
-    function switchAzkarCategory(cat) {
-        currentCategory = cat;
-        document.querySelectorAll('#azkarCategoryToggle .toggle-btn').forEach(function(b) { b.classList.remove('active'); });
-        var idx = cat === 'morning' ? 0 : 1;
-        var btns = document.querySelectorAll('#azkarCategoryToggle .toggle-btn');
-        if (btns[idx]) btns[idx].classList.add('active');
-        updateAzkarTracker();
-    }
 
     function updateAzkarTracker() {
         _init();
@@ -53,7 +49,6 @@ window.App.Azkar = (function() {
         var year = yearEl ? parseInt(yearEl.value) : Hijri.getCurrentHijriYear();
         var daysInMonth = Hijri.getHijriDaysInMonth(year, month);
         var data = getAzkarData(year, month);
-        var catData = data[currentCategory] || {};
         var currentLang = I18n.getCurrentLang();
 
         // Update compact month nav label
@@ -64,67 +59,102 @@ window.App.Azkar = (function() {
         var daysPill = document.getElementById('azkarMonthDaysPill');
         if (daysPill) daysPill.textContent = daysInMonth;
 
-        var grid = document.getElementById('azkarDaysGrid');
-        if (!grid) return;
-        grid.innerHTML = '';
+        var container = document.getElementById('azkarPrayersContainer');
+        if (!container) return;
+        container.innerHTML = '';
 
         var todayH = Hijri.getTodayHijri();
         var isCurrentMonth = (todayH.year === year && todayH.month === month);
 
-        var completed = 0;
-        for (var day = 1; day <= daysInMonth; day++) {
-            var dayBox = document.createElement('div');
-            dayBox.className = 'day-box';
+        categories.forEach(function(cat) {
+            var catData = data[cat.id] || {};
+            var section = document.createElement('div');
+            section.className = 'prayer-section';
 
-            dayBox.appendChild(Hijri.createDualDayNum(day, year, month));
-
-            // Today highlight
-            if (isCurrentMonth && todayH.day === day) {
-                dayBox.classList.add('today-box');
+            var completed = 0;
+            // Count completed
+            for (var d = 1; d <= daysInMonth; d++) {
+                if (catData[d]) completed++;
             }
 
-            if (Storage.isFutureDate(day, month, year)) {
-                dayBox.classList.add('disabled');
-            } else {
-                if (catData[day]) {
-                    dayBox.classList.add('checked');
-                    dayBox.style.background = 'linear-gradient(135deg, #0EA5E9, #0284C7)';
-                    dayBox.style.color = 'white';
-                    completed++;
+            var possible = daysInMonth;
+            if (todayH.year === year && todayH.month === month) {
+                possible = todayH.day;
+            } else if (Storage.isFutureDate(1, month, year)) {
+                possible = 0;
+            }
+            var pct = possible > 0 ? Math.round((completed / possible) * 100) : 0;
+
+            // Header (same style as fard prayer rows)
+            var header = document.createElement('div');
+            header.className = 'prayer-header';
+
+            var nameDiv = document.createElement('div');
+            nameDiv.className = 'prayer-name';
+            var catName = cat.id === 'morning' ? I18n.t('azkar_morning') : I18n.t('azkar_evening');
+            nameDiv.innerHTML = '<span class="prayer-icon-badge" style="background:' + cat.gradient + '"><span class="material-symbols-rounded" style="font-size:18px;color:white;">' + cat.icon + '</span></span><span>' + catName + '</span>';
+
+            var headerEnd = document.createElement('div');
+            headerEnd.className = 'prayer-header-end';
+            var pctColor = pct >= 80 ? 'var(--green-deep)' : pct >= 50 ? 'var(--gold)' : 'var(--red)';
+            headerEnd.innerHTML = '<span class="pct-pill" style="background:' + pctColor + '">' + pct + '%</span>' +
+                '<span class="prayer-counter">' + completed + '/' + daysInMonth + '</span>';
+
+            header.appendChild(nameDiv);
+            header.appendChild(headerEnd);
+            section.appendChild(header);
+
+            // Day circle grid
+            var grid = document.createElement('div');
+            grid.className = 'days-grid flow-grid';
+
+            for (var day = 1; day <= daysInMonth; day++) {
+                var dayBox = document.createElement('div');
+                dayBox.className = 'day-box';
+                dayBox.appendChild(Hijri.createDualDayNum(day, year, month));
+
+                if (isCurrentMonth && todayH.day === day) {
+                    dayBox.classList.add('today-box');
                 }
-                (function(d) {
-                    dayBox.onclick = function() {
-                        var azData = getAzkarData(year, month);
-                        if (!azData[currentCategory]) azData[currentCategory] = {};
-                        azData[currentCategory][d] = !azData[currentCategory][d];
-                        if (!azData[currentCategory][d]) delete azData[currentCategory][d];
-                        window.App.UI.hapticFeedback(azData[currentCategory][d] ? 'success' : 'light');
-                        saveAzkarData(year, month, azData);
-                        updateAzkarTracker();
-                    };
-                })(day);
+
+                if (Storage.isFutureDate(day, month, year)) {
+                    dayBox.classList.add('disabled');
+                } else {
+                    if (catData[day]) {
+                        dayBox.classList.add('checked');
+                        dayBox.style.background = 'linear-gradient(135deg, #0EA5E9, #38BDF8)';
+                        dayBox.style.color = 'white';
+                    }
+                    (function(d, catId) {
+                        dayBox.onclick = function() {
+                            var azData = getAzkarData(year, month);
+                            if (!azData[catId]) azData[catId] = {};
+                            azData[catId][d] = !azData[catId][d];
+                            if (!azData[catId][d]) delete azData[catId][d];
+                            window.App.UI.hapticFeedback(azData[catId][d] ? 'success' : 'light');
+                            saveAzkarData(year, month, azData);
+                            updateAzkarTracker();
+                        };
+                    })(day, cat.id);
+                }
+                grid.appendChild(dayBox);
             }
-            grid.appendChild(dayBox);
-        }
+            section.appendChild(grid);
 
-        var possible = daysInMonth;
-        // Subtract future days
-        var todayH = Hijri.getTodayHijri();
-        if (todayH.year === year && todayH.month === month) {
-            possible = todayH.day;
-        } else if (Storage.isFutureDate(1, month, year)) {
-            possible = 0;
-        }
-        var rate = possible > 0 ? Math.round((completed / possible) * 100) : 0;
+            // Mark all button for this category
+            var actionRow = document.createElement('div');
+            actionRow.style.cssText = 'margin-top:8px;margin-bottom:4px;display:flex;gap:8px;justify-content:center;';
+            var markBtn = document.createElement('button');
+            markBtn.className = 'btn btn-sm btn-outline';
+            markBtn.innerHTML = '<span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">done_all</span> ' + I18n.t('mark_all');
+            (function(catId) {
+                markBtn.onclick = function() { markAllAzkar(catId); };
+            })(cat.id);
+            actionRow.appendChild(markBtn);
+            section.appendChild(actionRow);
 
-        var elComp = document.getElementById('azkarCompleted');
-        var elTotal = document.getElementById('azkarTotal');
-        var elRate = document.getElementById('azkarRate');
-        var elCtr = document.getElementById('azkarCounter');
-        if (elComp) elComp.textContent = completed;
-        if (elTotal) elTotal.textContent = daysInMonth;
-        if (elRate) elRate.textContent = rate + '%';
-        if (elCtr) elCtr.textContent = completed + ' / ' + daysInMonth;
+            container.appendChild(section);
+        });
     }
 
     function changeAzkarMonth(delta) {
@@ -140,25 +170,39 @@ window.App.Azkar = (function() {
         updateAzkarTracker();
     }
 
-    function markAllAzkar() {
+    function markAllAzkar(category) {
         _init();
-        var mEl2 = document.getElementById('azkarTrackerMonth');
-        var yEl2 = document.getElementById('azkarTrackerYear');
-        var month = mEl2 ? parseInt(mEl2.value) : Hijri.getCurrentHijriMonth();
-        var year = yEl2 ? parseInt(yEl2.value) : Hijri.getCurrentHijriYear();
+        var mEl = document.getElementById('azkarTrackerMonth');
+        var yEl = document.getElementById('azkarTrackerYear');
+        var month = mEl ? parseInt(mEl.value) : Hijri.getCurrentHijriMonth();
+        var year = yEl ? parseInt(yEl.value) : Hijri.getCurrentHijriYear();
         var daysInMonth = Hijri.getHijriDaysInMonth(year, month);
         var data = getAzkarData(year, month);
-        if (!data[currentCategory]) data[currentCategory] = {};
 
+        // If no category specified, mark both
+        var cats = category ? [category] : ['morning', 'evening'];
         var todayH = Hijri.getTodayHijri();
         var maxDay = daysInMonth;
         if (todayH.year === year && todayH.month === month) {
             maxDay = todayH.day;
         }
 
-        for (var d = 1; d <= maxDay; d++) {
-            data[currentCategory][d] = true;
-        }
+        cats.forEach(function(cat) {
+            if (!data[cat]) data[cat] = {};
+            // Toggle: if all marked, unmark all; otherwise mark all
+            var allMarked = true;
+            for (var d = 1; d <= maxDay; d++) {
+                if (!data[cat][d]) { allMarked = false; break; }
+            }
+            if (allMarked) {
+                data[cat] = {};
+            } else {
+                for (var d2 = 1; d2 <= maxDay; d2++) {
+                    data[cat][d2] = true;
+                }
+            }
+        });
+
         saveAzkarData(year, month, data);
         window.App.UI.hapticFeedback('success');
         updateAzkarTracker();
@@ -172,8 +216,7 @@ window.App.Azkar = (function() {
             var yEl = document.getElementById('azkarTrackerYear');
             var month = mEl ? parseInt(mEl.value) : Hijri.getCurrentHijriMonth();
             var year = yEl ? parseInt(yEl.value) : Hijri.getCurrentHijriYear();
-            var data = getAzkarData(year, month);
-            data[currentCategory] = {};
+            var data = { morning: {}, evening: {} };
             saveAzkarData(year, month, data);
             updateAzkarTracker();
         });
@@ -254,7 +297,7 @@ window.App.Azkar = (function() {
                 '<div class="month-greg-ref">' + gregSpan + '</div>' +
                 '<div class="month-progress"><div class="progress-bar"><div class="progress-fill" style="width:' + avgPct + '%;background:' + barColor + '"></div></div></div>' +
                 '<div class="month-stats">' +
-                    '<span class="month-badge" style="color:#0EA5E9;background:rgba(14,165,233,0.1)"><span class="material-symbols-rounded" style="font-size:14px;vertical-align:middle;">light_mode</span> ' + mornPct + '%</span>' +
+                    '<span class="month-badge" style="color:#F59E0B;background:rgba(245,158,11,0.1)"><span class="material-symbols-rounded" style="font-size:14px;vertical-align:middle;">light_mode</span> ' + mornPct + '%</span>' +
                     '<span class="month-badge" style="color:#6366F1;background:rgba(99,102,241,0.1)"><span class="material-symbols-rounded" style="font-size:14px;vertical-align:middle;">nights_stay</span> ' + evePct + '%</span>' +
                 '</div>';
 
@@ -268,9 +311,9 @@ window.App.Azkar = (function() {
             var bestName = bestIdx > 0 ? Hijri.getHijriMonthName(bestIdx - 1) : '-';
             summaryEl.innerHTML =
                 '<div class="dashboard-grid" style="margin-bottom:16px;">' +
-                    '<div class="stat-card"><div class="label"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">light_mode</span> ' + (currentLang === 'ar' ? 'أذكار الصباح' : 'Morning') + '</div><div class="value" style="color:#0EA5E9">' + avgMorn + '%</div></div>' +
-                    '<div class="stat-card"><div class="label"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">nights_stay</span> ' + (currentLang === 'ar' ? 'أذكار المساء' : 'Evening') + '</div><div class="value" style="color:#6366F1">' + avgEve + '%</div></div>' +
-                    '<div class="stat-card"><div class="label"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">emoji_events</span> ' + (currentLang === 'ar' ? 'أفضل شهر' : 'Best Month') + '</div><div class="value" style="font-size:1.2em;">' + bestName + '</div><div class="sublabel">' + bestPct + '%</div></div>' +
+                    '<div class="stat-card"><div class="label"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">light_mode</span> ' + I18n.t('azkar_morning') + '</div><div class="value" style="color:#F59E0B">' + avgMorn + '%</div></div>' +
+                    '<div class="stat-card"><div class="label"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">nights_stay</span> ' + I18n.t('azkar_evening') + '</div><div class="value" style="color:#6366F1">' + avgEve + '%</div></div>' +
+                    '<div class="stat-card"><div class="label"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">emoji_events</span> ' + I18n.t('best_month') + '</div><div class="value" style="font-size:1.2em;">' + bestName + '</div><div class="sublabel">' + bestPct + '%</div></div>' +
                 '</div>';
         }
     }
@@ -299,7 +342,6 @@ window.App.Azkar = (function() {
             totalMorn += morn;
             totalEve += eve;
 
-            // Count days where both completed
             for (var d = 1; d <= days; d++) {
                 if ((data.morning || {})[d] && (data.evening || {})[d]) totalBoth++;
             }
@@ -316,7 +358,7 @@ window.App.Azkar = (function() {
         var mornRate = totalDays > 0 ? Math.round((totalMorn / totalDays) * 100) : 0;
         var eveRate = totalDays > 0 ? Math.round((totalEve / totalDays) * 100) : 0;
 
-        // Stat cards (null-safe)
+        // Stat cards
         var _s = function(id, txt) { var el = document.getElementById(id); if (el) el.textContent = txt; };
         _s('azkarDashMornRate', mornRate + '%');
         _s('azkarDashEveRate', eveRate + '%');
@@ -324,7 +366,7 @@ window.App.Azkar = (function() {
         _s('azkarDashBestMonth', bestMonth.month > 0 ? Hijri.getHijriMonthName(bestMonth.month - 1) : '-');
         _s('azkarDashBestPct', bestMonth.pct + '%');
 
-        // Mountain chart (two layers: morning=blue, evening=indigo)
+        // Mountain chart
         var mtnEl = document.getElementById('azkarMountainChart');
         if (mtnEl && Charts) {
             var monthLabels = window.App.Dashboard.getHijriMonthNamesShort();
@@ -332,44 +374,29 @@ window.App.Azkar = (function() {
                 labels: monthLabels,
                 values: monthlyMorn,
                 values2: monthlyEve,
-                color1: '#0EA5E9',
-                color2: '#6366F1',
                 currentMonth: todayH.year === hYear ? todayH.month : undefined,
                 legend: [
-                    { color: '#0EA5E9', label: currentLang === 'ar' ? 'الصباح' : 'Morning' },
-                    { color: '#6366F1', label: currentLang === 'ar' ? 'المساء' : 'Evening', dashed: true }
+                    { color: '#F59E0B', label: I18n.t('azkar_morning') },
+                    { color: '#6366F1', label: I18n.t('azkar_evening'), dashed: true }
                 ]
             });
         }
 
-        // Streak flame bars (morning + evening)
+        // Streak flame bars
         var streakEl = document.getElementById('azkarStreakFlame');
         if (streakEl && Charts) {
             var mornStreak = calculateAzkarStreak('morning');
             var eveStreak = calculateAzkarStreak('evening');
             Charts.streakFlameBars(streakEl, {
                 prayers: [
-                    { name: currentLang === 'ar' ? 'الصباح' : 'Morning', icon: 'light_mode', color: '#0EA5E9', current: mornStreak.current, best: mornStreak.best },
-                    { name: currentLang === 'ar' ? 'المساء' : 'Evening', icon: 'nights_stay', color: '#6366F1', current: eveStreak.current, best: eveStreak.best }
+                    { name: I18n.t('azkar_morning'), icon: 'light_mode', color: '#F59E0B', current: mornStreak.current, best: mornStreak.best },
+                    { name: I18n.t('azkar_evening'), icon: 'nights_stay', color: '#6366F1', current: eveStreak.current, best: eveStreak.best }
                 ],
                 legendLabels: {
-                    current: currentLang === 'ar' ? 'الحالية' : 'Current',
-                    best: currentLang === 'ar' ? 'الأفضل' : 'Best',
-                    record: currentLang === 'ar' ? 'رقم قياسي' : 'Record'
+                    current: I18n.t('current_word'),
+                    best: I18n.t('best_word'),
+                    record: I18n.t('record_word')
                 }
-            });
-        }
-
-        // Heatmap
-        var heatEl = document.getElementById('azkarHeatmap');
-        if (heatEl && Charts) {
-            var heatGrid = gatherAzkarHeatmap(hYear);
-            var dayNames = (Config.T['day_names'][currentLang] || []).slice(0, 7);
-            Charts.congregationHeatmap(heatEl, {
-                grid: heatGrid,
-                dayNames: dayNames,
-                maxPrayers: 2,
-                scaleLabels: currentLang === 'ar' ? ['أقل', 'أكثر'] : ['Less', 'More']
             });
         }
     }
@@ -378,11 +405,7 @@ window.App.Azkar = (function() {
         _init();
         var todayH = Hijri.getTodayHijri();
         var current = 0, best = 0, counting = true;
-
-        // Walk backwards from today
-        var year = todayH.year;
-        var month = todayH.month;
-        var day = todayH.day;
+        var year = todayH.year, month = todayH.month, day = todayH.day;
 
         for (var i = 0; i < 365; i++) {
             var data = getAzkarData(year, month);
@@ -395,7 +418,6 @@ window.App.Azkar = (function() {
                 if (counting) counting = false;
             }
 
-            // Previous day
             day--;
             if (day < 1) {
                 month--;
@@ -404,7 +426,7 @@ window.App.Azkar = (function() {
             }
         }
 
-        // Also count consecutive streaks for best
+        // Also find historical best
         year = todayH.year; month = todayH.month; day = todayH.day;
         var streak = 0;
         for (var j = 0; j < 365; j++) {
@@ -423,31 +445,12 @@ window.App.Azkar = (function() {
         return { current: current, best: best };
     }
 
-    function gatherAzkarHeatmap(hYear) {
-        _init();
-        var grid = [];
-        var today = new Date();
-        var startDate = new Date(today.getTime() - 69 * 86400000);
-
-        for (var i = 0; i < 70; i++) {
-            var d = new Date(startDate.getTime() + i * 86400000);
-            var h = Hijri.gregorianToHijri(d);
-            var data = getAzkarData(h.year, h.month);
-            var count = 0;
-            if ((data.morning || {})[h.day]) count++;
-            if ((data.evening || {})[h.day]) count++;
-            grid.push({ count: count });
-        }
-        return grid;
-    }
-
     // ==================== PUBLIC API ====================
 
     return {
         getAzkarKey: getAzkarKey,
         getAzkarData: getAzkarData,
         saveAzkarData: saveAzkarData,
-        switchAzkarCategory: switchAzkarCategory,
         updateAzkarTracker: updateAzkarTracker,
         changeAzkarMonth: changeAzkarMonth,
         markAllAzkar: markAllAzkar,
@@ -459,7 +462,6 @@ window.App.Azkar = (function() {
 })();
 
 // Backward compat globals
-window.switchAzkarCategory = window.App.Azkar.switchAzkarCategory;
 window.updateAzkarTracker = window.App.Azkar.updateAzkarTracker;
 window.changeAzkarMonth = window.App.Azkar.changeAzkarMonth;
 window.markAllAzkar = window.App.Azkar.markAllAzkar;

@@ -31,7 +31,7 @@
             <span class="app-icon"><span class="material-symbols-rounded" style="font-size:18px;">mosque</span></span>
             <div style="display:flex;flex-direction:column;">
                 <span data-t="app_title_short" id="shellTitle" style="font-size:0.95em;">متتبع الصلاة</span>
-                <span id="shellDateText" style="font-size:13px;font-weight:500;color:#8D99AE;display:flex;align-items:center;gap:4px;margin-top:3px;"><span class="material-symbols-rounded" style="font-size:14px;color:#8D99AE;font-variation-settings:'wght' 500;">calendar_today</span></span>
+                <span id="shellDateText" style="font-size:13px;font-weight:500;color:var(--text-muted);display:flex;align-items:center;gap:4px;margin-top:3px;"><span class="material-symbols-rounded" style="font-size:14px;color:var(--text-muted);font-variation-settings:'wght' 500;">calendar_today</span></span>
             </div>
         </div>
         <div class="shell-bar-actions">
@@ -46,7 +46,7 @@
     <!-- Theme dropdown (absolute positioned from shell bar) -->
     <div class="theme-options" id="themeOptions" style="position:fixed;top:calc(56px + env(safe-area-inset-top, 0px));right:60px;z-index:10001;">
         <button class="theme-option active" data-theme="green" onclick="setTheme('green')">
-            <span class="theme-dot" style="background: linear-gradient(135deg, #2D6A4F, #D4A03C);"></span>
+            <span class="theme-dot" style="background: linear-gradient(135deg, var(--green-deep), var(--gold));"></span>
             <span data-t="green_gold">أخضر وذهبي</span>
         </button>
         <button class="theme-option" data-theme="navy" onclick="setTheme('navy')">
@@ -54,11 +54,11 @@
             <span data-t="navy_silver">كحلي وفضي</span>
         </button>
         <button class="theme-option" data-theme="purple" onclick="setTheme('purple')">
-            <span class="theme-dot" style="background: linear-gradient(135deg, #5B21B6, #D4A03C);"></span>
+            <span class="theme-dot" style="background: linear-gradient(135deg, #5B21B6, var(--gold));"></span>
             <span data-t="purple_gold">بنفسجي وذهبي</span>
         </button>
         <button class="theme-option" data-theme="feminine" onclick="setTheme('feminine')">
-            <span class="theme-dot" style="background: linear-gradient(135deg, #9D174D, #D4A03C);"></span>
+            <span class="theme-dot" style="background: linear-gradient(135deg, #9D174D, var(--gold));"></span>
             <span data-t="pink">وردي</span>
         </button>
         <button class="theme-option" data-theme="sky" onclick="setTheme('sky')">
@@ -66,7 +66,7 @@
             <span data-t="sky_blue">أزرق سماوي</span>
         </button>
         <button class="theme-option" data-theme="dark" onclick="setTheme('dark')">
-            <span class="theme-dot" style="background: linear-gradient(135deg, #1A1A1E, #D4A03C);"></span>
+            <span class="theme-dot" style="background: linear-gradient(135deg, #1A1A1E, var(--gold));"></span>
             <span data-t="dark_mode">دارك مود</span>
         </button>
         <button class="theme-option" data-theme="olive" onclick="setTheme('olive')">
@@ -225,14 +225,14 @@
                         background: rgba(45,106,79,0.08);
                         display: flex; align-items: center; justify-content: center;
                         flex-shrink: 0;">
-                        <span class="material-symbols-rounded" style="font-size: 18px; color: #2D6A4F;
+                        <span class="material-symbols-rounded" style="font-size: 18px; color: var(--green-deep);
                             font-variation-settings: 'FILL' 1, 'wght' 500;">hourglass_top</span>
                     </div>
                     <div style="flex: 1;">
-                        <div id="npcLabel" style="font-size: 11px; color: #8D99AE; font-weight: 600;">الصلاة القادمة</div>
-                        <div id="npcName" style="font-size: 14px; font-weight: 700; color: #2B2D42;"></div>
+                        <div id="npcLabel" style="font-size: 11px; color: var(--text-muted); font-weight: 600;" data-t="next_prayer">الصلاة القادمة</div>
+                        <div id="npcName" style="font-size: 14px; font-weight: 700; color: var(--text-primary);"></div>
                     </div>
-                    <div id="npcTimer" style="font-size: 20px; font-weight: 800; color: #2D6A4F;
+                    <div id="npcTimer" style="font-size: 20px; font-weight: 800; color: var(--green-deep);
                         font-family: 'Rubik', sans-serif; font-variant-numeric: tabular-nums;
                         letter-spacing: 1px; margin-inline-start: auto;">--:--:--</div>
                 </div>
@@ -281,57 +281,57 @@
                     <div style="display:flex;gap:10px;">
                         <!-- Card 1: أفضل شهر -->
                         <div style="flex:1;padding:14px 12px;border-radius:14px;background:rgba(45,106,79,0.05);border:1px solid rgba(45,106,79,0.08);display:flex;align-items:center;gap:10px;">
-                            <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#D4A03C,#E8B84A);box-shadow:0 3px 8px rgba(212,160,60,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--gold),var(--gold-light));box-shadow:0 3px 8px rgba(212,160,60,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                                 <span class="material-symbols-rounded" style="font-size:20px;color:#fff;font-variation-settings:'FILL' 1,'wght' 500;">emoji_events</span>
                             </div>
                             <div>
-                                <div style="font-size:10px;color:#8D99AE;font-weight:600;" data-t="best_month_label">أفضل شهر</div>
-                                <div id="fardBestMonth" style="font-size:15px;font-weight:800;color:#2B2D42;font-family:'Noto Kufi Arabic',sans-serif;">-</div>
-                                <div id="fardBestMonthRate" style="font-size:10px;color:#40916C;font-weight:700;">0%</div>
+                                <div style="font-size:10px;color:var(--text-muted);font-weight:600;" data-t="best_month_label">أفضل شهر</div>
+                                <div id="fardBestMonth" style="font-size:15px;font-weight:800;color:var(--text-primary);font-family:'Noto Kufi Arabic',sans-serif;">-</div>
+                                <div id="fardBestMonthRate" style="font-size:10px;color:var(--green-mid);font-weight:700;">0%</div>
                             </div>
                         </div>
                         <!-- Card 2: الأكثر انتظاماً -->
                         <div style="flex:1;padding:14px 12px;border-radius:14px;background:rgba(45,106,79,0.05);border:1px solid rgba(45,106,79,0.08);display:flex;align-items:center;gap:10px;">
-                            <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#2D6A4F,#40916C);box-shadow:0 3px 8px rgba(45,106,79,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--green-deep),var(--green-mid));box-shadow:0 3px 8px rgba(45,106,79,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                                 <span class="material-symbols-rounded" style="font-size:20px;color:#fff;font-variation-settings:'FILL' 1,'wght' 500;">star</span>
                             </div>
                             <div>
-                                <div style="font-size:10px;color:#8D99AE;font-weight:600;" data-t="best_prayer">الأكثر انتظاماً</div>
-                                <div id="fardBestPrayer" style="font-size:15px;font-weight:800;color:#2B2D42;font-family:'Noto Kufi Arabic',sans-serif;">-</div>
-                                <div id="fardBestPrayerRate" style="font-size:10px;color:#40916C;font-weight:700;">0%</div>
+                                <div style="font-size:10px;color:var(--text-muted);font-weight:600;" data-t="best_prayer">الأكثر انتظاماً</div>
+                                <div id="fardBestPrayer" style="font-size:15px;font-weight:800;color:var(--text-primary);font-family:'Noto Kufi Arabic',sans-serif;">-</div>
+                                <div id="fardBestPrayerRate" style="font-size:10px;color:var(--green-mid);font-weight:700;">0%</div>
                             </div>
                         </div>
                     </div>
                     <!-- ROW 2: Congregation bar -->
                     <div style="margin-top:10px;padding:14px 16px;border-radius:14px;background:rgba(212,160,60,0.05);border:1px solid rgba(212,160,60,0.1);display:flex;align-items:center;justify-content:space-between;">
                         <div style="display:flex;align-items:center;gap:10px;">
-                            <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#D4A03C,#E8B84A);box-shadow:0 3px 8px rgba(212,160,60,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--gold),var(--gold-light));box-shadow:0 3px 8px rgba(212,160,60,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                                 <span class="material-symbols-rounded" style="font-size:20px;color:#fff;font-variation-settings:'FILL' 1,'wght' 500;">mosque</span>
                             </div>
                             <div>
-                                <div style="font-size:10px;color:#8D99AE;font-weight:600;" data-t="cong_rate">نسبة صلاة الجماعة</div>
-                                <div id="fardYearCongCount" style="font-size:12px;color:#8D99AE;font-weight:500;">0</div>
+                                <div style="font-size:10px;color:var(--text-muted);font-weight:600;" data-t="cong_rate">نسبة صلاة الجماعة</div>
+                                <div id="fardYearCongCount" style="font-size:12px;color:var(--text-muted);font-weight:500;">0</div>
                             </div>
                         </div>
-                        <div id="fardYearCongRate" style="font-size:28px;font-weight:800;color:#D4A03C;font-family:'Rubik',sans-serif;font-variant-numeric:tabular-nums;">0%</div>
+                        <div id="fardYearCongRate" style="font-size:28px;font-weight:800;color:var(--gold);font-family:'Rubik',sans-serif;font-variant-numeric:tabular-nums;">0%</div>
                     </div>
                 </div>
 
                 <!-- Orbital Progress -->
                 <div class="chart-card">
-                    <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">target</span> نسبة الإنجاز</h3>
+                    <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">target</span> <span data-t="completion">الإنجاز</span></h3>
                     <div class="svg-chart-container" id="fardOrbitalProgress"></div>
                 </div>
 
                 <!-- Streak Flame Bars -->
                 <div class="chart-card">
-                    <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">local_fire_department</span> سلاسل المواظبة على الجماعة</h3>
+                    <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">local_fire_department</span> <span data-t="congregation_streak">سلاسل المواظبة على الجماعة</span></h3>
                     <div class="svg-chart-container" id="fardStreakFlame"></div>
                 </div>
 
                 <!-- Mountain Landscape -->
                 <div class="chart-card">
-                    <h3 data-t="monthly_progress"><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">trending_up</span> التقدم الشهري</h3>
+                    <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">trending_up</span> <span data-t="monthly_progress">التقدم الشهري</span></h3>
                     <div class="svg-chart-container" id="fardMountainChart"></div>
                 </div>
 
@@ -347,9 +347,9 @@
                 <!-- Period History (Females Only) -->
                 <div class="period-history-dashboard" id="fardPeriodDashboard" style="display:none;">
                     <div class="chart-card">
-                        <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;color:var(--purple);">water_drop</span> سجل الدورة الشهرية</h3>
+                        <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;color:var(--purple);">water_drop</span> <span data-t="period_history_title">سجل الدورة الشهرية</span></h3>
                         <div class="period-history" id="fardPeriodHistoryContainer">
-                            <p style="text-align:center;color:var(--text-muted);padding:20px;">
+                            <p style="text-align:center;color:var(--text-muted);padding:20px;" data-t="no_period_data">
                                 حددي أيام الإعفاء من المتتبع الشهري لتظهر هنا
                             </p>
                         </div>
@@ -453,57 +453,57 @@
                     <div style="display:flex;gap:10px;">
                         <!-- Card 1: أفضل شهر -->
                         <div style="flex:1;padding:14px 12px;border-radius:14px;background:rgba(45,106,79,0.05);border:1px solid rgba(45,106,79,0.08);display:flex;align-items:center;gap:10px;">
-                            <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#D4A03C,#E8B84A);box-shadow:0 3px 8px rgba(212,160,60,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--gold),var(--gold-light));box-shadow:0 3px 8px rgba(212,160,60,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                                 <span class="material-symbols-rounded" style="font-size:20px;color:#fff;font-variation-settings:'FILL' 1,'wght' 500;">emoji_events</span>
                             </div>
                             <div>
-                                <div style="font-size:10px;color:#8D99AE;font-weight:600;" data-t="best_month_label">أفضل شهر</div>
-                                <div id="sunnahBestMonth" style="font-size:15px;font-weight:800;color:#2B2D42;font-family:'Noto Kufi Arabic',sans-serif;">-</div>
-                                <div id="sunnahBestMonthRate" style="font-size:10px;color:#40916C;font-weight:700;">0%</div>
+                                <div style="font-size:10px;color:var(--text-muted);font-weight:600;" data-t="best_month_label">أفضل شهر</div>
+                                <div id="sunnahBestMonth" style="font-size:15px;font-weight:800;color:var(--text-primary);font-family:'Noto Kufi Arabic',sans-serif;">-</div>
+                                <div id="sunnahBestMonthRate" style="font-size:10px;color:var(--green-mid);font-weight:700;">0%</div>
                             </div>
                         </div>
                         <!-- Card 2: الأكثر انتظاماً -->
                         <div style="flex:1;padding:14px 12px;border-radius:14px;background:rgba(45,106,79,0.05);border:1px solid rgba(45,106,79,0.08);display:flex;align-items:center;gap:10px;">
-                            <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#2D6A4F,#40916C);box-shadow:0 3px 8px rgba(45,106,79,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--green-deep),var(--green-mid));box-shadow:0 3px 8px rgba(45,106,79,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                                 <span class="material-symbols-rounded" style="font-size:20px;color:#fff;font-variation-settings:'FILL' 1,'wght' 500;">star</span>
                             </div>
                             <div>
-                                <div style="font-size:10px;color:#8D99AE;font-weight:600;" data-t="best_prayer">الأكثر انتظاماً</div>
-                                <div id="sunnahBestPrayer" style="font-size:15px;font-weight:800;color:#2B2D42;font-family:'Noto Kufi Arabic',sans-serif;">-</div>
-                                <div id="sunnahBestPrayerRate" style="font-size:10px;color:#40916C;font-weight:700;">0%</div>
+                                <div style="font-size:10px;color:var(--text-muted);font-weight:600;" data-t="best_prayer">الأكثر انتظاماً</div>
+                                <div id="sunnahBestPrayer" style="font-size:15px;font-weight:800;color:var(--text-primary);font-family:'Noto Kufi Arabic',sans-serif;">-</div>
+                                <div id="sunnahBestPrayerRate" style="font-size:10px;color:var(--green-mid);font-weight:700;">0%</div>
                             </div>
                         </div>
                     </div>
                     <!-- ROW 2: Overall Completion -->
                     <div style="margin-top:10px;padding:14px 16px;border-radius:14px;background:rgba(45,106,79,0.05);border:1px solid rgba(45,106,79,0.08);display:flex;align-items:center;justify-content:space-between;">
                         <div style="display:flex;align-items:center;gap:10px;">
-                            <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#2D6A4F,#40916C);box-shadow:0 3px 8px rgba(45,106,79,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--green-deep),var(--green-mid));box-shadow:0 3px 8px rgba(45,106,79,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                                 <span class="material-symbols-rounded" style="font-size:20px;color:#fff;font-variation-settings:'FILL' 1,'wght' 500;">verified</span>
                             </div>
                             <div>
-                                <div style="font-size:10px;color:#8D99AE;font-weight:600;">نسبة الإنجاز الكلي</div>
-                                <div id="sunnahYearCompCount" style="font-size:12px;color:#8D99AE;font-weight:500;">0</div>
+                                <div style="font-size:10px;color:var(--text-muted);font-weight:600;" data-t="overall_completion">نسبة الإنجاز الكلي</div>
+                                <div id="sunnahYearCompCount" style="font-size:12px;color:var(--text-muted);font-weight:500;">0</div>
                             </div>
                         </div>
-                        <div id="sunnahYearCompRate" style="font-size:28px;font-weight:800;color:#2D6A4F;font-family:'Rubik',sans-serif;font-variant-numeric:tabular-nums;">0%</div>
+                        <div id="sunnahYearCompRate" style="font-size:28px;font-weight:800;color:var(--green-deep);font-family:'Rubik',sans-serif;font-variant-numeric:tabular-nums;">0%</div>
                     </div>
                 </div>
 
                 <!-- Orbital Progress (single ring) -->
                 <div class="chart-card">
-                    <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">target</span> نسبة الإنجاز</h3>
+                    <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">target</span> <span data-t="completion">الإنجاز</span></h3>
                     <div class="svg-chart-container" id="sunnahOrbitalProgress"></div>
                 </div>
 
                 <!-- Streak Flame Bars -->
                 <div class="chart-card">
-                    <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">local_fire_department</span> سلاسل المواظبة على الجماعة</h3>
+                    <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">local_fire_department</span> <span data-t="congregation_streak">سلاسل المواظبة على الجماعة</span></h3>
                     <div class="svg-chart-container" id="sunnahStreakFlame"></div>
                 </div>
 
                 <!-- Mountain Landscape (single layer) -->
                 <div class="chart-card">
-                    <h3 data-t="monthly_progress"><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">trending_up</span> التقدم الشهري</h3>
+                    <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">trending_up</span> <span data-t="monthly_progress">التقدم الشهري</span></h3>
                     <div class="svg-chart-container" id="sunnahMountainChart"></div>
                 </div>
 
@@ -530,9 +530,9 @@
         <!-- ==================== FASTING SECTION (All Users) ==================== -->
         <div id="fastingSection" class="section" role="tabpanel" aria-label="Fasting">
             <div class="sub-tabs" id="fastingSubTabs">
-                <button class="sub-tab active" onclick="switchFastingView('voluntary')"><span class="material-symbols-rounded" style="font-size:16px;">grid_view</span> <span>تطوع</span></button>
-                <button class="sub-tab" onclick="switchFastingView('ramadan')"><span class="material-symbols-rounded" style="font-size:16px;">nights_stay</span> <span>رمضان</span></button>
-                <button class="sub-tab" onclick="switchFastingView('dashboard')"><span class="material-symbols-rounded" style="font-size:16px;">analytics</span> <span>الإحصائيات</span></button>
+                <button class="sub-tab active" onclick="switchFastingView('voluntary')"><span class="material-symbols-rounded" style="font-size:16px;">grid_view</span> <span data-t="voluntary_short">تطوع</span></button>
+                <button class="sub-tab" onclick="switchFastingView('ramadan')"><span class="material-symbols-rounded" style="font-size:16px;">nights_stay</span> <span data-t="ramadan_short">رمضان</span></button>
+                <button class="sub-tab" onclick="switchFastingView('dashboard')"><span class="material-symbols-rounded" style="font-size:16px;">analytics</span> <span data-t="dashboard_short">الإحصائيات</span></button>
             </div>
             <!-- Voluntary Fasting Tracker -->
             <div id="fastingVoluntaryView" class="view active">
@@ -555,7 +555,7 @@
                 <!-- Female Exempt Bar for Fasting -->
                 <div class="exempt-toggle-bar" id="fastingExemptBar" style="display:none;">
                     <span><span class="material-symbols-rounded" style="font-size:16px;color:#db2777;">water_drop</span></span>
-                    <label>وضع تحديد أيام الحيض</label>
+                    <label data-t="fasting_exempt_label">وضع تحديد أيام الحيض</label>
                     <label class="exempt-switch">
                         <input type="checkbox" id="fastingExemptMode" onchange="window.fastingExemptModeOn=this.checked;window.updateVoluntaryFasting()">
                         <span class="exempt-slider"></span>
@@ -581,7 +581,7 @@
                     <div class="prayer-header">
                         <div class="prayer-name">
                             <span class="material-symbols-rounded" style="font-size:20px;">nights_stay</span>
-                            <span id="volFastingTitle">صيام التطوع</span>
+                            <span id="volFastingTitle" data-t="vol_fasting_title">صيام التطوع</span>
                         </div>
                         <div class="prayer-counter" id="volFastingCounter">0 / 0</div>
                     </div>
@@ -645,7 +645,7 @@
                     <div class="prayer-header">
                         <div class="prayer-name">
                             <span class="material-symbols-rounded" style="font-size:20px;">nights_stay</span>
-                            <span>أيام رمضان</span>
+                            <span data-t="ramadan_days_label">أيام رمضان</span>
                         </div>
                         <div class="prayer-counter" id="fastingCounter">0 / 30</div>
                     </div>
@@ -669,30 +669,30 @@
 
                 <div class="dashboard-grid">
                     <div class="stat-card">
-                        <div class="label">إجمالي أيام صيام التطوع</div>
+                        <div class="label" data-t="vol_fasting_total">إجمالي أيام صيام التطوع</div>
                         <div class="value" id="fastDashVolTotal">0</div>
-                        <div class="sublabel">خلال السنة</div>
+                        <div class="sublabel" data-t="during_year_label">خلال السنة</div>
                     </div>
                     <div class="stat-card">
-                        <div class="label">أفضل شهر صيام</div>
+                        <div class="label" data-t="best_fasting_month_label">أفضل شهر صيام</div>
                         <div class="value" id="fastDashBestMonth">-</div>
                         <div class="sublabel" id="fastDashBestMonthDays">0 يوم</div>
                     </div>
                     <div class="stat-card">
-                        <div class="label">صيام رمضان</div>
+                        <div class="label" data-t="ramadan_fasting_label">صيام رمضان</div>
                         <div class="value" id="fastDashRamadan">0/30</div>
                         <div class="sublabel" id="fastDashRamadanRate">0%</div>
                     </div>
                     <div class="stat-card">
-                        <div class="label">معدل الصيام الشهري</div>
+                        <div class="label" data-t="monthly_fasting_avg">معدل الصيام الشهري</div>
                         <div class="value" id="fastDashAvg">0</div>
-                        <div class="sublabel">يوم/شهر</div>
+                        <div class="sublabel" data-t="day_per_month">يوم/شهر</div>
                     </div>
                 </div>
 
                 <div class="charts-container">
                     <div class="chart-card">
-                        <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">trending_up</span> صيام التطوع الشهري</h3>
+                        <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">trending_up</span> <span data-t="vol_monthly_chart">صيام التطوع الشهري</span></h3>
                         <div class="chart-wrapper">
                             <div class="svg-chart-container" id="fastingMonthlyChart"></div>
                         </div>
@@ -705,23 +705,13 @@
         <div id="azkarSection" class="section">
             <!-- Sub-tabs -->
             <div class="sub-tabs" id="azkarSubTabs">
-                <button class="sub-tab active" onclick="switchAzkarView('tracker')"><span class="material-symbols-rounded" style="font-size:16px;">grid_view</span> <span>التتبع</span></button>
-                <button class="sub-tab" onclick="switchAzkarView('yearly')"><span class="material-symbols-rounded" style="font-size:16px;">calendar_month</span> <span>السنة</span></button>
-                <button class="sub-tab" onclick="switchAzkarView('dashboard')"><span class="material-symbols-rounded" style="font-size:16px;">analytics</span> <span>الإحصائيات</span></button>
+                <button class="sub-tab active" onclick="switchAzkarView('tracker')"><span class="material-symbols-rounded" style="font-size:16px;">grid_view</span> <span data-t="azkar_tracker">التتبع</span></button>
+                <button class="sub-tab" onclick="switchAzkarView('yearly')"><span class="material-symbols-rounded" style="font-size:16px;">calendar_month</span> <span data-t="azkar_yearly">السنة</span></button>
+                <button class="sub-tab" onclick="switchAzkarView('dashboard')"><span class="material-symbols-rounded" style="font-size:16px;">analytics</span> <span data-t="azkar_dashboard">الإحصائيات</span></button>
             </div>
 
             <!-- Azkar Tracker View -->
             <div id="azkarTrackerView" class="view active">
-                <!-- Category Toggle -->
-                <div class="toggle-group" id="azkarCategoryToggle" style="margin-bottom:12px;">
-                    <button class="toggle-btn active" onclick="switchAzkarCategory('morning')">
-                        <span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">light_mode</span> أذكار الصباح
-                    </button>
-                    <button class="toggle-btn" onclick="switchAzkarCategory('evening')">
-                        <span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">nights_stay</span> أذكار المساء
-                    </button>
-                </div>
-
                 <!-- Hidden inputs for JS compat -->
                 <select id="azkarTrackerMonth" style="display:none" onchange="updateAzkarTracker()">
                     <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>
@@ -738,27 +728,8 @@
                     <button class="nav-circle" onclick="changeAzkarMonth(-1)"><span class="material-symbols-rounded">chevron_left</span></button>
                 </div>
 
-                <!-- Stats bar -->
-                <div class="stats-bar">
-                    <div class="stat-mini"><span class="stat-label" data-t="completed_word">منجز</span> <span class="stat-value" id="azkarCompleted">0</span></div>
-                    <div class="stat-mini"><span class="stat-label" data-t="total_word">الكل</span> <span class="stat-value" id="azkarTotal">0</span></div>
-                    <div class="stat-mini"><span class="stat-label" data-t="rate">النسبة</span> <span class="stat-value" id="azkarRate">0%</span></div>
-                </div>
-
-                <div class="counter-display" id="azkarCounter">0 / 0</div>
-
-                <!-- Days grid -->
-                <div class="days-grid flow-grid" id="azkarDaysGrid"></div>
-
-                <!-- Action buttons -->
-                <div class="action-row" style="margin-top:12px;display:flex;gap:8px;justify-content:center;">
-                    <button class="btn btn-sm btn-outline" onclick="markAllAzkar()">
-                        <span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">done_all</span> تحديد الكل
-                    </button>
-                    <button class="btn btn-sm btn-danger-outline" onclick="resetAzkar()">
-                        <span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">restart_alt</span> مسح
-                    </button>
-                </div>
+                <!-- Both morning & evening rendered here by JS (like fard prayer rows) -->
+                <div id="azkarPrayersContainer"></div>
             </div>
 
             <!-- Azkar Yearly View -->
@@ -787,19 +758,19 @@
                 <!-- Stat cards -->
                 <div class="dashboard-grid">
                     <div class="stat-card">
-                        <div class="label"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">light_mode</span> أذكار الصباح</div>
-                        <div class="value" id="azkarDashMornRate" style="color:#0EA5E9">0%</div>
+                        <div class="label"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">light_mode</span> <span data-t="azkar_morning">أذكار الصباح</span></div>
+                        <div class="value" id="azkarDashMornRate" style="color:#F59E0B">0%</div>
                     </div>
                     <div class="stat-card">
-                        <div class="label"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">nights_stay</span> أذكار المساء</div>
+                        <div class="label"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">nights_stay</span> <span data-t="azkar_evening">أذكار المساء</span></div>
                         <div class="value" id="azkarDashEveRate" style="color:#6366F1">0%</div>
                     </div>
                     <div class="stat-card">
-                        <div class="label"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">done_all</span> أيام مكتملة (صباح+مساء)</div>
+                        <div class="label"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">done_all</span> <span data-t="azkar_both_days">أيام مكتملة (صباح+مساء)</span></div>
                         <div class="value" id="azkarDashBothCount">0</div>
                     </div>
                     <div class="stat-card">
-                        <div class="label"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">emoji_events</span> أفضل شهر</div>
+                        <div class="label"><span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;">emoji_events</span> <span data-t="azkar_best_month">أفضل شهر</span></div>
                         <div class="value" id="azkarDashBestMonth" style="font-size:1.2em;">-</div>
                         <div class="sublabel" id="azkarDashBestPct">0%</div>
                     </div>
@@ -808,21 +779,15 @@
                 <!-- Charts -->
                 <div class="charts-container">
                     <div class="chart-card">
-                        <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">show_chart</span> التقدم الشهري</h3>
+                        <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">show_chart</span> <span data-t="monthly_progress">التقدم الشهري</span></h3>
                         <div class="chart-wrapper">
                             <div class="svg-chart-container" id="azkarMountainChart"></div>
                         </div>
                     </div>
                     <div class="chart-card">
-                        <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">local_fire_department</span> السلسلة المتتالية</h3>
+                        <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">local_fire_department</span> <span data-t="azkar_streak">السلسلة المتتالية</span></h3>
                         <div class="chart-wrapper">
                             <div class="svg-chart-container" id="azkarStreakFlame"></div>
-                        </div>
-                    </div>
-                    <div class="chart-card">
-                        <h3><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;">grid_view</span> خريطة الالتزام</h3>
-                        <div class="chart-wrapper">
-                            <div class="svg-chart-container" id="azkarHeatmap"></div>
                         </div>
                     </div>
                 </div>
@@ -834,34 +799,34 @@
 
     <input type="file" id="importFile" style="display:none;" accept=".json" onchange="handleImport(event)">
 
-    <script src="js/config.js?v=78"></script>
-    <script src="js/storage.js?v=78"></script>
-    <script src="js/hijri-calendar.js?v=78"></script>
-    <script src="js/ui-utils.js?v=78"></script>
-    <script src="js/i18n.js?v=78"></script>
-    <script src="js/themes.js?v=78"></script>
-    <script src="js/profiles.js?v=78"></script>
-    <script src="js/female-features.js?v=78"></script>
-    <script src="js/fard-tracker.js?v=78"></script>
-    <script src="js/sunnah-tracker.js?v=78"></script>
-    <script src="js/jamaah-tracker.js?v=78"></script>
-    <script src="js/weekly-view.js?v=78"></script>
-    <script src="js/fasting-tracker.js?v=78"></script>
-    <script src="js/prayer-times.js?v=78"></script>
-    <script src="js/notifications.js?v=78"></script>
-    <script src="js/azkar-tracker.js?v=78"></script>
-    <script src="js/svg-charts.js?v=78"></script>
-    <script src="js/qada-report.js?v=78"></script>
-    <script src="js/dashboard.js?v=78"></script>
-    <script src="js/year-overview.js?v=78"></script>
-    <script src="js/data-io.js?v=78"></script>
-    <script src="js/app.js?v=78"></script>
+    <script src="js/config.js?v=80"></script>
+    <script src="js/storage.js?v=80"></script>
+    <script src="js/hijri-calendar.js?v=80"></script>
+    <script src="js/ui-utils.js?v=80"></script>
+    <script src="js/i18n.js?v=80"></script>
+    <script src="js/themes.js?v=80"></script>
+    <script src="js/profiles.js?v=80"></script>
+    <script src="js/female-features.js?v=80"></script>
+    <script src="js/fard-tracker.js?v=80"></script>
+    <script src="js/sunnah-tracker.js?v=80"></script>
+    <script src="js/jamaah-tracker.js?v=80"></script>
+    <script src="js/weekly-view.js?v=80"></script>
+    <script src="js/fasting-tracker.js?v=80"></script>
+    <script src="js/prayer-times.js?v=80"></script>
+    <script src="js/notifications.js?v=80"></script>
+    <script src="js/azkar-tracker.js?v=80"></script>
+    <script src="js/svg-charts.js?v=80"></script>
+    <script src="js/qada-report.js?v=80"></script>
+    <script src="js/dashboard.js?v=80"></script>
+    <script src="js/year-overview.js?v=80"></script>
+    <script src="js/data-io.js?v=80"></script>
+    <script src="js/app.js?v=80"></script>
 
     <!-- Profile Settings Overlay -->
     <div class="profile-settings-overlay" id="profileSettingsOverlay">
         <div style="max-width:480px;width:100%;margin:0 auto;">
             <div class="ps-header">
-                <span style="font-size:1.1em;font-weight:700;color:var(--text-primary);">الإعدادات</span>
+                <span style="font-size:1.1em;font-weight:700;color:var(--text-primary);" data-t="settings">الإعدادات</span>
                 <button class="ps-close-btn" onclick="closeProfileSettings()">
                     <span class="material-symbols-rounded" style="font-size:20px;">close</span>
                 </button>
@@ -882,20 +847,20 @@
                 <div class="ps-menu-item" onclick="closeProfileSettings();editProfile(window.App.Profiles.getActiveProfileId())">
                     <div class="ps-icon"><span class="material-symbols-rounded">edit</span></div>
                     <div class="ps-content">
-                        <div class="ps-title">تعديل البيانات</div>
-                        <div class="ps-subtitle">الاسم، العمر، الجنس</div>
+                        <div class="ps-title" data-t="edit_data">تعديل البيانات</div>
+                        <div class="ps-subtitle" data-t="edit_data_subtitle">الاسم، العمر، الجنس</div>
                     </div>
                 </div>
                 <div class="ps-menu-item" onclick="closeProfileSettings();showProfileScreen()">
                     <div class="ps-icon"><span class="material-symbols-rounded">swap_horiz</span></div>
                     <div class="ps-content">
-                        <div class="ps-title">تبديل الملف الشخصي</div>
+                        <div class="ps-title" data-t="switch_profile_menu">تبديل الملف الشخصي</div>
                     </div>
                 </div>
                 <div class="ps-menu-item" onclick="closeProfileSettings();showProfileForm()">
                     <div class="ps-icon"><span class="material-symbols-rounded">person_add</span></div>
                     <div class="ps-content">
-                        <div class="ps-title">إضافة ملف جديد</div>
+                        <div class="ps-title" data-t="add_new_profile">إضافة ملف جديد</div>
                     </div>
                 </div>
             </div>
@@ -904,15 +869,15 @@
                 <div class="ps-menu-item" onclick="exportData()">
                     <div class="ps-icon"><span class="material-symbols-rounded">upload_file</span></div>
                     <div class="ps-content">
-                        <div class="ps-title">تصدير البيانات</div>
-                        <div class="ps-subtitle">حفظ نسخة احتياطية JSON</div>
+                        <div class="ps-title" data-t="export_data">تصدير البيانات</div>
+                        <div class="ps-subtitle" data-t="export_backup_subtitle">حفظ نسخة احتياطية JSON</div>
                     </div>
                 </div>
                 <div class="ps-menu-item" onclick="importData()">
                     <div class="ps-icon"><span class="material-symbols-rounded">download</span></div>
                     <div class="ps-content">
-                        <div class="ps-title">استيراد البيانات</div>
-                        <div class="ps-subtitle">استعادة من نسخة سابقة</div>
+                        <div class="ps-title" data-t="import_data">استيراد البيانات</div>
+                        <div class="ps-subtitle" data-t="import_restore_subtitle">استعادة من نسخة سابقة</div>
                     </div>
                 </div>
             </div>
@@ -921,14 +886,14 @@
                 <div class="ps-menu-item" onclick="toggleThemeMenu()">
                     <div class="ps-icon"><span class="material-symbols-rounded">palette</span></div>
                     <div class="ps-content">
-                        <div class="ps-title">الألوان والثيم</div>
+                        <div class="ps-title" data-t="colors_theme">الألوان والثيم</div>
                     </div>
                     <div class="ps-trail" id="psThemeTrail"></div>
                 </div>
                 <div class="ps-menu-item" onclick="toggleLang()">
                     <div class="ps-icon"><span class="material-symbols-rounded">translate</span></div>
                     <div class="ps-content">
-                        <div class="ps-title">اللغة</div>
+                        <div class="ps-title" data-t="language_label">اللغة</div>
                     </div>
                     <div class="ps-trail" id="psLangTrail">العربية</div>
                 </div>
@@ -938,8 +903,8 @@
                 <div class="ps-menu-item" onclick="togglePrayerNotifications()">
                     <div class="ps-icon"><span class="material-symbols-rounded">notifications</span></div>
                     <div class="ps-content">
-                        <div class="ps-title">الإشعارات</div>
-                        <div class="ps-subtitle">تذكير الصلاة قبل وبعد الوقت</div>
+                        <div class="ps-title" data-t="notifications_label">الإشعارات</div>
+                        <div class="ps-subtitle" data-t="notif_subtitle">تذكير الصلاة قبل وبعد الوقت</div>
                     </div>
                 </div>
             </div>
@@ -948,20 +913,20 @@
                 <div class="ps-menu-item" onclick="closeProfileSettings();resetTrackerMonth('fard')">
                     <div class="ps-icon"><span class="material-symbols-rounded">refresh</span></div>
                     <div class="ps-content">
-                        <div class="ps-title">مسح بيانات الشهر (الفرائض)</div>
-                        <div class="ps-subtitle">مسح بيانات الشهر الحالي</div>
+                        <div class="ps-title" data-t="clear_fard_month">مسح بيانات الشهر (الفرائض)</div>
+                        <div class="ps-subtitle" data-t="clear_fard_subtitle">مسح بيانات الشهر الحالي</div>
                     </div>
                 </div>
                 <div class="ps-menu-item" onclick="closeProfileSettings();resetTrackerMonth('sunnah')">
                     <div class="ps-icon"><span class="material-symbols-rounded">refresh</span></div>
                     <div class="ps-content">
-                        <div class="ps-title">مسح بيانات الشهر (السنن)</div>
+                        <div class="ps-title" data-t="clear_sunnah_month">مسح بيانات الشهر (السنن)</div>
                     </div>
                 </div>
                 <div class="ps-menu-item" onclick="window.print()">
                     <div class="ps-icon"><span class="material-symbols-rounded">print</span></div>
                     <div class="ps-content">
-                        <div class="ps-title">طباعة</div>
+                        <div class="ps-title" data-t="print">طباعة</div>
                     </div>
                 </div>
             </div>
@@ -970,13 +935,13 @@
                 <div class="ps-menu-item danger" onclick="var id=window.App.Profiles.getActiveProfileId();if(id){closeProfileSettings();deleteProfile(id);}">
                     <div class="ps-icon"><span class="material-symbols-rounded">delete_outline</span></div>
                     <div class="ps-content">
-                        <div class="ps-title">حذف الملف الشخصي</div>
-                        <div class="ps-subtitle">سيتم حذف جميع البيانات نهائياً</div>
+                        <div class="ps-title" data-t="delete_profile_full">حذف الملف الشخصي</div>
+                        <div class="ps-subtitle" data-t="delete_profile_subtitle">سيتم حذف جميع البيانات نهائياً</div>
                     </div>
                 </div>
             </div>
 
-            <div class="ps-footer">متتبع الصلاة — الإصدار ٢.١</div>
+            <div class="ps-footer" data-t="app_version">متتبع الصلاة — الإصدار ٢.١</div>
         </div>
     </div>
 

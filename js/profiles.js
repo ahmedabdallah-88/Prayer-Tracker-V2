@@ -256,7 +256,7 @@ window.App.Profiles = (function() {
 
                         localStorage.removeItem('_pending_import');
                     } catch(e) {
-                        console.log('Pending import error:', e);
+                        console.error('Pending import error:', e);
                     }
                 }
 

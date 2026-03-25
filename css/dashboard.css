@@ -102,7 +102,7 @@
 .stat-item:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    border-color: var(--gold, #D4A03C);
+    border-color: var(--gold);
 }
 
 .stat-item .label {
@@ -115,7 +115,7 @@
 .stat-item .value {
     font-size: 2em;
     font-weight: 700;
-    color: var(--green-mid, #40916C);
+    color: var(--green-mid);
     text-shadow: none;
 }
 
@@ -160,7 +160,7 @@
 .streak-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-    border-color: var(--gold, #D4A03C);
+    border-color: var(--gold);
 }
 
 .streak-prayer-name {
@@ -184,7 +184,7 @@
 }
 
 .streak-value.fire {
-    color: var(--gold, #D4A03C);
+    color: var(--gold);
 }
 
 .streak-label {
@@ -194,7 +194,7 @@
 
 .streak-best {
     font-size: 0.75em;
-    color: var(--green-deep, #2D6A4F);
+    color: var(--green-deep);
     margin-top: 6px;
     font-weight: 600;
 }
@@ -304,7 +304,7 @@
     font-size: 1.5em;
     font-weight: 800;
     font-family: 'Rubik', sans-serif;
-    color: var(--green-deep, #2D6A4F);
+    color: var(--green-deep);
     line-height: 1;
 }
 
@@ -331,7 +331,7 @@
 .month-badge {
     font-size: 0.72em;
     font-weight: 600;
-    color: var(--gold, #D4A03C);
+    color: var(--gold);
     background: rgba(212, 160, 60, 0.1);
     padding: 2px 8px;
     border-radius: 12px;
@@ -341,7 +341,7 @@
     display: inline-block;
     width: 8px;
     height: 8px;
-    background: var(--green-deep, #2D6A4F);
+    background: var(--green-deep);
     border-radius: 50%;
     margin-inline-start: 4px;
     vertical-align: middle;

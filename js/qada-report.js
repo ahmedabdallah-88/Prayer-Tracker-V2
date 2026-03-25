@@ -38,13 +38,13 @@ window.App.QadaReport = (function() {
         header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;';
 
         var titleDiv = document.createElement('div');
-        titleDiv.style.cssText = 'font-size:14px;font-weight:700;color:#2B2D42;display:flex;align-items:center;gap:6px;';
-        titleDiv.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;color:#C1574E;font-variation-settings:\'FILL\' 0,\'wght\' 500;">assignment_late</span>' +
+        titleDiv.style.cssText = 'font-size:14px;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:6px;';
+        titleDiv.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;color:var(--red);font-variation-settings:\'FILL\' 0,\'wght\' 500;">assignment_late</span>' +
             (currentLang === 'ar' ? '\u062A\u0642\u0631\u064A\u0631 \u0627\u0644\u0642\u0636\u0627\u0621' : 'Qada Report');
         header.appendChild(titleDiv);
 
         var badge = document.createElement('div');
-        badge.style.cssText = 'padding:4px 10px;border-radius:8px;background:rgba(193,87,78,0.08);font-size:13px;font-weight:800;color:#C1574E;font-family:Rubik,sans-serif;';
+        badge.style.cssText = 'padding:4px 10px;border-radius:8px;background:rgba(193,87,78,0.08);font-size:13px;font-weight:800;color:var(--red);font-family:Rubik,sans-serif;';
         badge.textContent = totalQada;
         header.appendChild(badge);
         container.appendChild(header);
@@ -53,8 +53,8 @@ window.App.QadaReport = (function() {
         if (totalQada === 0) {
             var zeroDiv = document.createElement('div');
             zeroDiv.style.cssText = 'text-align:center;padding:20px;';
-            zeroDiv.innerHTML = '<span class="material-symbols-rounded" style="font-size:32px;color:#40916C;font-variation-settings:\'FILL\' 1;">check_circle</span>' +
-                '<div style="font-size:13px;font-weight:600;color:#40916C;margin-top:6px;">' +
+            zeroDiv.innerHTML = '<span class="material-symbols-rounded" style="font-size:32px;color:var(--green-mid);font-variation-settings:\'FILL\' 1;">check_circle</span>' +
+                '<div style="font-size:13px;font-weight:600;color:var(--green-mid);margin-top:6px;">' +
                 (currentLang === 'ar' ? '\u0644\u0627 \u062A\u0648\u062C\u062F \u0635\u0644\u0648\u0627\u062A \u0642\u0636\u0627\u0621 \u2014 \u0623\u062D\u0633\u0646\u062A' : 'No qada prayers \u2014 great job!') + '</div>';
             container.appendChild(zeroDiv);
             return;
@@ -91,7 +91,7 @@ window.App.QadaReport = (function() {
 
             // Prayer name
             var name = document.createElement('span');
-            name.style.cssText = 'flex:1;font-size:13px;font-weight:600;color:#2B2D42;font-family:"Noto Kufi Arabic",sans-serif;';
+            name.style.cssText = 'flex:1;font-size:13px;font-weight:600;color:var(--text-primary);font-family:"Noto Kufi Arabic",sans-serif;';
             name.textContent = I18n.getPrayerName(p.id);
             row.appendChild(name);
 
@@ -105,7 +105,7 @@ window.App.QadaReport = (function() {
 
             // Count number
             var countSpan = document.createElement('span');
-            countSpan.style.cssText = 'font-size:14px;font-weight:800;color:#C1574E;font-family:Rubik,sans-serif;width:24px;text-align:left;';
+            countSpan.style.cssText = 'font-size:14px;font-weight:800;color:var(--red);font-family:Rubik,sans-serif;width:24px;text-align:left;';
             countSpan.textContent = count;
             row.appendChild(countSpan);
 

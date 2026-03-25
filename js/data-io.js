@@ -612,12 +612,10 @@
         }
 
         if (profileId) {
-            console.log('Hijri migration v2: converting ' + Object.keys(gregData).length + ' keys for profile ' + profileId);
             importAndConvertToHijri(gregData, profileId);
         }
 
         localStorage.setItem('salah_hijri_migrated_v2', 'true');
-        console.log('Hijri migration v2 complete');
     }
 
     // ================================================================

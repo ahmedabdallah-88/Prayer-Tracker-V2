@@ -205,7 +205,6 @@ window.App.Main = (function() {
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('./service-worker.js')
                     .then(function(reg) {
-                        console.log('SW registered:', reg.scope);
 
                         // Listen for notification clicks from SW
                         navigator.serviceWorker.addEventListener('message', function(event) {
@@ -222,7 +221,6 @@ window.App.Main = (function() {
                             var newWorker = reg.installing;
                             newWorker.addEventListener('statechange', function() {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    console.log('[APP] New SW installed, sending SKIP_WAITING...');
                                     newWorker.postMessage({ type: 'SKIP_WAITING' });
                                 }
                             });
@@ -246,16 +244,12 @@ window.App.Main = (function() {
                                 if (status.state === 'granted') {
                                     reg.periodicSync.register('prayer-check', {
                                         minInterval: 15 * 60 * 1000
-                                    }).then(function() {
-                                        console.log('Periodic sync registered');
                                     });
                                 }
-                            }).catch(function(e) {
-                                console.log('Periodic sync not available:', e);
-                            });
+                            }).catch(function() {});
                         }
                     })
-                    .catch(function(err) { console.log('SW failed:', err); });
+                    .catch(function(err) { console.error('SW registration failed:', err); });
             });
         }
 

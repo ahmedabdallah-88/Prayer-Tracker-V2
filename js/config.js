@@ -306,7 +306,77 @@ window.App.Config = {
         'chart_remaining_label': { ar: '\u0645\u062a\u0628\u0642\u064a\u0629', en: 'Remaining' },
         'chart_sunnah_performed': { ar: '\u0645\u0624\u062f\u0627\u0629', en: 'Performed' },
         'fasting_days_chart': { ar: '\u0623\u064a\u0627\u0645 \u0627\u0644\u0635\u064a\u0627\u0645', en: 'Fasting Days' },
-        'no_period_data': { ar: '\u062d\u062f\u062f\u064a \u0623\u064a\u0627\u0645 \u0627\u0644\u0625\u0639\u0641\u0627\u0621 \u0645\u0646 \u0627\u0644\u0645\u062a\u062a\u0628\u0639 \u0627\u0644\u0634\u0647\u0631\u064a \u0644\u062a\u0638\u0647\u0631 \u0647\u0646\u0627', en: 'Mark exempt days in the monthly tracker to see them here' }
+        'no_period_data': { ar: '\u062d\u062f\u062f\u064a \u0623\u064a\u0627\u0645 \u0627\u0644\u0625\u0639\u0641\u0627\u0621 \u0645\u0646 \u0627\u0644\u0645\u062a\u062a\u0628\u0639 \u0627\u0644\u0634\u0647\u0631\u064a \u0644\u062a\u0638\u0647\u0631 \u0647\u0646\u0627', en: 'Mark exempt days in the monthly tracker to see them here' },
+
+        // Chart/dashboard titles
+        'congregation_streak': { ar: '\u0633\u0644\u0627\u0633\u0644 \u0627\u0644\u0645\u0648\u0627\u0638\u0628\u0629 \u0639\u0644\u0649 \u0627\u0644\u062c\u0645\u0627\u0639\u0629', en: 'Congregation Streaks' },
+        'weekly_congregation_pattern': { ar: '\u0646\u0645\u0637 \u0627\u0644\u062c\u0645\u0627\u0639\u0629 \u0627\u0644\u0623\u0633\u0628\u0648\u0639\u064a', en: 'Weekly Congregation Pattern' },
+        'qada_report_title': { ar: '\u062a\u0642\u0631\u064a\u0631 \u0627\u0644\u0642\u0636\u0627\u0621', en: 'Qada Report' },
+        'next_prayer': { ar: '\u0627\u0644\u0635\u0644\u0627\u0629 \u0627\u0644\u0642\u0627\u062f\u0645\u0629', en: 'Next Prayer' },
+        'completion': { ar: '\u0627\u0644\u0625\u0646\u062c\u0627\u0632', en: 'Completion' },
+        'overall_completion': { ar: '\u0646\u0633\u0628\u0629 \u0627\u0644\u0625\u0646\u062c\u0627\u0632 \u0627\u0644\u0643\u0644\u064a', en: 'Overall Completion' },
+        'best_month_label': { ar: '\u0623\u0641\u0636\u0644 \u0634\u0647\u0631', en: 'Best Month' },
+
+        // Stats card labels
+        'most_consistent': { ar: '\u0627\u0644\u0623\u0643\u062b\u0631 \u0627\u0646\u062a\u0638\u0627\u0645\u0627\u064b', en: 'Most Consistent' },
+        'congregation_rate': { ar: '\u0646\u0633\u0628\u0629 \u0635\u0644\u0627\u0629 \u0627\u0644\u062c\u0645\u0627\u0639\u0629', en: 'Congregation Rate' },
+        'qada_word': { ar: '\u0642\u0636\u0627\u0621', en: 'Qada' },
+
+        // Azkar translations
+        'select_all': { ar: '\u062a\u062d\u062f\u064a\u062f \u0627\u0644\u0643\u0644', en: 'Select All' },
+        'clear_word': { ar: '\u0645\u0633\u062d', en: 'Clear' },
+        'azkar_both_days': { ar: '\u0623\u064a\u0627\u0645 \u0645\u0643\u062a\u0645\u0644\u0629 (\u0635\u0628\u0627\u062d+\u0645\u0633\u0627\u0621)', en: 'Complete Days (morning+evening)' },
+        'azkar_streak': { ar: '\u0627\u0644\u0633\u0644\u0633\u0644\u0629 \u0627\u0644\u0645\u062a\u062a\u0627\u0644\u064a\u0629', en: 'Consecutive Streak' },
+        'azkar_heatmap': { ar: '\u062e\u0631\u064a\u0637\u0629 \u0627\u0644\u0627\u0644\u062a\u0632\u0627\u0645', en: 'Commitment Map' },
+        'azkar_best_month': { ar: '\u0623\u0641\u0636\u0644 \u0634\u0647\u0631', en: 'Best Month' },
+
+        // Streak labels
+        'current_word': { ar: '\u0627\u0644\u062d\u0627\u0644\u064a\u0629', en: 'Current' },
+        'best_word': { ar: '\u0627\u0644\u0623\u0641\u0636\u0644', en: 'Best' },
+        'record_word': { ar: '\u0631\u0642\u0645 \u0642\u064a\u0627\u0633\u064a', en: 'Personal Best' },
+
+        // Misc labels
+        'total_word': { ar: '\u0627\u0644\u0643\u0644', en: 'Total' },
+        'rate': { ar: '\u0627\u0644\u0646\u0633\u0628\u0629', en: 'Rate' },
+        'settings': { ar: '\u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a', en: 'Settings' },
+        'edit_profile': { ar: '\u062a\u0639\u062f\u064a\u0644 \u0627\u0644\u0645\u0644\u0641', en: 'Edit Profile' },
+        'delete_profile': { ar: '\u062d\u0630\u0641', en: 'Delete' },
+        'theme_label': { ar: '\u0627\u0644\u0645\u0638\u0647\u0631', en: 'Theme' },
+        'language_label': { ar: '\u0627\u0644\u0644\u063a\u0629', en: 'Language' },
+        'year_overview': { ar: '\u0646\u0638\u0631\u0629 \u0633\u0646\u0648\u064a\u0629', en: 'Year Overview' },
+
+        // Profile settings
+        'edit_data': { ar: '\u062a\u0639\u062f\u064a\u0644 \u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a', en: 'Edit Data' },
+        'edit_data_subtitle': { ar: '\u0627\u0644\u0627\u0633\u0645\u060c \u0627\u0644\u0639\u0645\u0631\u060c \u0627\u0644\u062c\u0646\u0633', en: 'Name, Age, Gender' },
+        'switch_profile_menu': { ar: '\u062a\u0628\u062f\u064a\u0644 \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0634\u062e\u0635\u064a', en: 'Switch Profile' },
+        'add_new_profile': { ar: '\u0625\u0636\u0627\u0641\u0629 \u0645\u0644\u0641 \u062c\u062f\u064a\u062f', en: 'Add New Profile' },
+        'export_backup_subtitle': { ar: '\u062d\u0641\u0638 \u0646\u0633\u062e\u0629 \u0627\u062d\u062a\u064a\u0627\u0637\u064a\u0629 JSON', en: 'Save JSON backup' },
+        'import_restore_subtitle': { ar: '\u0627\u0633\u062a\u0639\u0627\u062f\u0629 \u0645\u0646 \u0646\u0633\u062e\u0629 \u0633\u0627\u0628\u0642\u0629', en: 'Restore from backup' },
+        'colors_theme': { ar: '\u0627\u0644\u0623\u0644\u0648\u0627\u0646 \u0648\u0627\u0644\u062b\u064a\u0645', en: 'Colors & Theme' },
+        'notifications_label': { ar: '\u0627\u0644\u0625\u0634\u0639\u0627\u0631\u0627\u062a', en: 'Notifications' },
+        'notif_subtitle': { ar: '\u062a\u0630\u0643\u064a\u0631 \u0627\u0644\u0635\u0644\u0627\u0629 \u0642\u0628\u0644 \u0648\u0628\u0639\u062f \u0627\u0644\u0648\u0642\u062a', en: 'Prayer reminder before & after time' },
+        'clear_fard_month': { ar: '\u0645\u0633\u062d \u0628\u064a\u0627\u0646\u0627\u062a \u0627\u0644\u0634\u0647\u0631 (\u0627\u0644\u0641\u0631\u0627\u0626\u0636)', en: 'Clear Month Data (Fard)' },
+        'clear_fard_subtitle': { ar: '\u0645\u0633\u062d \u0628\u064a\u0627\u0646\u0627\u062a \u0627\u0644\u0634\u0647\u0631 \u0627\u0644\u062d\u0627\u0644\u064a', en: 'Clear current month data' },
+        'clear_sunnah_month': { ar: '\u0645\u0633\u062d \u0628\u064a\u0627\u0646\u0627\u062a \u0627\u0644\u0634\u0647\u0631 (\u0627\u0644\u0633\u0646\u0646)', en: 'Clear Month Data (Sunnah)' },
+        'delete_profile_full': { ar: '\u062d\u0630\u0641 \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0634\u062e\u0635\u064a', en: 'Delete Profile' },
+        'delete_profile_subtitle': { ar: '\u0633\u064a\u062a\u0645 \u062d\u0630\u0641 \u062c\u0645\u064a\u0639 \u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a \u0646\u0647\u0627\u0626\u064a\u0627\u064b', en: 'All data will be permanently deleted' },
+        'app_version': { ar: '\u0645\u062a\u062a\u0628\u0639 \u0627\u0644\u0635\u0644\u0627\u0629 \u2014 \u0627\u0644\u0625\u0635\u062f\u0627\u0631 \u0662.\u0661', en: 'Prayer Tracker \u2014 Version 2.1' },
+
+        // Fasting sub-tabs
+        'voluntary_short': { ar: '\u062a\u0637\u0648\u0639', en: 'Voluntary' },
+        'ramadan_short': { ar: '\u0631\u0645\u0636\u0627\u0646', en: 'Ramadan' },
+
+        // Fasting dashboard labels
+        'vol_fasting_total': { ar: '\u0625\u062c\u0645\u0627\u0644\u064a \u0623\u064a\u0627\u0645 \u0635\u064a\u0627\u0645 \u0627\u0644\u062a\u0637\u0648\u0639', en: 'Total Voluntary Fasting Days' },
+        'during_year_label': { ar: '\u062e\u0644\u0627\u0644 \u0627\u0644\u0633\u0646\u0629', en: 'During the year' },
+        'best_fasting_month_label': { ar: '\u0623\u0641\u0636\u0644 \u0634\u0647\u0631 \u0635\u064a\u0627\u0645', en: 'Best Fasting Month' },
+        'ramadan_fasting_label': { ar: '\u0635\u064a\u0627\u0645 \u0631\u0645\u0636\u0627\u0646', en: 'Ramadan Fasting' },
+        'monthly_fasting_avg': { ar: '\u0645\u0639\u062f\u0644 \u0627\u0644\u0635\u064a\u0627\u0645 \u0627\u0644\u0634\u0647\u0631\u064a', en: 'Monthly Fasting Average' },
+        'ramadan_days_label': { ar: '\u0623\u064a\u0627\u0645 \u0631\u0645\u0636\u0627\u0646', en: 'Ramadan Days' },
+        'fasting_exempt_label': { ar: '\u0648\u0636\u0639 \u062a\u062d\u062f\u064a\u062f \u0623\u064a\u0627\u0645 \u0627\u0644\u062d\u064a\u0636', en: 'Period marking mode' },
+
+        // Period history
+        'period_history_title': { ar: '\u0633\u062c\u0644 \u0627\u0644\u062f\u0648\u0631\u0629 \u0627\u0644\u0634\u0647\u0631\u064a\u0629', en: 'Period History' }
     }
 
 };

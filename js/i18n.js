@@ -110,9 +110,15 @@ window.App.I18n = (function() {
                     if (volView && volView.classList.contains('active') && typeof window.updateVoluntaryFasting === 'function') window.updateVoluntaryFasting();
                     var dashView = document.getElementById('fastingDashboardView');
                     if (dashView && dashView.classList.contains('active') && typeof window.updateFastingDashboard === 'function') window.updateFastingDashboard();
+                } else if (currentSection === 'azkar') {
+                    if (typeof window.updateAzkarTracker === 'function') window.updateAzkarTracker();
+                    var azDash = document.getElementById('azkarDashboardView');
+                    if (azDash && azDash.classList.contains('active') && typeof window.updateAzkarDashboard === 'function') window.updateAzkarDashboard();
+                    var azYearly = document.getElementById('azkarYearlyView');
+                    if (azYearly && azYearly.classList.contains('active') && typeof window.updateAzkarYearly === 'function') window.updateAzkarYearly();
                 }
             }
-        } catch(e) { console.log('Lang re-render:', e); }
+        } catch(e) { console.error('Lang re-render:', e); }
 
         if (typeof window.updateShellBar === 'function') window.updateShellBar();
     }

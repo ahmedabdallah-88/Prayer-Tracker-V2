@@ -102,7 +102,7 @@ window.App.PrayerTimes = (function() {
             }
             return { city: city, countryCode: countryCode };
         }).catch(function(e) {
-            console.log('Reverse geocode error:', e);
+            console.error('Reverse geocode error:', e);
 
             // Check cache as fallback
             try {
@@ -228,7 +228,7 @@ window.App.PrayerTimes = (function() {
                 });
             });
         }).catch(function(e) {
-            console.log('Prayer times fetch error:', e);
+            console.error('Prayer times fetch error:', e);
             // Try to show cached data even if expired
             var cached = getPrayerTimesFromStorage();
             if (cached) {

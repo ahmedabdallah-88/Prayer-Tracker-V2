@@ -291,7 +291,7 @@ window.App.UI = (function() {
                 else navigator.vibrate([35]);
             }
         } catch(e) {
-            console.log('Vibrate error:', e);
+            console.error('Vibrate error:', e);
         }
 
         try {

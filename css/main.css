@@ -173,7 +173,7 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #2B2D42;
+    color: var(--text-primary);
     font-family: 'Noto Kufi Arabic', sans-serif;
     font-weight: 800;
     font-size: 1.05em;
@@ -184,7 +184,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #2D6A4F, #40916C);
+    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
     border-radius: 10px;
     color: white;
     box-shadow: 0 2px 8px rgba(45,106,79,0.2);
@@ -232,7 +232,7 @@ body {
     border-radius: 12px;
     border: 1px solid rgba(0,0,0,0.06);
     background: rgba(255,255,255,0.6);
-    color: #2B2D42;
+    color: var(--text-primary);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -250,7 +250,7 @@ body {
 #shellProfileBtn {
     width: 38px; height: 38px;
     border-radius: 12px;
-    background: linear-gradient(135deg, #2D6A4F, #40916C);
+    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
     border: none;
     box-shadow: 0 3px 10px rgba(45,106,79,0.3);
 }
@@ -420,7 +420,7 @@ body {
     border: none;
     border-radius: 10px;
     background: transparent;
-    color: #8D99AE;
+    color: var(--text-muted);
     font-family: 'Noto Kufi Arabic', sans-serif;
     font-weight: 700;
     font-size: 12px;
@@ -435,18 +435,18 @@ body {
 
 .sub-tab.active {
     background: #fff;
-    color: #2B2D42;
+    color: var(--text-primary);
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 .sub-tab .material-symbols-rounded {
     font-variation-settings: 'FILL' 0, 'wght' 400;
-    color: #8D99AE;
+    color: var(--text-muted);
 }
 
 .sub-tab.active .material-symbols-rounded {
     font-variation-settings: 'FILL' 1, 'wght' 600;
-    color: #2D6A4F;
+    color: var(--green-deep);
 }
 
 /* ==================== MONTH NAVIGATION ==================== */
@@ -566,7 +566,7 @@ body {
 .pt-item .pt-icon .material-symbols-rounded {
     font-size: 16px;
     font-variation-settings: 'FILL' 0, 'wght' 300;
-    color: #8D99AE;
+    color: var(--text-muted);
 }
 
 .pt-item.active-prayer .pt-icon .material-symbols-rounded {
@@ -575,7 +575,7 @@ body {
 }
 
 .pt-item.active-prayer {
-    background: linear-gradient(135deg, #2D6A4F, #40916C);
+    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
     border: none;
     box-shadow: 0 3px 12px rgba(45,106,79,0.25);
 }
@@ -585,14 +585,14 @@ body {
 .pt-item .pt-name {
     font-size: 10px;
     font-weight: 600;
-    color: #8D99AE;
+    color: var(--text-muted);
     margin-bottom: 1px;
 }
 
 .pt-item .pt-time {
     font-size: 12px;
     font-weight: 700;
-    color: #2B2D42;
+    color: var(--text-primary);
     font-family: 'Rubik', sans-serif;
     font-variant-numeric: tabular-nums;
 }
@@ -711,7 +711,7 @@ body {
 }
 
 .prayer-name .prayer-icon-badge.fajr-icon { background: linear-gradient(135deg, #E8B4B8, #D4A0A7); }
-.prayer-name .prayer-icon-badge.dhuhr-icon { background: linear-gradient(135deg, #F0C75E, #E8B84A); }
+.prayer-name .prayer-icon-badge.dhuhr-icon { background: linear-gradient(135deg, #F0C75E, var(--gold-light)); }
 .prayer-name .prayer-icon-badge.asr-icon { background: linear-gradient(135deg, #E8A849, #D4943A); }
 .prayer-name .prayer-icon-badge.maghrib-icon { background: linear-gradient(135deg, #C47A5A, #B0664A); }
 .prayer-name .prayer-icon-badge.isha-icon { background: linear-gradient(135deg, #5B6B8A, #4A5A7A); }
@@ -1407,7 +1407,7 @@ body {
     flex-shrink: 0;
 }
 
-.profile-avatar.male { background: linear-gradient(135deg, #2D6A4F, #40916C); }
+.profile-avatar.male { background: linear-gradient(135deg, var(--green-deep), var(--green-mid)); }
 .profile-avatar.female { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
 .profile-avatar.child-male { background: linear-gradient(135deg, #0EA5E9, #38BDF8); }
 .profile-avatar.child-female { background: linear-gradient(135deg, #EC4899, #F472B6); }
@@ -1517,7 +1517,7 @@ body {
 
 .gender-option.selected[data-gender="male"] {
     border: 2px solid transparent;
-    background: linear-gradient(135deg, #2D6A4F, #40916C);
+    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
     color: white;
     box-shadow: 0 4px 16px rgba(45,106,79,0.25);
     transform: scale(1.02);
@@ -1555,7 +1555,7 @@ body {
 }
 
 .form-btn.save {
-    background: linear-gradient(135deg, #2D6A4F, #40916C);
+    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
     color: white;
     box-shadow: 0 6px 20px rgba(45,106,79,0.25);
     padding: 15px;
@@ -2090,7 +2090,7 @@ body {
 .ps-close-btn:hover { background: rgba(0,0,0,0.08); }
 
 .ps-profile-card {
-    background: linear-gradient(135deg, #2D6A4F, #40916C);
+    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
     border-radius: 20px;
     padding: 20px;
     margin-bottom: 20px;
@@ -2256,7 +2256,7 @@ body {
 
 .nav-circle .material-symbols-rounded {
     font-size: 20px;
-    color: #8D99AE;
+    color: var(--text-muted);
     font-variation-settings: 'wght' 500;
 }
 
@@ -2277,7 +2277,7 @@ body {
 .month-nav-label {
     font-size: 16px;
     font-weight: 700;
-    color: #2B2D42;
+    color: var(--text-primary);
     font-family: 'Noto Kufi Arabic', sans-serif;
 }
 
@@ -2287,7 +2287,7 @@ body {
     justify-content: center;
     padding: 2px 8px;
     background: rgba(43,45,66,0.06);
-    color: #8D99AE;
+    color: var(--text-muted);
     border-radius: 6px;
     font-size: 11px;
     font-weight: 700;
@@ -2310,7 +2310,7 @@ body {
 
 .nav-gear .material-symbols-rounded {
     font-size: 14px;
-    color: #8D99AE;
+    color: var(--text-muted);
     font-variation-settings: 'wght' 400;
 }
 
@@ -2397,7 +2397,7 @@ body {
     gap: 5px;
     font-size: 11px;
     font-weight: 600;
-    color: #8D99AE;
+    color: var(--text-muted);
 }
 
 .prayer-legend .legend-dot {
@@ -2409,18 +2409,18 @@ body {
 }
 
 .prayer-legend .legend-dot.checked-dot {
-    background: linear-gradient(135deg, #40916C, #40916Cdd);
-    border: 2px solid #40916C;
+    background: linear-gradient(135deg, var(--green-mid), #40916Cdd);
+    border: 2px solid var(--green-mid);
 }
 
 .prayer-legend .legend-dot.cong-dot {
-    background: linear-gradient(135deg, #40916C, #40916Cdd);
-    border: 2px solid #D4A03C;
+    background: linear-gradient(135deg, var(--green-mid), #40916Cdd);
+    border: 2px solid var(--gold);
 }
 
 .prayer-legend .legend-dot.qada-dot {
-    background: linear-gradient(135deg, #C1574E, #C1574Edd);
-    border: 2px solid #C1574E;
+    background: linear-gradient(135deg, var(--red), #C1574Edd);
+    border: 2px solid var(--red);
 }
 
 /* ==================== REMINDER BAR GLASSMORPHISM ==================== */

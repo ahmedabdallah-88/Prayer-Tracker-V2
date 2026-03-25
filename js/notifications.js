@@ -215,7 +215,7 @@ window.App.Notifications = (function() {
                 renotify: true
             });
         } catch(e) {
-            console.log('Notification error:', e);
+            console.error('Notification error:', e);
             // Last resort: in-app toast
             showToast(title + ': ' + body, 'info', 5000);
         }
