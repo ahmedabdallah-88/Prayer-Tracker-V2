@@ -51,7 +51,7 @@ window.App.SVGCharts = (function() {
         // Outer ring (الإنجاز): r=72, strokeWidth=10, green
         var outerCirc = 2 * Math.PI * 72;
         var outerOffset = outerCirc * (1 - completionPct / 100);
-        var outerArc = el('circle', { cx: cx, cy: cy, r: 72, fill: 'none', stroke: tv('--green-mid'), 'stroke-width': 10, 'stroke-linecap': 'round', 'stroke-dasharray': outerCirc, 'stroke-dashoffset': outerOffset, transform: 'rotate(-90 ' + cx + ' ' + cy + ')' });
+        var outerArc = el('circle', { cx: cx, cy: cy, r: 72, fill: 'none', stroke: tv('--primary-mid'), 'stroke-width': 10, 'stroke-linecap': 'round', 'stroke-dasharray': outerCirc, 'stroke-dashoffset': outerOffset, transform: 'rotate(-90 ' + cx + ' ' + cy + ')' });
         outerArc.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
         children.push(outerArc);
 
@@ -59,7 +59,7 @@ window.App.SVGCharts = (function() {
         if (data.isFard) {
             var innerCirc = 2 * Math.PI * 56;
             var innerOffset = innerCirc * (1 - congPct / 100);
-            var innerArc = el('circle', { cx: cx, cy: cy, r: 56, fill: 'none', stroke: tv('--gold'), 'stroke-width': 8, 'stroke-linecap': 'round', 'stroke-dasharray': innerCirc, 'stroke-dashoffset': innerOffset, transform: 'rotate(-90 ' + cx + ' ' + cy + ')' });
+            var innerArc = el('circle', { cx: cx, cy: cy, r: 56, fill: 'none', stroke: tv('--accent'), 'stroke-width': 8, 'stroke-linecap': 'round', 'stroke-dasharray': innerCirc, 'stroke-dashoffset': innerOffset, transform: 'rotate(-90 ' + cx + ' ' + cy + ')' });
             innerArc.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
             children.push(innerArc);
         }
@@ -93,21 +93,21 @@ window.App.SVGCharts = (function() {
             // Item 1: الإنجاز
             '<div style="margin-bottom:12px;">' +
                 '<div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">' +
-                    '<span style="width:10px;height:10px;border-radius:3px;background:var(--green-mid);flex-shrink:0;"></span>' +
+                    '<span style="width:10px;height:10px;border-radius:3px;background:var(--primary-mid);flex-shrink:0;"></span>' +
                     '<span style="font-size:12px;color:var(--text-muted);font-weight:600;">' + completionLabel + '</span>' +
                 '</div>' +
                 '<div style="font-size:11px;color:var(--text-muted);font-weight:500;margin-bottom:2px;margin-inline-start:16px;">' + data.completed + ' / ' + data.total + '</div>' +
-                '<div style="font-size:16px;font-weight:800;color:var(--green-mid);font-family:\'Rubik\',sans-serif;margin-inline-start:16px;">' + completionPct + '%</div>' +
+                '<div style="font-size:16px;font-weight:800;color:var(--primary-mid);font-family:\'Rubik\',sans-serif;margin-inline-start:16px;">' + completionPct + '%</div>' +
             '</div>' +
             // Item 2: الجماعة (fard only)
             (data.isFard ?
             '<div>' +
                 '<div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">' +
-                    '<span style="width:10px;height:10px;border-radius:3px;background:var(--gold);flex-shrink:0;"></span>' +
+                    '<span style="width:10px;height:10px;border-radius:3px;background:var(--accent);flex-shrink:0;"></span>' +
                     '<span style="font-size:12px;color:var(--text-muted);font-weight:600;">' + congLabel + '</span>' +
                 '</div>' +
                 '<div style="font-size:11px;color:var(--text-muted);font-weight:500;margin-bottom:2px;margin-inline-start:16px;">' + data.congCount + congSuffix + '</div>' +
-                '<div style="font-size:16px;font-weight:800;color:var(--gold);font-family:\'Rubik\',sans-serif;margin-inline-start:16px;">' + congPct + '%</div>' +
+                '<div style="font-size:16px;font-weight:800;color:var(--accent);font-family:\'Rubik\',sans-serif;margin-inline-start:16px;">' + congPct + '%</div>' +
             '</div>' : '');
 
         wrapper.appendChild(legend);
@@ -263,7 +263,7 @@ window.App.SVGCharts = (function() {
             var leg = document.createElement('div');
             leg.style.cssText = 'display:flex;justify-content:center;gap:14px;margin-top:8px;padding:4px 0;';
             leg.innerHTML =
-                '<div style="display:flex;align-items:center;gap:4px;"><div style="width:12px;height:4px;border-radius:2px;background:var(--green-mid);"></div><span style="font-size:9px;color:var(--text-muted);font-weight:600;">' + (data.legendLabels.current || 'الحالية') + '</span></div>' +
+                '<div style="display:flex;align-items:center;gap:4px;"><div style="width:12px;height:4px;border-radius:2px;background:var(--primary-mid);"></div><span style="font-size:9px;color:var(--text-muted);font-weight:600;">' + (data.legendLabels.current || 'الحالية') + '</span></div>' +
                 '<div style="display:flex;align-items:center;gap:4px;"><div style="width:12px;height:4px;border-radius:2px;border:1px dashed rgba(0,0,0,0.15);background:rgba(0,0,0,0.04);"></div><span style="font-size:9px;color:var(--text-muted);font-weight:600;">' + (data.legendLabels.best || 'الأفضل') + '</span></div>';
             container.appendChild(leg);
         }
@@ -281,10 +281,10 @@ window.App.SVGCharts = (function() {
         if (n === 0) return;
 
         // Resolve theme colors for SVG string building
-        var _greenDeep = tv('--green-deep');
-        var _greenMid = tv('--green-mid');
-        var _gold = tv('--gold');
-        var _red = tv('--red');
+        var _greenDeep = tv('--primary');
+        var _greenMid = tv('--primary-mid');
+        var _gold = tv('--accent');
+        var _red = tv('--danger');
         var _textMuted = tv('--text-muted');
 
         var W = 360, H = 190;
@@ -468,12 +468,12 @@ window.App.SVGCharts = (function() {
 
         // Card container
         var card = document.createElement('div');
-        card.style.cssText = 'background:rgba(255,255,255,0.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:20px;border:1px solid rgba(0,0,0,0.04);padding:16px 14px;';
+        card.style.cssText = 'background:var(--card-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:20px;border:1px solid rgba(0,0,0,0.04);padding:16px 14px;';
 
         // Header
         var hdr = document.createElement('div');
         hdr.style.cssText = 'display:flex;align-items:center;gap:6px;margin-bottom:16px;';
-        hdr.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;color:var(--green-deep);">compare_arrows</span>' +
+        hdr.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;color:var(--primary);">compare_arrows</span>' +
             '<span style="font-size:14px;font-weight:700;color:var(--text-primary);font-family:\'Noto Kufi Arabic\',sans-serif;">\u0645\u0642\u0627\u0631\u0646\u0629 \u0627\u0644\u0635\u0644\u0648\u0627\u062a</span>';
         card.appendChild(hdr);
 
@@ -537,12 +537,12 @@ window.App.SVGCharts = (function() {
                 var track3 = document.createElement('div');
                 track3.style.cssText = 'flex:1;height:6px;border-radius:3px;background:rgba(0,0,0,0.03);overflow:hidden;';
                 var fill3 = document.createElement('div');
-                fill3.style.cssText = 'width:' + (p.congregation || 0) + '%;height:100%;border-radius:3px;background:linear-gradient(270deg,var(--gold),var(--gold-light));';
+                fill3.style.cssText = 'width:' + (p.congregation || 0) + '%;height:100%;border-radius:3px;background:linear-gradient(270deg,var(--accent),var(--accent-light));';
                 track3.appendChild(fill3);
                 row3.appendChild(track3);
 
                 var val3 = document.createElement('span');
-                val3.style.cssText = 'font-size:10px;font-weight:700;color:var(--gold);width:30px;text-align:left;font-family:Rubik,sans-serif;';
+                val3.style.cssText = 'font-size:10px;font-weight:700;color:var(--accent);width:30px;text-align:left;font-family:Rubik,sans-serif;';
                 val3.textContent = (p.congregation || 0) + '%';
                 row3.appendChild(val3);
 
@@ -566,24 +566,24 @@ window.App.SVGCharts = (function() {
         var avg = Math.round(days.reduce(function(s, d) { return s + d.value; }, 0) / 7);
 
         function getColor(v) {
-            return v >= 90 ? tv('--green-deep') : v >= 75 ? tv('--green-mid') : v >= 60 ? tv('--gold') : tv('--red');
+            return v >= 90 ? tv('--primary') : v >= 75 ? tv('--primary-mid') : v >= 60 ? tv('--accent') : tv('--danger');
         }
 
         // Card
         var card = document.createElement('div');
-        card.style.cssText = 'background:rgba(255,255,255,0.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:20px;border:1px solid rgba(0,0,0,0.04);padding:16px 14px;';
+        card.style.cssText = 'background:var(--card-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:20px;border:1px solid rgba(0,0,0,0.04);padding:16px 14px;';
 
         // Header
         var hdr = document.createElement('div');
         hdr.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;';
         var hdrLeft = document.createElement('div');
         hdrLeft.style.cssText = 'display:flex;align-items:center;gap:6px;';
-        hdrLeft.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;color:var(--green-deep);">date_range</span>' +
+        hdrLeft.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;color:var(--primary);">date_range</span>' +
             '<span style="font-size:14px;font-weight:700;color:var(--text-primary);font-family:\'Noto Kufi Arabic\',sans-serif;">\u0646\u0645\u0637 \u0627\u0644\u062c\u0645\u0627\u0639\u0629 \u0627\u0644\u0623\u0633\u0628\u0648\u0639\u064a</span>';
         hdr.appendChild(hdrLeft);
         var badge = document.createElement('div');
         badge.style.cssText = 'padding:3px 10px;border-radius:8px;background:rgba(45,106,79,0.08);';
-        badge.innerHTML = '<span style="font-size:12px;font-weight:800;color:var(--green-deep);font-family:Rubik,sans-serif;">' + avg + '%</span>';
+        badge.innerHTML = '<span style="font-size:12px;font-weight:800;color:var(--primary);font-family:Rubik,sans-serif;">' + avg + '%</span>';
         hdr.appendChild(badge);
         card.appendChild(hdr);
 
@@ -601,7 +601,7 @@ window.App.SVGCharts = (function() {
 
             // Day name
             var nameSpan = document.createElement('span');
-            nameSpan.style.cssText = 'width:42px;font-size:11px;font-weight:' + (isTop ? '800' : '600') + ';color:' + (isTop ? 'var(--green-deep)' : 'var(--text-primary)') + ';text-align:right;flex-shrink:0;font-family:"Noto Kufi Arabic",sans-serif;';
+            nameSpan.style.cssText = 'width:42px;font-size:11px;font-weight:' + (isTop ? '800' : '600') + ';color:' + (isTop ? 'var(--primary)' : 'var(--text-primary)') + ';text-align:right;flex-shrink:0;font-family:"Noto Kufi Arabic",sans-serif;';
             nameSpan.textContent = d.name;
             row.appendChild(nameSpan);
 

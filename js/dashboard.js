@@ -218,8 +218,8 @@ window.App.Dashboard = (function() {
             if (type === 'fard') {
                 mtnData.values2 = monthlyData.congregation;
                 mtnData.legend = [
-                    { color: 'var(--green-deep)', label: currentLang === 'ar' ? 'الإنجاز الكلي' : 'Total' },
-                    { color: 'var(--gold)', label: currentLang === 'ar' ? 'الجماعة' : 'Congregation', dashed: true }
+                    { color: 'var(--primary)', label: currentLang === 'ar' ? 'الإنجاز الكلي' : 'Total' },
+                    { color: 'var(--accent)', label: currentLang === 'ar' ? 'الجماعة' : 'Congregation', dashed: true }
                 ];
             }
             Charts.mountainChart(mtnEl, mtnData);

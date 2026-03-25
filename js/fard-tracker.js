@@ -333,7 +333,7 @@ window.App.Tracker = (function() {
             if (type === 'fard' && congCount > 0) {
                 headerEnd.innerHTML += '<span class="cong-pill"><span class="material-symbols-rounded" style="font-size:12px;">mosque</span> ' + congCount + '</span>';
             }
-            var pctColor = pct >= 80 ? 'var(--green-deep)' : pct >= 50 ? 'var(--gold)' : 'var(--red)';
+            var pctColor = pct >= 80 ? 'var(--primary)' : pct >= 50 ? 'var(--accent)' : 'var(--danger)';
             headerEnd.innerHTML += '<span class="pct-pill" style="background:' + pctColor + '">' + pct + '%</span>';
             headerEnd.innerHTML += '<span class="prayer-counter">' + completed + '/' + adjustedTotal + '</span>';
 

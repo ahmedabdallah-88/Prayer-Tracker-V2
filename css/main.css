@@ -7,15 +7,15 @@
 /* ==================== DESIGN TOKENS ==================== */
 :root {
     /* Primary */
-    --green-deep: #2D6A4F;
-    --green-mid: #40916C;
-    --green-light: #52B788;
+    --primary: #2D6A4F;
+    --primary-mid: #40916C;
+    --primary-light: #52B788;
 
     /* Accents */
-    --gold: #D4A03C;
-    --gold-light: #E8B84A;
-    --red: #C1574E;
-    --red-light: #D4645B;
+    --accent: #D4A03C;
+    --accent-light: #E8B84A;
+    --danger: #C1574E;
+    --danger-light: #D4645B;
 
     /* Prayer Sky-Time Colors */
     --fajr: #D4A0A7;
@@ -111,7 +111,7 @@ body {
     margin-bottom: 20px;
     padding: 24px 20px 16px;
     position: relative;
-    background: rgba(255,255,255,0.55);
+    background: var(--card-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 20px;
@@ -184,7 +184,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    background: linear-gradient(135deg, var(--primary), var(--primary-mid));
     border-radius: 10px;
     color: white;
     box-shadow: 0 2px 8px rgba(45,106,79,0.2);
@@ -211,7 +211,7 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 0.9em;
-    background: linear-gradient(135deg, var(--green-deep), var(--green-light));
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
     color: white;
 }
 
@@ -250,7 +250,7 @@ body {
 #shellProfileBtn {
     width: 38px; height: 38px;
     border-radius: 12px;
-    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    background: linear-gradient(135deg, var(--primary), var(--primary-mid));
     border: none;
     box-shadow: 0 3px 10px rgba(45,106,79,0.3);
 }
@@ -307,7 +307,7 @@ body {
 }
 
 .theme-option.active {
-    border-color: var(--green-deep);
+    border-color: var(--primary);
     background: rgba(45,106,79,0.08);
 }
 
@@ -352,7 +352,7 @@ body {
 }
 
 .tab-item.active {
-    color: var(--green-deep);
+    color: var(--primary);
 }
 
 .tab-item .tab-icon {
@@ -377,7 +377,7 @@ body {
 .tab-item.active .tab-icon-wrap {
     width: 48px;
     border-radius: 14px;
-    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    background: linear-gradient(135deg, var(--primary), var(--primary-mid));
     box-shadow: 0 2px 8px rgba(45,106,79,0.3);
 }
 
@@ -446,7 +446,7 @@ body {
 
 .sub-tab.active .material-symbols-rounded {
     font-variation-settings: 'FILL' 1, 'wght' 600;
-    color: var(--green-deep);
+    color: var(--primary);
 }
 
 /* ==================== MONTH NAVIGATION ==================== */
@@ -458,7 +458,7 @@ body {
     margin-bottom: 16px;
     flex-wrap: wrap;
     padding: 14px;
-    background: rgba(255,255,255,0.55);
+    background: var(--card-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 16px;
@@ -493,7 +493,7 @@ body {
 .input-group select:focus,
 .input-group input:focus {
     outline: none;
-    border-color: var(--green-deep);
+    border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
 }
 
@@ -516,14 +516,14 @@ body {
 }
 
 .nav-btn:hover {
-    background: var(--green-deep);
+    background: var(--primary);
     color: white;
-    border-color: var(--green-deep);
+    border-color: var(--primary);
 }
 
 /* ==================== PRAYER TIMES BAR ==================== */
 .prayer-times-bar {
-    background: rgba(255,255,255,0.55);
+    background: var(--card-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(0,0,0,0.04);
@@ -575,7 +575,7 @@ body {
 }
 
 .pt-item.active-prayer {
-    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    background: linear-gradient(135deg, var(--primary), var(--primary-mid));
     border: none;
     box-shadow: 0 3px 12px rgba(45,106,79,0.25);
 }
@@ -626,7 +626,7 @@ body {
 .stat-item {
     text-align: center;
     padding: 14px 8px;
-    background: rgba(255,255,255,0.55);
+    background: var(--card-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 16px;
@@ -644,7 +644,7 @@ body {
 .stat-item .value {
     font-size: 1.6em;
     font-weight: 800;
-    color: var(--green-deep);
+    color: var(--primary);
     font-family: 'Rubik', sans-serif;
 }
 
@@ -711,7 +711,7 @@ body {
 }
 
 .prayer-name .prayer-icon-badge.fajr-icon { background: linear-gradient(135deg, #E8B4B8, #D4A0A7); }
-.prayer-name .prayer-icon-badge.dhuhr-icon { background: linear-gradient(135deg, #F0C75E, var(--gold-light)); }
+.prayer-name .prayer-icon-badge.dhuhr-icon { background: linear-gradient(135deg, #F0C75E, var(--accent-light)); }
 .prayer-name .prayer-icon-badge.asr-icon { background: linear-gradient(135deg, #E8A849, #D4943A); }
 .prayer-name .prayer-icon-badge.maghrib-icon { background: linear-gradient(135deg, #C47A5A, #B0664A); }
 .prayer-name .prayer-icon-badge.isha-icon { background: linear-gradient(135deg, #5B6B8A, #4A5A7A); }
@@ -720,7 +720,7 @@ body {
     font-size: 0.8em;
     padding: 4px 12px;
     background: rgba(45,106,79,0.08);
-    color: var(--green-deep);
+    color: var(--primary);
     border-radius: 20px;
     font-weight: 700;
     font-family: 'Rubik', sans-serif;
@@ -735,7 +735,7 @@ body {
     gap: 3px;
     padding: 3px 8px;
     background: rgba(212,160,60,0.12);
-    color: var(--gold);
+    color: var(--accent);
     border-radius: 8px;
     font-size: 0.75em;
     font-weight: 700;
@@ -812,14 +812,14 @@ body {
 /* === Today === */
 .day-box.today {
     background: rgba(45,106,79,0.08);
-    border-color: var(--green-deep);
+    border-color: var(--primary);
 }
 
-.day-box.today .day-number { color: var(--green-deep); }
+.day-box.today .day-number { color: var(--primary); }
 
 /* === Prayed (Munfarid) === */
 .day-box.checked {
-    background: linear-gradient(135deg, var(--green-mid), var(--green-light));
+    background: linear-gradient(135deg, var(--primary-mid), var(--primary-light));
     border: 2px solid transparent;
     box-shadow: 0 2px 8px rgba(64,145,108,0.35);
 }
@@ -848,7 +848,7 @@ body {
     top: -4px; right: -4px;
     width: 14px; height: 14px;
     font-size: 10px;
-    color: var(--green-deep);
+    color: var(--primary);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -857,8 +857,8 @@ body {
 
 /* === Congregation === */
 .day-box.congregation {
-    background: linear-gradient(135deg, var(--green-mid), var(--green-light)) !important;
-    border: 2.5px solid var(--gold) !important;
+    background: linear-gradient(135deg, var(--primary-mid), var(--primary-light)) !important;
+    border: 2.5px solid var(--accent) !important;
     box-shadow: 0 2px 10px rgba(212,160,60,0.4), 0 2px 8px rgba(64,145,108,0.2);
 }
 
@@ -871,7 +871,7 @@ body {
     top: -4px; right: -4px;
     width: 14px; height: 14px;
     border-radius: 4px;
-    background: var(--gold);
+    background: var(--accent);
     box-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
 
@@ -892,7 +892,7 @@ body {
 
 /* === Qada === */
 .day-box.qada {
-    background: linear-gradient(135deg, var(--red), var(--red-light));
+    background: linear-gradient(135deg, var(--danger), var(--danger-light));
     border: 2px solid transparent;
     box-shadow: 0 2px 8px rgba(193,87,78,0.35);
 }
@@ -918,7 +918,7 @@ body {
     top: -4px; right: -4px;
     width: 14px; height: 14px;
     font-size: 10px;
-    color: var(--red);
+    color: var(--danger);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -996,7 +996,7 @@ body {
     gap: 12px;
     margin-bottom: 16px;
     padding: 14px;
-    background: rgba(255,255,255,0.55);
+    background: var(--card-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 16px;
@@ -1029,7 +1029,7 @@ body {
 }
 
 .month-card {
-    background: rgba(255,255,255,0.55);
+    background: var(--card-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(0,0,0,0.04);
@@ -1066,7 +1066,7 @@ body {
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--green-deep), var(--green-light));
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -1125,7 +1125,7 @@ body {
     font-size: 0.85em;
     font-weight: 800;
     font-family: 'Rubik', sans-serif;
-    color: var(--green-deep);
+    color: var(--primary);
 }
 
 .month-greg-ref {
@@ -1169,7 +1169,7 @@ body {
     gap: 3px;
     padding: 2px 8px;
     background: rgba(212,160,60,0.12);
-    color: var(--gold);
+    color: var(--accent);
     border-radius: 8px;
     font-size: 0.7em;
     font-weight: 700;
@@ -1181,7 +1181,7 @@ body {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--green-deep);
+    background: var(--primary);
     margin-right: 4px;
     vertical-align: middle;
     animation: pulse 2s infinite;
@@ -1203,7 +1203,7 @@ body {
     align-items: center;
     margin-bottom: 16px;
     padding: 16px;
-    background: rgba(255,255,255,0.55);
+    background: var(--card-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 16px;
@@ -1217,7 +1217,7 @@ body {
 
 .back-btn {
     padding: 8px 16px;
-    background: var(--green-deep);
+    background: var(--primary);
     color: white;
     border: none;
     border-radius: 10px;
@@ -1229,7 +1229,7 @@ body {
 }
 
 .back-btn:hover {
-    background: var(--green-mid);
+    background: var(--primary-mid);
 }
 
 /* ==================== ACTION BUTTONS ==================== */
@@ -1254,27 +1254,27 @@ body {
 }
 
 .action-btn.reset {
-    background: var(--red);
+    background: var(--danger);
 }
 
 .action-btn.reset:hover {
-    background: var(--red-light);
+    background: var(--danger-light);
 }
 
 .action-btn.print {
-    background: var(--green-deep);
+    background: var(--primary);
 }
 
 .action-btn.print:hover {
-    background: var(--green-mid);
+    background: var(--primary-mid);
 }
 
 .action-btn.export {
-    background: var(--green-deep);
+    background: var(--primary);
 }
 
 .action-btn.export:hover {
-    background: var(--green-mid);
+    background: var(--primary-mid);
 }
 
 .action-btn.import {
@@ -1319,7 +1319,7 @@ body {
     font-weight: 600;
 }
 
-.cong-stat.mosque { background: rgba(212,160,60,0.1); color: var(--gold); }
+.cong-stat.mosque { background: rgba(212,160,60,0.1); color: var(--accent); }
 .cong-stat.alone { background: rgba(0,0,0,0.04); color: var(--text-secondary); }
 
 /* ==================== PROFILE SYSTEM ==================== */
@@ -1392,7 +1392,7 @@ body {
 }
 
 .profile-card:hover {
-    border-color: var(--green-deep);
+    border-color: var(--primary);
     box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 
@@ -1407,7 +1407,7 @@ body {
     flex-shrink: 0;
 }
 
-.profile-avatar.male { background: linear-gradient(135deg, var(--green-deep), var(--green-mid)); }
+.profile-avatar.male { background: linear-gradient(135deg, var(--primary), var(--primary-mid)); }
 .profile-avatar.female { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
 .profile-avatar.child-male { background: linear-gradient(135deg, #0EA5E9, #38BDF8); }
 .profile-avatar.child-female { background: linear-gradient(135deg, #EC4899, #F472B6); }
@@ -1433,15 +1433,15 @@ body {
     transition: all 0.2s;
 }
 
-.profile-action-btn.edit { background: rgba(212,160,60,0.15); color: var(--gold); }
-.profile-action-btn.delete { background: rgba(193,87,78,0.1); color: var(--red); }
+.profile-action-btn.edit { background: rgba(212,160,60,0.15); color: var(--accent); }
+.profile-action-btn.delete { background: rgba(193,87,78,0.1); color: var(--danger); }
 .profile-action-btn:hover { transform: scale(1.1); }
 
 .add-profile-btn {
     width: 100%;
     padding: 14px;
     background: rgba(45,106,79,0.03);
-    color: var(--green-deep);
+    color: var(--primary);
     border: 2px dashed rgba(45,106,79,0.25);
     border-radius: 16px;
     cursor: pointer;
@@ -1457,7 +1457,7 @@ body {
 
 .add-profile-btn:hover {
     background: rgba(45,106,79,0.05);
-    border-color: var(--green-deep);
+    border-color: var(--primary);
 }
 
 /* Profile Form */
@@ -1489,7 +1489,7 @@ body {
 
 .form-group input:focus, .form-group select:focus {
     outline: none;
-    border-color: var(--green-deep);
+    border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
 }
 
@@ -1517,7 +1517,7 @@ body {
 
 .gender-option.selected[data-gender="male"] {
     border: 2px solid transparent;
-    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    background: linear-gradient(135deg, var(--primary), var(--primary-mid));
     color: white;
     box-shadow: 0 4px 16px rgba(45,106,79,0.25);
     transform: scale(1.02);
@@ -1555,7 +1555,7 @@ body {
 }
 
 .form-btn.save {
-    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    background: linear-gradient(135deg, var(--primary), var(--primary-mid));
     color: white;
     box-shadow: 0 6px 20px rgba(45,106,79,0.25);
     padding: 15px;
@@ -1685,7 +1685,7 @@ body {
 }
 
 .fasting-day-box.fasted {
-    background: linear-gradient(135deg, var(--green-deep), var(--green-light));
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
     color: white;
     border-color: transparent;
 }
@@ -1698,7 +1698,7 @@ body {
     top: -4px; right: -4px;
     width: 14px; height: 14px;
     font-size: 10px;
-    color: var(--green-deep);
+    color: var(--primary);
     background: white;
     border-radius: 50%;
     display: flex;
@@ -1730,7 +1730,7 @@ body {
 
 .fasting-day-box.missed {
     background: rgba(193,87,78,0.08);
-    border-color: var(--red);
+    border-color: var(--danger);
 }
 
 .fasting-day-box.missed::after {
@@ -1741,7 +1741,7 @@ body {
     top: -4px; right: -4px;
     width: 14px; height: 14px;
     font-size: 10px;
-    color: var(--red);
+    color: var(--danger);
     background: white;
     border-radius: 50%;
     display: flex;
@@ -1798,10 +1798,10 @@ body {
 }
 
 .toast.show { opacity: 1; transform: translateY(0); }
-.toast.success { background: var(--green-deep); color: white; }
-.toast.error { background: var(--red); color: white; }
+.toast.success { background: var(--primary); color: white; }
+.toast.error { background: var(--danger); color: white; }
 .toast.info { background: rgba(255,255,255,0.85); color: var(--text-primary); border: 1px solid rgba(0,0,0,0.06); }
-.toast.warning { background: var(--gold); color: white; }
+.toast.warning { background: var(--accent); color: white; }
 
 /* ==================== CONFIRM DIALOG ==================== */
 .confirm-overlay {
@@ -1864,7 +1864,7 @@ body {
 }
 
 .confirm-btn:hover { transform: translateY(-1px); }
-.confirm-btn.yes { background: var(--green-deep); color: white; }
+.confirm-btn.yes { background: var(--primary); color: white; }
 .confirm-btn.no { background: rgba(0,0,0,0.04); color: var(--text-secondary); }
 
 /* ==================== SECTION/VIEW TRANSITIONS ==================== */
@@ -1895,7 +1895,7 @@ body {
 .batch-btn {
     padding: 5px 12px;
     background: rgba(45,106,79,0.08);
-    color: var(--green-deep);
+    color: var(--primary);
     border: none;
     border-radius: 8px;
     font-size: 0.7em;
@@ -1906,7 +1906,7 @@ body {
     margin-right: 8px;
 }
 
-.batch-btn:hover { background: var(--green-deep); color: white; }
+.batch-btn:hover { background: var(--primary); color: white; }
 
 /* ==================== REMINDER BAR ==================== */
 .reminder-bar {
@@ -1915,7 +1915,7 @@ body {
     gap: 10px;
     padding: 12px 16px;
     margin-bottom: 14px;
-    background: rgba(255,255,255,0.55);
+    background: var(--card-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 16px;
@@ -1950,7 +1950,7 @@ body {
     top: 0; left: 0; right: 0;
     padding: 8px;
     padding-top: max(8px, env(safe-area-inset-top));
-    background: var(--red);
+    background: var(--danger);
     color: white;
     text-align: center;
     font-weight: 700;
@@ -1967,7 +1967,7 @@ body {
     top: -100px;
     left: 50%;
     transform: translateX(-50%);
-    background: var(--green-deep);
+    background: var(--primary);
     color: white;
     padding: 10px 20px;
     border-radius: 0 0 8px 8px;
@@ -1985,7 +1985,7 @@ body {
 .action-btn:focus-visible,
 .batch-btn:focus-visible,
 .tab-item:focus-visible {
-    outline: 3px solid var(--green-deep);
+    outline: 3px solid var(--primary);
     outline-offset: 2px;
 }
 
@@ -1997,7 +1997,7 @@ body {
     .prayer-section:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
     .nav-btn:hover { background: white; color: var(--text-primary); }
     .profile-card:hover { transform: none; }
-    .batch-btn:hover { background: rgba(45,106,79,0.08); color: var(--green-deep); }
+    .batch-btn:hover { background: rgba(45,106,79,0.08); color: var(--primary); }
 }
 
 /* ==================== PRINT ==================== */
@@ -2090,7 +2090,7 @@ body {
 .ps-close-btn:hover { background: rgba(0,0,0,0.08); }
 
 .ps-profile-card {
-    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    background: linear-gradient(135deg, var(--primary), var(--primary-mid));
     border-radius: 20px;
     padding: 20px;
     margin-bottom: 20px;
@@ -2134,7 +2134,7 @@ body {
 .ps-profile-card .ps-edit-btn:hover { background: rgba(255,255,255,0.3); }
 
 .ps-section {
-    background: rgba(255,255,255,0.55);
+    background: var(--card-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 20px;
@@ -2167,20 +2167,20 @@ body {
     align-items: center;
     justify-content: center;
     background: rgba(45,106,79,0.08);
-    color: var(--green-deep);
+    color: var(--primary);
     font-size: 18px;
     flex-shrink: 0;
 }
 
 .ps-menu-item.danger .ps-icon {
     background: rgba(193,87,78,0.08);
-    color: var(--red);
+    color: var(--danger);
 }
 
 .ps-menu-item .ps-content { flex: 1; }
 .ps-menu-item .ps-title { font-weight: 600; font-size: 0.9em; color: var(--text-primary); }
 .ps-menu-item .ps-subtitle { font-size: 0.7em; color: var(--text-muted); margin-top: 1px; }
-.ps-menu-item.danger .ps-title { color: var(--red); }
+.ps-menu-item.danger .ps-title { color: var(--danger); }
 
 .ps-menu-item .ps-trail {
     font-size: 0.75em;
@@ -2205,7 +2205,7 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 10px 14px;
-    background: rgba(255,255,255,0.55);
+    background: var(--card-bg);
     border: 1px solid rgba(0,0,0,0.04);
     border-radius: 12px;
     margin-bottom: 6px;
@@ -2261,7 +2261,7 @@ body {
 }
 
 .nav-circle:hover {
-    background: var(--green-deep);
+    background: var(--primary);
 }
 
 .nav-circle:hover .material-symbols-rounded {
@@ -2354,7 +2354,7 @@ body {
     gap: 3px;
     padding: 2px 8px;
     background: rgba(212,160,60,0.12);
-    color: var(--gold);
+    color: var(--accent);
     border-radius: 8px;
     font-size: 0.7em;
     font-weight: 700;
@@ -2409,18 +2409,18 @@ body {
 }
 
 .prayer-legend .legend-dot.checked-dot {
-    background: linear-gradient(135deg, var(--green-mid), #40916Cdd);
-    border: 2px solid var(--green-mid);
+    background: var(--primary-mid);
+    border: 2px solid var(--primary-mid);
 }
 
 .prayer-legend .legend-dot.cong-dot {
-    background: linear-gradient(135deg, var(--green-mid), #40916Cdd);
-    border: 2px solid var(--gold);
+    background: var(--primary-mid);
+    border: 2px solid var(--accent);
 }
 
 .prayer-legend .legend-dot.qada-dot {
-    background: linear-gradient(135deg, var(--red), #C1574Edd);
-    border: 2px solid var(--red);
+    background: var(--danger);
+    border: 2px solid var(--danger);
 }
 
 /* ==================== REMINDER BAR GLASSMORPHISM ==================== */
@@ -2428,11 +2428,11 @@ body {
 
 /* ==================== TAB BAR ACTIVE PILL ==================== */
 .tab-item.active {
-    color: var(--green-deep);
+    color: var(--primary);
 }
 
 .tab-item.active .tab-icon {
-    background: linear-gradient(135deg, var(--green-deep), var(--green-light));
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
     color: white;
     padding: 4px 12px;
     border-radius: 14px;
@@ -2491,7 +2491,7 @@ body {
     gap: 10px;
     margin-bottom: 12px;
     padding: 10px 16px;
-    background: rgba(255,255,255,0.55);
+    background: var(--card-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 16px;
@@ -2517,7 +2517,7 @@ body {
     gap: 16px;
     margin-bottom: 10px;
     padding: 8px 12px;
-    background: rgba(255,255,255,0.55);
+    background: var(--card-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 12px;
@@ -2547,7 +2547,7 @@ body {
     text-align: center;
     font-size: 0.85em;
     font-weight: 700;
-    color: var(--green-deep);
+    color: var(--primary);
     font-family: 'Rubik', sans-serif;
     margin-bottom: 10px;
 }
@@ -2568,10 +2568,10 @@ body {
 }
 
 .btn-sm { padding: 6px 12px; font-size: 0.75em; }
-.btn-outline { background: rgba(45,106,79,0.08); color: var(--green-deep); }
-.btn-outline:hover { background: var(--green-deep); color: white; }
-.btn-danger-outline { background: rgba(193,87,78,0.08); color: var(--red); }
-.btn-danger-outline:hover { background: var(--red); color: white; }
+.btn-outline { background: rgba(45,106,79,0.08); color: var(--primary); }
+.btn-outline:hover { background: var(--primary); color: white; }
+.btn-danger-outline { background: rgba(193,87,78,0.08); color: var(--danger); }
+.btn-danger-outline:hover { background: var(--danger); color: white; }
 
 /* ==================== BODY BACKGROUND RADIAL GRADIENTS ==================== */
 body::before {
@@ -2589,10 +2589,10 @@ body::before {
 /* ==================== TODAY BOX VARIANT ==================== */
 .day-box.today-box {
     background: rgba(45,106,79,0.08);
-    border-color: var(--green-deep);
+    border-color: var(--primary);
 }
 
-.day-box.today-box .day-number { color: var(--green-deep); }
+.day-box.today-box .day-number { color: var(--primary); }
 
 /* SVG Chart Legend (used by dashboard charts) */
 .svg-chart-legend {

@@ -3,13 +3,13 @@
 /* Default theme (Emerald / Sacred Green) uses :root in main.css */
 /* Alias so [data-theme="green"] also works */
 [data-theme="green"] {
-    --green-deep: #2D6A4F;
-    --green-mid: #40916C;
-    --green-light: #52B788;
-    --gold: #D4A03C;
-    --gold-light: #E8B84A;
-    --red: #C1574E;
-    --red-light: #D4645B;
+    --primary: #2D6A4F;
+    --primary-mid: #40916C;
+    --primary-light: #52B788;
+    --accent: #D4A03C;
+    --accent-light: #E8B84A;
+    --danger: #C1574E;
+    --danger-light: #D4645B;
     --bg-main: #F5F3EF;
     --card-bg: rgba(255,255,255,0.55);
     --text-primary: #2B2D42;
@@ -21,13 +21,13 @@
 
 /* Midnight & Silver */
 [data-theme="navy"] {
-    --green-deep: #1B2A4A;
-    --green-mid: #2C3E6B;
-    --green-light: #4A6FA5;
-    --gold: #A8B4C4;
-    --gold-light: #C0CCD8;
-    --red: #C1574E;
-    --red-light: #D4645B;
+    --primary: #1B2A4A;
+    --primary-mid: #2C3E6B;
+    --primary-light: #4A6FA5;
+    --accent: #A8B4C4;
+    --accent-light: #C0CCD8;
+    --danger: #C1574E;
+    --danger-light: #D4645B;
     --bg-main: #F0F2F5;
     --card-bg: rgba(255,255,255,0.6);
     --text-primary: #1B2A4A;
@@ -39,13 +39,13 @@
 
 /* Royal Purple */
 [data-theme="purple"] {
-    --green-deep: #5B21B6;
-    --green-mid: #7C3AED;
-    --green-light: #A78BFA;
-    --gold: #D4A03C;
-    --gold-light: #E8B84A;
-    --red: #C1574E;
-    --red-light: #D4645B;
+    --primary: #5B21B6;
+    --primary-mid: #7C3AED;
+    --primary-light: #A78BFA;
+    --accent: #D4A03C;
+    --accent-light: #E8B84A;
+    --danger: #C1574E;
+    --danger-light: #D4645B;
     --bg-main: #F5F3F7;
     --card-bg: rgba(255,255,255,0.55);
     --text-primary: #2D1B69;
@@ -57,13 +57,13 @@
 
 /* Elegant Rose */
 [data-theme="feminine"] {
-    --green-deep: #9D174D;
-    --green-mid: #BE185D;
-    --green-light: #EC4899;
-    --gold: #D4A03C;
-    --gold-light: #E8B84A;
-    --red: #B91C1C;
-    --red-light: #DC2626;
+    --primary: #9D174D;
+    --primary-mid: #BE185D;
+    --primary-light: #EC4899;
+    --accent: #D4A03C;
+    --accent-light: #E8B84A;
+    --danger: #B91C1C;
+    --danger-light: #DC2626;
     --bg-main: #FDF2F4;
     --card-bg: rgba(255,255,255,0.55);
     --text-primary: #4A1D34;
@@ -75,13 +75,13 @@
 
 /* Ocean Blue */
 [data-theme="sky"] {
-    --green-deep: #0C4A6E;
-    --green-mid: #0369A1;
-    --green-light: #0EA5E9;
-    --gold: #F59E0B;
-    --gold-light: #FBBF24;
-    --red: #C1574E;
-    --red-light: #D4645B;
+    --primary: #0C4A6E;
+    --primary-mid: #0369A1;
+    --primary-light: #0EA5E9;
+    --accent: #F59E0B;
+    --accent-light: #FBBF24;
+    --danger: #C1574E;
+    --danger-light: #D4645B;
     --bg-main: #F0F7FA;
     --card-bg: rgba(255,255,255,0.55);
     --text-primary: #0C2D48;
@@ -93,13 +93,13 @@
 
 /* Dark & Gold */
 [data-theme="dark"] {
-    --green-deep: #D4A03C;
-    --green-mid: #E8B84A;
-    --green-light: #F0D68A;
-    --gold: #D4A03C;
-    --gold-light: #E8B84A;
-    --red: #EF4444;
-    --red-light: #F87171;
+    --primary: #D4A03C;
+    --primary-mid: #E8B84A;
+    --primary-light: #F0D68A;
+    --accent: #D4A03C;
+    --accent-light: #E8B84A;
+    --danger: #EF4444;
+    --danger-light: #F87171;
     --bg-main: #1A1A1E;
     --card-bg: rgba(40,40,44,0.8);
     --text-primary: #E8E6E1;
@@ -112,13 +112,13 @@
 
 /* Warm Olive */
 [data-theme="olive"] {
-    --green-deep: #3D5A3E;
-    --green-mid: #5A7D5B;
-    --green-light: #7A9E7B;
-    --gold: #C8B56E;
-    --gold-light: #D4C17A;
-    --red: #A0522D;
-    --red-light: #B8633D;
+    --primary: #3D5A3E;
+    --primary-mid: #5A7D5B;
+    --primary-light: #7A9E7B;
+    --accent: #C8B56E;
+    --accent-light: #D4C17A;
+    --danger: #A0522D;
+    --danger-light: #B8633D;
     --bg-main: #F4F2EC;
     --card-bg: rgba(255,255,255,0.5);
     --text-primary: #2E3A2F;
@@ -317,7 +317,7 @@
 
 [data-theme="dark"] .cong-pill {
     background: rgba(255,255,255,0.06);
-    color: #E8B84A;
+    color: var(--accent-light);
 }
 
 /* 8. Stat cards text */

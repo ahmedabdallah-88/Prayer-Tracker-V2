@@ -96,7 +96,7 @@ window.App.Azkar = (function() {
 
             var headerEnd = document.createElement('div');
             headerEnd.className = 'prayer-header-end';
-            var pctColor = pct >= 80 ? 'var(--green-deep)' : pct >= 50 ? 'var(--gold)' : 'var(--red)';
+            var pctColor = pct >= 80 ? 'var(--primary)' : pct >= 50 ? 'var(--accent)' : 'var(--danger)';
             headerEnd.innerHTML = '<span class="pct-pill" style="background:' + pctColor + '">' + pct + '%</span>' +
                 '<span class="prayer-counter">' + completed + '/' + daysInMonth + '</span>';
 
@@ -285,7 +285,7 @@ window.App.Azkar = (function() {
             card.className = 'month-card' + (isCurrent ? ' current-month' : '');
             if (isFuture) card.style.opacity = '0.35';
 
-            var barColor = avgPct >= 90 ? 'var(--green-deep)' : avgPct >= 70 ? 'var(--gold)' : 'var(--red, #dc2626)';
+            var barColor = avgPct >= 90 ? 'var(--primary)' : avgPct >= 70 ? 'var(--accent)' : 'var(--danger, #dc2626)';
             var hijriLabel = Hijri.getHijriMonthName(month - 1);
             var gregSpan = Hijri.getGregorianSpanForHijriMonth(yearVal, month);
 
