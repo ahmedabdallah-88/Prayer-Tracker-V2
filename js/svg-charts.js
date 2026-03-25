@@ -615,57 +615,7 @@ window.App.SVGCharts = (function() {
         container.appendChild(card);
     }
 
-    // ==================== 7. CONGREGATION HEATMAP ====================
-
-    function congregationHeatmap(container, data) {
-        container.innerHTML = '';
-        var grid = data.grid || []; // [{day, dow, count}] — day entries for ~70 days (10 weeks)
-        var dayNames = data.dayNames || ['سبت', 'أحد', 'اثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة'];
-        var maxCount = data.maxPrayers || 5;
-
-        var cellSize = 14, gap = 3, labelW = 50, padT = 5;
-        var weeks = Math.ceil(grid.length / 7);
-        var W = labelW + weeks * (cellSize + gap) + 20;
-        var H = 7 * (cellSize + gap) + padT + 30;
-        var children = [];
-
-        // Day labels
-        dayNames.forEach(function(name, i) {
-            children.push(el('text', { x: labelW - 6, y: padT + i * (cellSize + gap) + cellSize / 2 + 4, 'text-anchor': 'end', fill: 'var(--text-muted)', 'font-size': '9', 'font-family': 'Noto Kufi Arabic' }, name));
-        });
-
-        // Cells
-        grid.forEach(function(cell, idx) {
-            var week = Math.floor(idx / 7);
-            var dow = idx % 7;
-            var x = labelW + week * (cellSize + gap);
-            var y = padT + dow * (cellSize + gap);
-            var intensity = cell.count / maxCount;
-            var color = intensity === 0 ? 'rgba(0,0,0,0.03)'
-                : intensity <= 0.2 ? 'rgba(45,106,79,0.15)'
-                : intensity <= 0.4 ? 'rgba(45,106,79,0.3)'
-                : intensity <= 0.6 ? 'rgba(45,106,79,0.5)'
-                : intensity <= 0.8 ? 'rgba(45,106,79,0.7)'
-                : '#2D6A4F';
-
-            children.push(el('rect', { x: x, y: y, width: cellSize, height: cellSize, rx: 3, fill: color }));
-        });
-
-        // Scale legend at bottom
-        var scaleY = H - 18;
-        var scaleLabels = data.scaleLabels || ['أقل', 'أكثر'];
-        children.push(el('text', { x: labelW, y: scaleY, fill: 'var(--text-muted)', 'font-size': '9', 'font-family': 'Noto Kufi Arabic' }, scaleLabels[0]));
-        [0, 0.25, 0.5, 0.75, 1].forEach(function(v, i) {
-            var c = v === 0 ? 'rgba(0,0,0,0.03)' : v <= 0.25 ? 'rgba(45,106,79,0.2)' : v <= 0.5 ? 'rgba(45,106,79,0.4)' : v <= 0.75 ? 'rgba(45,106,79,0.65)' : '#2D6A4F';
-            children.push(el('rect', { x: labelW + 24 + i * (cellSize + 2), y: scaleY - 12, width: cellSize, height: 12, rx: 3, fill: c }));
-        });
-        children.push(el('text', { x: labelW + 24 + 5 * (cellSize + 2) + 4, y: scaleY, fill: 'var(--text-muted)', 'font-size': '9', 'font-family': 'Noto Kufi Arabic' }, scaleLabels[1]));
-
-        var s = svg(W, H, '0 0 ' + W + ' ' + H, children);
-        container.appendChild(s);
-    }
-
-    // ==================== 8. SIMPLE BAR CHART (for Qada, Fasting, etc.) ====================
+    // ==================== 7. SIMPLE BAR CHART (for Qada, Fasting, etc.) ====================
 
     function barChart(container, data) {
         container.innerHTML = '';
@@ -712,7 +662,6 @@ window.App.SVGCharts = (function() {
         mountainChart: mountainChart,
         prayerDualBars: prayerDualBars,
         weeklyRhythm: weeklyRhythm,
-        congregationHeatmap: congregationHeatmap,
         barChart: barChart
     };
 })();

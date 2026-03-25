@@ -112,29 +112,6 @@ window.App.Dashboard = (function() {
         });
     }
 
-    function gatherHeatmapData(hYear) {
-        var prayers = Storage.getPrayersArray('fard');
-        var dataObj = Storage.getDataObject('fard');
-        var grid = [];
-        var todayH = Hijri.getTodayHijri();
-
-        // Build last ~10 weeks of data (70 days back from current date)
-        var today = new Date();
-        var startDate = new Date(today.getTime() - 69 * 86400000);
-
-        for (var i = 0; i < 70; i++) {
-            var d = new Date(startDate.getTime() + i * 86400000);
-            var h = Hijri.gregorianToHijri(d);
-            var congData = Storage.getCongregationData(h.year, h.month);
-            var count = 0;
-            prayers.forEach(function(p) {
-                if (congData[p.id] && congData[p.id][h.day]) count++;
-            });
-            grid.push({ count: count });
-        }
-        return grid;
-    }
-
     // ==================== MAIN DASHBOARD UPDATE ====================
 
     function updateDashboard(type) {
@@ -253,20 +230,6 @@ window.App.Dashboard = (function() {
         if (weeklyEl && type === 'fard') {
             var weeklyData = gatherWeeklyData(hYear);
             Charts.weeklyRhythm(weeklyEl, { days: weeklyData });
-        }
-
-        // 7. Congregation Heatmap (fard only)
-        var heatEl = document.getElementById(type + 'Heatmap');
-        if (heatEl && type === 'fard') {
-            var heatGrid = gatherHeatmapData(hYear);
-            var heatDayNames = currentLang === 'ar'
-                ? ['\u0623\u062d\u062f', '\u0625\u062b\u0646', '\u062b\u0644\u062b', '\u0623\u0631\u0628\u0639', '\u062e\u0645\u0633', '\u062c\u0645\u0639', '\u0633\u0628\u062a']
-                : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            Charts.congregationHeatmap(heatEl, {
-                grid: heatGrid,
-                dayNames: heatDayNames,
-                maxPrayers: 5
-            });
         }
 
         // Qada report (fard only)
