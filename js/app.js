@@ -294,6 +294,15 @@ window.App.Main = (function() {
         if (window.App.UI && window.App.UI.initInstallBanner) {
             window.App.UI.initInstallBanner();
         }
+
+        // Fade out splash screen after animation completes
+        setTimeout(function() {
+            var splash = document.getElementById('splashScreen');
+            if (splash) {
+                splash.classList.add('splash-hidden');
+                setTimeout(function() { splash.remove(); }, 600);
+            }
+        }, 5000);
     }
 
     return {
