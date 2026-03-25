@@ -180,28 +180,34 @@ window.App.Dashboard = (function() {
         // 1. Orbital Progress
         var orbitalEl = document.getElementById(type + 'OrbitalProgress');
         if (orbitalEl) {
-            var completionPct = yearStats.percentage;
-            var congPct = 0, yCong = 0, yComp = 0;
-            if (type === 'fard') {
-                prayerStats.forEach(function(p) { yCong += p.congCount; yComp += p.completed; });
-                congPct = yComp > 0 ? Math.round((yCong / yComp) * 100) : 0;
+            try {
+                var completionPct = yearStats.percentage;
+                var congPct = 0, yCong = 0, yComp = 0;
+                if (type === 'fard') {
+                    prayerStats.forEach(function(p) { yCong += p.congCount; yComp += p.completed; });
+                    congPct = yComp > 0 ? Math.round((yCong / yComp) * 100) : 0;
+                }
+                Charts.orbitalProgress(orbitalEl, {
+                    completionPct: completionPct,
+                    congPct: congPct,
+                    completed: yearStats.completed,
+                    total: yearStats.total,
+                    congCount: yCong,
+                    isFard: type === 'fard',
+                    lang: currentLang
+                });
+            } catch(e) {
+                console.error('[DASHBOARD] orbitalProgress error:', e);
             }
-            Charts.orbitalProgress(orbitalEl, {
-                completionPct: completionPct,
-                congPct: congPct,
-                completed: yearStats.completed,
-                total: yearStats.total,
-                congCount: yCong,
-                isFard: type === 'fard',
-                lang: currentLang
-            });
         }
 
         // 2. Streak Flame Bars
+        console.log('[DASHBOARD] About to render streak bars. streakEl:', type + 'StreakFlame', 'exists:', !!document.getElementById(type + 'StreakFlame'), 'Jamaah:', !!window.App.Jamaah);
         var streakEl = document.getElementById(type + 'StreakFlame');
         if (streakEl && window.App.Jamaah) {
             var streakData = prayerStats.map(function(p) {
                 var streak = window.App.Jamaah.calculateStreak(type, p.id);
+                console.log('[DASHBOARD] streak for', p.id, ':', JSON.stringify(streak));
                 return { name: p.name, icon: p.icon, color: p.color, current: streak.current, best: streak.best };
             });
             Charts.streakFlameBars(streakEl, {
