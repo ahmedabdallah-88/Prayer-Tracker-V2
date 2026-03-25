@@ -68,9 +68,6 @@ window.App.Jamaah = (function() {
         var checkDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 0, 0);
         var todayH = Hijri.gregorianToHijri(checkDate);
 
-        console.log('[STREAK DEBUG] calculateStreak called:', type, prayerId);
-        console.log('[STREAK DEBUG] todayH:', JSON.stringify(todayH));
-
         function isOverflowDay(hYear, hMonth, hDay) {
             var maxDays = Hijri.getHijriDaysInMonth(hYear, hMonth);
             return hDay > maxDays;
@@ -95,32 +92,6 @@ window.App.Jamaah = (function() {
                     if (parsed2[prayerId] && (parsed2[prayerId][String(hDay)] || parsed2[prayerId][hDay])) return true;
                 }
                 return false;
-            }
-        }
-
-        // Debug: test isDayChecked directly
-        var testKey = Storage.getStorageKey(type, todayH.month, todayH.year);
-        var testStored = localStorage.getItem(testKey);
-        console.log('[STREAK DEBUG] Storage key for today:', testKey);
-        console.log('[STREAK DEBUG] profilePrefix:', Storage.getProfilePrefix());
-        console.log('[STREAK DEBUG] localStorage has data:', !!testStored);
-        if (!testStored) {
-            // Try listing localStorage keys that match
-            var matchingKeys = [];
-            for (var _i = 0; _i < localStorage.length; _i++) {
-                var _k = localStorage.key(_i);
-                if (_k.indexOf('salah_tracker') === 0 && _k.indexOf('h' + todayH.year) >= 0) matchingKeys.push(_k);
-            }
-            console.log('[STREAK DEBUG] matching localStorage keys:', matchingKeys);
-        }
-        if (testStored) {
-            var testParsed = JSON.parse(testStored);
-            console.log('[STREAK DEBUG] prayers in data:', Object.keys(testParsed));
-            if (testParsed[prayerId]) {
-                var checkedDays = Object.keys(testParsed[prayerId]).filter(function(d) { return testParsed[prayerId][d]; });
-                console.log('[STREAK DEBUG]', prayerId, 'checked days:', checkedDays);
-            } else {
-                console.log('[STREAK DEBUG]', prayerId, 'NOT FOUND in data');
             }
         }
 
@@ -167,7 +138,6 @@ window.App.Jamaah = (function() {
             scanDate = new Date(scanDate.getTime() + 86400000);
         }
 
-        console.log('[STREAK DEBUG] RESULT:', prayerId, '-> current:', currentStreak, 'best:', bestStreak);
         return { current: currentStreak, best: bestStreak };
     }
 

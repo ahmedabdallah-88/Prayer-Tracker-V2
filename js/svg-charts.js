@@ -128,20 +128,28 @@ window.App.SVGCharts = (function() {
             var bestY = chartH - bestH;
             var curY = chartH - curH;
 
-            // Ghost (best) bar
-            children.push(el('rect', { x: x, y: bestY, width: barW, height: bestH, rx: 12, fill: 'rgba(0,0,0,0.03)', stroke: 'rgba(0,0,0,0.06)', 'stroke-width': 1, 'stroke-dasharray': '4 3' }));
+            // Ghost (best) bar — visible dashed outline
+            if (p.best > 0) {
+                children.push(el('rect', { x: x, y: bestY, width: barW, height: bestH, rx: 12, fill: 'rgba(0,0,0,0.04)', stroke: p.color + '40', 'stroke-width': 1.5, 'stroke-dasharray': '4 3' }));
+                // Best value label at top of ghost bar
+                children.push(el('text', { x: x + barW / 2, y: bestY - 6, 'text-anchor': 'middle', fill: '#8D99AE', 'font-size': '11', 'font-weight': '600', 'font-family': 'Rubik' }, '' + p.best));
+            }
             // Current bar
             var grad = el('linearGradient', { id: 'sg' + i, x1: '0', y1: '1', x2: '0', y2: '0' });
             grad.appendChild(el('stop', { offset: '0%', 'stop-color': p.color + 'cc' }));
             grad.appendChild(el('stop', { offset: '100%', 'stop-color': p.color }));
             children.push(el('defs', {}, [grad]));
-            children.push(el('rect', { x: x, y: curY, width: barW, height: curH, rx: 14, fill: 'url(#sg' + i + ')' }));
+            if (curH > 0) {
+                children.push(el('rect', { x: x, y: curY, width: barW, height: curH, rx: 14, fill: 'url(#sg' + i + ')' }));
+            }
             // Fire icon if current == best and > 0
             if (p.current > 0 && p.current >= p.best) {
                 children.push(el('text', { x: x + barW / 2, y: curY - 4, 'text-anchor': 'middle', fill: '#D4A03C', 'font-size': '16', 'font-family': 'Material Symbols Rounded' }, 'local_fire_department'));
             }
-            // Value label
-            children.push(el('text', { x: x + barW / 2, y: curY + curH / 2 + 5, 'text-anchor': 'middle', fill: 'white', 'font-size': '13', 'font-weight': '700', 'font-family': 'Rubik' }, '' + p.current));
+            // Value label — white on filled bar, colored text when no bar
+            var valY = curH > 20 ? curY + curH / 2 + 5 : chartH - 6;
+            var valFill = curH > 20 ? 'white' : p.color;
+            children.push(el('text', { x: x + barW / 2, y: valY, 'text-anchor': 'middle', fill: valFill, 'font-size': '13', 'font-weight': '700', 'font-family': 'Rubik' }, '' + p.current));
             // Prayer icon + name below
             children.push(el('text', { x: x + barW / 2, y: chartH + 20, 'text-anchor': 'middle', fill: p.color, 'font-size': '18', 'font-family': 'Material Symbols Rounded' }, p.icon));
             children.push(el('text', { x: x + barW / 2, y: chartH + 38, 'text-anchor': 'middle', fill: 'var(--text-muted)', 'font-size': '9', 'font-family': 'Noto Kufi Arabic' }, p.name));

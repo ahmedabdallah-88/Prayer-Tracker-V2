@@ -202,12 +202,10 @@ window.App.Dashboard = (function() {
         }
 
         // 2. Streak Flame Bars
-        console.log('[DASHBOARD] About to render streak bars. streakEl:', type + 'StreakFlame', 'exists:', !!document.getElementById(type + 'StreakFlame'), 'Jamaah:', !!window.App.Jamaah);
         var streakEl = document.getElementById(type + 'StreakFlame');
         if (streakEl && window.App.Jamaah) {
             var streakData = prayerStats.map(function(p) {
                 var streak = window.App.Jamaah.calculateStreak(type, p.id);
-                console.log('[DASHBOARD] streak for', p.id, ':', JSON.stringify(streak));
                 return { name: p.name, icon: p.icon, color: p.color, current: streak.current, best: streak.best };
             });
             Charts.streakFlameBars(streakEl, {
