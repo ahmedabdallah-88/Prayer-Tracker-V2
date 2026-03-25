@@ -582,7 +582,7 @@ window.App.SVGCharts = (function() {
             '<span style="font-size:14px;font-weight:700;color:var(--text-primary);font-family:\'Noto Kufi Arabic\',sans-serif;">\u0646\u0645\u0637 \u0627\u0644\u062c\u0645\u0627\u0639\u0629 \u0627\u0644\u0623\u0633\u0628\u0648\u0639\u064a</span>';
         hdr.appendChild(hdrLeft);
         var badge = document.createElement('div');
-        badge.style.cssText = 'padding:3px 10px;border-radius:8px;background:rgba(45,106,79,0.08);';
+        badge.style.cssText = 'padding:3px 10px;border-radius:8px;background:rgba(var(--primary-rgb),0.08);';
         badge.innerHTML = '<span style="font-size:12px;font-weight:800;color:var(--primary);font-family:Rubik,sans-serif;">' + avg + '%</span>';
         hdr.appendChild(badge);
         card.appendChild(hdr);
@@ -597,7 +597,7 @@ window.App.SVGCharts = (function() {
                 (i < 6 ? 'margin-bottom:8px;' : '') +
                 'padding:' + (isTop ? '6px 8px' : '2px 8px') + ';' +
                 'border-radius:' + (isTop ? '10px' : '0') + ';' +
-                'background:' + (isTop ? 'rgba(45,106,79,0.03)' : 'transparent') + ';';
+                'background:' + (isTop ? 'rgba(var(--primary-rgb),0.03)' : 'transparent') + ';';
 
             // Day name
             var nameSpan = document.createElement('span');

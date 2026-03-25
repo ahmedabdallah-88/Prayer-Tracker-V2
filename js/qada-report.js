@@ -44,7 +44,7 @@ window.App.QadaReport = (function() {
         header.appendChild(titleDiv);
 
         var badge = document.createElement('div');
-        badge.style.cssText = 'padding:4px 10px;border-radius:8px;background:rgba(193,87,78,0.08);font-size:13px;font-weight:800;color:var(--danger);font-family:Rubik,sans-serif;';
+        badge.style.cssText = 'padding:4px 10px;border-radius:8px;background:rgba(var(--danger-rgb),0.08);font-size:13px;font-weight:800;color:var(--danger);font-family:Rubik,sans-serif;';
         badge.textContent = totalQada;
         header.appendChild(badge);
         container.appendChild(header);

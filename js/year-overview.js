@@ -82,7 +82,7 @@ window.App.YearOverview = (function() {
 
             // Progress bar color
             var pct = ms.stats.percentage;
-            var barColor = pct >= 90 ? 'linear-gradient(90deg, var(--primary-mid), var(--primary-light))' : pct >= 70 ? 'linear-gradient(90deg, var(--accent), var(--accent-light))' : pct > 0 ? 'linear-gradient(90deg, var(--danger), #D4645B)' : 'transparent';
+            var barColor = pct >= 90 ? 'linear-gradient(90deg, var(--primary-mid), var(--primary-light))' : pct >= 70 ? 'linear-gradient(90deg, var(--accent), var(--accent-light))' : pct > 0 ? 'linear-gradient(90deg, var(--danger), var(--danger-light))' : 'transparent';
 
             var congBadge = '';
             if (type === 'fard' && ms.congRate > 0) {

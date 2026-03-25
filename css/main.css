@@ -8,13 +8,17 @@
 :root {
     /* Primary */
     --primary: #2D6A4F;
+    --primary-rgb: 45, 106, 79;
     --primary-mid: #40916C;
+    --primary-mid-rgb: 64, 145, 108;
     --primary-light: #52B788;
 
     /* Accents */
     --accent: #D4A03C;
+    --accent-rgb: 212, 160, 60;
     --accent-light: #E8B84A;
     --danger: #C1574E;
+    --danger-rgb: 193, 87, 78;
     --danger-light: #D4645B;
 
     /* Prayer Sky-Time Colors */
@@ -187,7 +191,7 @@ body {
     background: linear-gradient(135deg, var(--primary), var(--primary-mid));
     border-radius: 10px;
     color: white;
-    box-shadow: 0 2px 8px rgba(45,106,79,0.2);
+    box-shadow: 0 2px 8px rgba(var(--primary-rgb),0.2);
 }
 
 .shell-bar-profile {
@@ -252,7 +256,7 @@ body {
     border-radius: 12px;
     background: linear-gradient(135deg, var(--primary), var(--primary-mid));
     border: none;
-    box-shadow: 0 3px 10px rgba(45,106,79,0.3);
+    box-shadow: 0 3px 10px rgba(var(--primary-rgb),0.3);
 }
 
 #shellProfileBtn .material-symbols-rounded {
@@ -308,7 +312,7 @@ body {
 
 .theme-option.active {
     border-color: var(--primary);
-    background: rgba(45,106,79,0.08);
+    background: rgba(var(--primary-rgb),0.08);
 }
 
 .theme-dot {
@@ -378,7 +382,7 @@ body {
     width: 48px;
     border-radius: 14px;
     background: linear-gradient(135deg, var(--primary), var(--primary-mid));
-    box-shadow: 0 2px 8px rgba(45,106,79,0.3);
+    box-shadow: 0 2px 8px rgba(var(--primary-rgb),0.3);
 }
 
 .tab-item.active .tab-icon-wrap .material-symbols-rounded {
@@ -494,7 +498,7 @@ body {
 .input-group input:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb),0.1);
 }
 
 .nav-buttons {
@@ -577,7 +581,7 @@ body {
 .pt-item.active-prayer {
     background: linear-gradient(135deg, var(--primary), var(--primary-mid));
     border: none;
-    box-shadow: 0 3px 12px rgba(45,106,79,0.25);
+    box-shadow: 0 3px 12px rgba(var(--primary-rgb),0.25);
 }
 
 .pt-item.passed-prayer { opacity: 0.45; }
@@ -719,7 +723,7 @@ body {
 .prayer-counter {
     font-size: 0.8em;
     padding: 4px 12px;
-    background: rgba(45,106,79,0.08);
+    background: rgba(var(--primary-rgb),0.08);
     color: var(--primary);
     border-radius: 20px;
     font-weight: 700;
@@ -734,7 +738,7 @@ body {
     align-items: center;
     gap: 3px;
     padding: 3px 8px;
-    background: rgba(212,160,60,0.12);
+    background: rgba(var(--accent-rgb),0.12);
     color: var(--accent);
     border-radius: 8px;
     font-size: 0.75em;
@@ -811,7 +815,7 @@ body {
 
 /* === Today === */
 .day-box.today {
-    background: rgba(45,106,79,0.08);
+    background: rgba(var(--primary-rgb),0.08);
     border-color: var(--primary);
 }
 
@@ -821,7 +825,7 @@ body {
 .day-box.checked {
     background: linear-gradient(135deg, var(--primary-mid), var(--primary-light));
     border: 2px solid transparent;
-    box-shadow: 0 2px 8px rgba(64,145,108,0.35);
+    box-shadow: 0 2px 8px rgba(var(--primary-mid-rgb),0.35);
 }
 
 .day-box.checked .day-number { color: white; }
@@ -859,7 +863,7 @@ body {
 .day-box.congregation {
     background: linear-gradient(135deg, var(--primary-mid), var(--primary-light)) !important;
     border: 2.5px solid var(--accent) !important;
-    box-shadow: 0 2px 10px rgba(212,160,60,0.4), 0 2px 8px rgba(64,145,108,0.2);
+    box-shadow: 0 2px 10px rgba(var(--accent-rgb),0.4), 0 2px 8px rgba(var(--primary-mid-rgb),0.2);
 }
 
 .day-box.congregation .day-number { color: white !important; }
@@ -894,7 +898,7 @@ body {
 .day-box.qada {
     background: linear-gradient(135deg, var(--danger), var(--danger-light));
     border: 2px solid transparent;
-    box-shadow: 0 2px 8px rgba(193,87,78,0.35);
+    box-shadow: 0 2px 8px rgba(var(--danger-rgb),0.35);
 }
 
 .day-box.qada .day-number { color: white; }
@@ -1168,7 +1172,7 @@ body {
     align-items: center;
     gap: 3px;
     padding: 2px 8px;
-    background: rgba(212,160,60,0.12);
+    background: rgba(var(--accent-rgb),0.12);
     color: var(--accent);
     border-radius: 8px;
     font-size: 0.7em;
@@ -1193,8 +1197,8 @@ body {
 }
 
 .month-card.current-month {
-    background: rgba(45,106,79,0.06);
-    border: 1.5px solid rgba(45,106,79,0.2);
+    background: rgba(var(--primary-rgb),0.06);
+    border: 1.5px solid rgba(var(--primary-rgb),0.2);
 }
 
 .month-detail-header {
@@ -1319,7 +1323,7 @@ body {
     font-weight: 600;
 }
 
-.cong-stat.mosque { background: rgba(212,160,60,0.1); color: var(--accent); }
+.cong-stat.mosque { background: rgba(var(--accent-rgb),0.1); color: var(--accent); }
 .cong-stat.alone { background: rgba(0,0,0,0.04); color: var(--text-secondary); }
 
 /* ==================== PROFILE SYSTEM ==================== */
@@ -1433,16 +1437,16 @@ body {
     transition: all 0.2s;
 }
 
-.profile-action-btn.edit { background: rgba(212,160,60,0.15); color: var(--accent); }
-.profile-action-btn.delete { background: rgba(193,87,78,0.1); color: var(--danger); }
+.profile-action-btn.edit { background: rgba(var(--accent-rgb),0.15); color: var(--accent); }
+.profile-action-btn.delete { background: rgba(var(--danger-rgb),0.1); color: var(--danger); }
 .profile-action-btn:hover { transform: scale(1.1); }
 
 .add-profile-btn {
     width: 100%;
     padding: 14px;
-    background: rgba(45,106,79,0.03);
+    background: rgba(var(--primary-rgb),0.03);
     color: var(--primary);
-    border: 2px dashed rgba(45,106,79,0.25);
+    border: 2px dashed rgba(var(--primary-rgb),0.25);
     border-radius: 16px;
     cursor: pointer;
     font-size: 0.9em;
@@ -1456,7 +1460,7 @@ body {
 }
 
 .add-profile-btn:hover {
-    background: rgba(45,106,79,0.05);
+    background: rgba(var(--primary-rgb),0.05);
     border-color: var(--primary);
 }
 
@@ -1490,7 +1494,7 @@ body {
 .form-group input:focus, .form-group select:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb),0.1);
 }
 
 .gender-select {
@@ -1519,7 +1523,7 @@ body {
     border: 2px solid transparent;
     background: linear-gradient(135deg, var(--primary), var(--primary-mid));
     color: white;
-    box-shadow: 0 4px 16px rgba(45,106,79,0.25);
+    box-shadow: 0 4px 16px rgba(var(--primary-rgb),0.25);
     transform: scale(1.02);
 }
 
@@ -1557,7 +1561,7 @@ body {
 .form-btn.save {
     background: linear-gradient(135deg, var(--primary), var(--primary-mid));
     color: white;
-    box-shadow: 0 6px 20px rgba(45,106,79,0.25);
+    box-shadow: 0 6px 20px rgba(var(--primary-rgb),0.25);
     padding: 15px;
     border-radius: 16px;
 }
@@ -1729,7 +1733,7 @@ body {
 }
 
 .fasting-day-box.missed {
-    background: rgba(193,87,78,0.08);
+    background: rgba(var(--danger-rgb),0.08);
     border-color: var(--danger);
 }
 
@@ -1894,7 +1898,7 @@ body {
 /* ==================== BATCH BUTTON ==================== */
 .batch-btn {
     padding: 5px 12px;
-    background: rgba(45,106,79,0.08);
+    background: rgba(var(--primary-rgb),0.08);
     color: var(--primary);
     border: none;
     border-radius: 8px;
@@ -1924,7 +1928,7 @@ body {
     transition: all 0.2s;
 }
 
-.reminder-bar:hover { background: rgba(212,160,60,0.12); }
+.reminder-bar:hover { background: rgba(var(--accent-rgb),0.12); }
 .reminder-bar .icon { font-size: 1.2em; }
 .reminder-bar .msg { font-weight: 600; color: var(--text-primary); font-size: 0.85em; }
 .reminder-bar .dismiss {
@@ -1997,7 +2001,7 @@ body {
     .prayer-section:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
     .nav-btn:hover { background: white; color: var(--text-primary); }
     .profile-card:hover { transform: none; }
-    .batch-btn:hover { background: rgba(45,106,79,0.08); color: var(--primary); }
+    .batch-btn:hover { background: rgba(var(--primary-rgb),0.08); color: var(--primary); }
 }
 
 /* ==================== PRINT ==================== */
@@ -2100,7 +2104,7 @@ body {
     color: white;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 8px 30px rgba(45,106,79,0.2);
+    box-shadow: 0 8px 30px rgba(var(--primary-rgb),0.2);
 }
 
 .ps-profile-card .ps-avatar {
@@ -2144,7 +2148,7 @@ body {
 }
 
 .ps-section.danger {
-    border-color: rgba(193,87,78,0.15);
+    border-color: rgba(var(--danger-rgb),0.15);
 }
 
 .ps-menu-item {
@@ -2166,14 +2170,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(45,106,79,0.08);
+    background: rgba(var(--primary-rgb),0.08);
     color: var(--primary);
     font-size: 18px;
     flex-shrink: 0;
 }
 
 .ps-menu-item.danger .ps-icon {
-    background: rgba(193,87,78,0.08);
+    background: rgba(var(--danger-rgb),0.08);
     color: var(--danger);
 }
 
@@ -2353,7 +2357,7 @@ body {
     align-items: center;
     gap: 3px;
     padding: 2px 8px;
-    background: rgba(212,160,60,0.12);
+    background: rgba(var(--accent-rgb),0.12);
     color: var(--accent);
     border-radius: 8px;
     font-size: 0.7em;
@@ -2568,9 +2572,9 @@ body {
 }
 
 .btn-sm { padding: 6px 12px; font-size: 0.75em; }
-.btn-outline { background: rgba(45,106,79,0.08); color: var(--primary); }
+.btn-outline { background: rgba(var(--primary-rgb),0.08); color: var(--primary); }
 .btn-outline:hover { background: var(--primary); color: white; }
-.btn-danger-outline { background: rgba(193,87,78,0.08); color: var(--danger); }
+.btn-danger-outline { background: rgba(var(--danger-rgb),0.08); color: var(--danger); }
 .btn-danger-outline:hover { background: var(--danger); color: white; }
 
 /* ==================== BODY BACKGROUND RADIAL GRADIENTS ==================== */
@@ -2579,8 +2583,8 @@ body::before {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     background:
-        radial-gradient(ellipse at 20% 20%, rgba(45,106,79,0.06) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 80%, rgba(212,160,60,0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 20%, rgba(var(--primary-rgb),0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(var(--accent-rgb),0.04) 0%, transparent 50%),
         radial-gradient(ellipse at 50% 50%, rgba(14,165,233,0.03) 0%, transparent 50%);
     pointer-events: none;
     z-index: 0;
@@ -2588,7 +2592,7 @@ body::before {
 
 /* ==================== TODAY BOX VARIANT ==================== */
 .day-box.today-box {
-    background: rgba(45,106,79,0.08);
+    background: rgba(var(--primary-rgb),0.08);
     border-color: var(--primary);
 }
 
