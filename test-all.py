@@ -254,9 +254,9 @@ print("="*60)
 
 sw_content = read_file('service-worker.js')
 
-# Check all JS files are cached
+# Check all JS files are cached (with optional ?v= cache buster)
 for fname in js_files:
-    cached = f"'./js/{fname}'" in sw_content
+    cached = f"'./js/{fname}" in sw_content
     test(f"sw-cache: js/{fname}", cached)
 
 # Check all CSS files

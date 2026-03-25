@@ -9,28 +9,28 @@ const ASSETS = [
     './css/themes.css',
     './css/dashboard.css',
     // JS modules (dependency order)
-    './js/config.js',
-    './js/storage.js',
-    './js/hijri-calendar.js',
-    './js/ui-utils.js',
-    './js/i18n.js',
-    './js/themes.js',
-    './js/profiles.js',
-    './js/female-features.js',
-    './js/fard-tracker.js',
-    './js/sunnah-tracker.js',
-    './js/jamaah-tracker.js',
-    './js/weekly-view.js',
-    './js/fasting-tracker.js',
-    './js/prayer-times.js',
-    './js/notifications.js',
-    './js/azkar-tracker.js',
-    './js/svg-charts.js',
-    './js/qada-report.js',
-    './js/dashboard.js',
-    './js/year-overview.js',
-    './js/data-io.js',
-    './js/app.js',
+    './js/config.js?v=76',
+    './js/storage.js?v=76',
+    './js/hijri-calendar.js?v=76',
+    './js/ui-utils.js?v=76',
+    './js/i18n.js?v=76',
+    './js/themes.js?v=76',
+    './js/profiles.js?v=76',
+    './js/female-features.js?v=76',
+    './js/fard-tracker.js?v=76',
+    './js/sunnah-tracker.js?v=76',
+    './js/jamaah-tracker.js?v=76',
+    './js/weekly-view.js?v=76',
+    './js/fasting-tracker.js?v=76',
+    './js/prayer-times.js?v=76',
+    './js/notifications.js?v=76',
+    './js/azkar-tracker.js?v=76',
+    './js/svg-charts.js?v=76',
+    './js/qada-report.js?v=76',
+    './js/dashboard.js?v=76',
+    './js/year-overview.js?v=76',
+    './js/data-io.js?v=76',
+    './js/app.js?v=76',
     // Icons
     './icons/icon-72x72.png',
     './icons/icon-96x96.png',
@@ -49,7 +49,7 @@ const ASSETS = [
 
 // ==================== INSTALL ====================
 self.addEventListener('install', event => {
-    console.log('[SW] Installing v61...');
+    console.log('[SW] Installing v76...');
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => cache.addAll(ASSETS))
@@ -59,7 +59,7 @@ self.addEventListener('install', event => {
 
 // ==================== ACTIVATE ====================
 self.addEventListener('activate', event => {
-    console.log('[SW] Activating v61...');
+    console.log('[SW] Activating v76...');
     event.waitUntil(
         caches.keys().then(keys => {
             return Promise.all(
