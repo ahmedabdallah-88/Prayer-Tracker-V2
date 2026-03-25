@@ -65,17 +65,18 @@ window.App.Dashboard = (function() {
                 var prayers = Storage.getPrayersArray('fard');
                 var dataObj = Storage.getDataObject('fard');
                 var cd = Storage.getCongregationData(hYear, m);
-                var monthComp = 0, monthCong = 0;
+                var daysInMonth = Hijri.getHijriDaysInMonth(hYear, m);
+                var totalPossible = daysInMonth * prayers.length;
+                var monthCong = 0;
                 prayers.forEach(function(p) {
                     if (dataObj[m] && dataObj[m][p.id]) {
                         var cDays = Object.keys(dataObj[m][p.id]).filter(function(d) { return dataObj[m][p.id][d]; });
-                        monthComp += cDays.length;
                         cDays.forEach(function(d) {
                             if (cd[p.id] && cd[p.id][parseInt(d)]) monthCong++;
                         });
                     }
                 });
-                congData.push(monthComp > 0 ? Math.round((monthCong / monthComp) * 100) : 0);
+                congData.push(totalPossible > 0 ? Math.round((monthCong / totalPossible) * 100) : 0);
             }
         }
         return { completion: completionData, congregation: congData };

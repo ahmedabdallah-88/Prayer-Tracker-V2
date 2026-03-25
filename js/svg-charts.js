@@ -253,103 +253,74 @@ window.App.SVGCharts = (function() {
     function mountainChart(container, data) {
         container.innerHTML = '';
         var months = data.labels || [];
-        var values = data.values || [];       // total completion %
-        var values2 = data.values2 || null;   // congregation % (optional)
+        var values = data.values || [];
+        var values2 = data.values2 || null;
         var currentIdx = data.currentMonth !== undefined ? data.currentMonth - 1 : -1;
 
-        var W = 360, H = 200, padL = 10, padR = 10, padT = 25, padB = 45;
-        var plotW = W - padL - padR, plotH = H - padT - padB;
-        var maxVal = 100;
-        var children = [];
+        // --- Bars container ---
+        var barsWrap = document.createElement('div');
+        barsWrap.style.cssText = 'display:flex;align-items:flex-end;gap:4px;height:160px;padding:0 2px;';
 
-        // Grid lines
-        [25, 50, 75, 100].forEach(function(v) {
-            var y = padT + plotH - (v / maxVal) * plotH;
-            children.push(el('line', { x1: padL, y1: y, x2: W - padR, y2: y, stroke: 'rgba(0,0,0,0.03)', 'stroke-width': 1 }));
-            children.push(el('text', { x: W - padR + 4, y: y + 3, 'text-anchor': 'start', fill: '#C8CBD0', 'font-size': '8', 'font-family': 'Rubik, sans-serif' }, String(v)));
-        });
-
-        function buildPath(vals, close) {
-            if (!vals || vals.length === 0) return '';
-            var pts = vals.map(function(v, i) {
-                return { x: padL + (i / (vals.length - 1)) * plotW, y: padT + plotH - (v / maxVal) * plotH };
-            });
-            // Smooth bezier
-            var d = 'M' + pts[0].x + ',' + pts[0].y;
-            for (var i = 1; i < pts.length; i++) {
-                var cp1x = pts[i - 1].x + (pts[i].x - pts[i - 1].x) * 0.4;
-                var cp2x = pts[i].x - (pts[i].x - pts[i - 1].x) * 0.4;
-                d += ' C' + cp1x + ',' + pts[i - 1].y + ' ' + cp2x + ',' + pts[i].y + ' ' + pts[i].x + ',' + pts[i].y;
-            }
-            if (close) {
-                d += ' L' + pts[pts.length - 1].x + ',' + (padT + plotH) + ' L' + pts[0].x + ',' + (padT + plotH) + ' Z';
-            }
-            return d;
-        }
-
-        // Configurable colors (default: green for primary, gold for secondary)
-        var color1 = data.color1 || 'var(--green-deep)';
-        var color2 = data.color2 || 'var(--gold)';
-
-        // Gradients
-        var gradG = el('linearGradient', { id: 'mtnPrimary', x1: '0', y1: '0', x2: '0', y2: '1' });
-        gradG.appendChild(el('stop', { offset: '0%', 'stop-color': '#40916C', 'stop-opacity': '0.5' }));
-        gradG.appendChild(el('stop', { offset: '40%', 'stop-color': '#52B788', 'stop-opacity': '0.3' }));
-        gradG.appendChild(el('stop', { offset: '100%', 'stop-color': '#52B788', 'stop-opacity': '0.05' }));
-        children.push(el('defs', {}, [gradG]));
-
-        // Primary area (total)
-        children.push(el('path', { d: buildPath(values, true), fill: 'url(#mtnPrimary)', stroke: 'none' }));
-        children.push(el('path', { d: buildPath(values, false), fill: 'none', stroke: color1, 'stroke-width': 2.5 }));
-
-        // Secondary area if provided
-        if (values2) {
-            var gradSec = el('linearGradient', { id: 'mtnSecondary', x1: '0', y1: '0', x2: '0', y2: '1' });
-            gradSec.appendChild(el('stop', { offset: '0%', 'stop-color': '#D4A03C', 'stop-opacity': '0.45' }));
-            gradSec.appendChild(el('stop', { offset: '50%', 'stop-color': '#E8B84A', 'stop-opacity': '0.2' }));
-            gradSec.appendChild(el('stop', { offset: '100%', 'stop-color': '#E8B84A', 'stop-opacity': '0.03' }));
-            children.push(el('defs', {}, [gradSec]));
-            children.push(el('path', { d: buildPath(values2, true), fill: 'url(#mtnSecondary)', stroke: 'none' }));
-            children.push(el('path', { d: buildPath(values2, false), fill: 'none', stroke: color2, 'stroke-width': 2, 'stroke-dasharray': '6 3' }));
-        }
-
-        // Dots and labels (only show % on peaks >= 95 to avoid overlap)
-        values.forEach(function(v, i) {
-            var x = padL + (i / (values.length - 1)) * plotW;
-            var y = padT + plotH - (v / maxVal) * plotH;
-            var isHighlight = v >= 95;
-            children.push(el('circle', { cx: x, cy: y, r: isHighlight ? 5 : 3.5, fill: color1, stroke: 'white', 'stroke-width': 2 }));
-            if (isHighlight) {
-                children.push(el('circle', { cx: x, cy: y, r: 8, fill: color1, opacity: '0.15' }));
-                var labelY = (i % 2 === 0) ? y - 10 : y - 18;
-                children.push(el('text', { x: x, y: labelY, 'text-anchor': 'middle', fill: 'var(--text-secondary)', 'font-size': '9', 'font-weight': '600', 'font-family': 'Rubik' }, v + '%'));
-            }
-        });
-
-        // Current month indicator
-        if (currentIdx >= 0 && currentIdx < values.length) {
-            var cx2 = padL + (currentIdx / (values.length - 1)) * plotW;
-            children.push(el('line', { x1: cx2, y1: padT, x2: cx2, y2: padT + plotH, stroke: 'var(--green-mid)', 'stroke-width': 1, 'stroke-dasharray': '3 2', opacity: '0.6' }));
-        }
-
-        // Month labels
-        months.forEach(function(m, i) {
-            var x = padL + (i / (months.length - 1)) * plotW;
+        months.forEach(function(label, i) {
+            var v = values[i] || 0;
+            var v2 = values2 ? (values2[i] || 0) : 0;
             var isCurrent = i === currentIdx;
-            children.push(el('text', { x: x, y: H - 8, 'text-anchor': 'middle', fill: isCurrent ? 'var(--green-deep)' : 'var(--text-muted)', 'font-size': '8', 'font-weight': isCurrent ? '700' : '400', 'font-family': 'Noto Kufi Arabic' }, m));
+            var isFuture = currentIdx >= 0 && i > currentIdx;
+
+            var col = document.createElement('div');
+            col.style.cssText = 'flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;' + (isFuture ? 'opacity:0.25;' : '');
+
+            // Percentage label above bar
+            if (v > 0) {
+                var pctLbl = document.createElement('div');
+                pctLbl.style.cssText = 'font-size:7px;font-weight:700;color:#8D99AE;font-family:Rubik,sans-serif;margin-bottom:2px;';
+                pctLbl.textContent = v + '%';
+                col.appendChild(pctLbl);
+            }
+
+            // Bar container (relative for stacking green + gold)
+            var barOuter = document.createElement('div');
+            barOuter.style.cssText = 'width:100%;max-width:26px;position:relative;border-radius:8px 8px 4px 4px;overflow:hidden;';
+            var greenH = v;
+            barOuter.style.height = Math.max(greenH, 0) + '%';
+            barOuter.style.minHeight = v > 0 ? '4px' : '0';
+
+            // Green fill (الإنجاز)
+            var greenBar = document.createElement('div');
+            var greenBg = isCurrent
+                ? 'linear-gradient(180deg, #2D6A4F, #40916C)'
+                : 'linear-gradient(180deg, #40916C, #52B788)';
+            greenBar.style.cssText = 'position:absolute;inset:0;background:' + greenBg + ';border-radius:8px 8px 4px 4px;';
+            barOuter.appendChild(greenBar);
+
+            // Gold fill (الجماعة) — from bottom, height relative to bar
+            if (values2 && v2 > 0 && v > 0) {
+                var goldH = (v2 / v) * 100;
+                var goldBar = document.createElement('div');
+                goldBar.style.cssText = 'position:absolute;bottom:0;left:0;right:0;height:' + goldH + '%;background:linear-gradient(180deg, #D4A03C, #E8B84A);border-radius:0 0 4px 4px;';
+                barOuter.appendChild(goldBar);
+            }
+
+            col.appendChild(barOuter);
+
+            // Month label below
+            var mLbl = document.createElement('div');
+            mLbl.style.cssText = 'font-size:7px;font-weight:' + (isCurrent ? '700' : '500') + ';color:' + (isCurrent ? '#2D6A4F' : '#8D99AE') + ';font-family:"Noto Kufi Arabic",sans-serif;margin-top:4px;white-space:nowrap;';
+            mLbl.textContent = label;
+            col.appendChild(mLbl);
+
+            barsWrap.appendChild(col);
         });
 
-        var s = svg(W, H, '0 0 ' + W + ' ' + H, children);
-        container.appendChild(s);
+        container.appendChild(barsWrap);
 
         // Legend
         if (data.legend) {
             var leg = document.createElement('div');
-            leg.className = 'svg-chart-legend';
-            data.legend.forEach(function(item) {
-                var dotStyle = item.dashed ? 'background:transparent;border:2px dashed ' + item.color : 'background:' + item.color;
-                leg.innerHTML += '<div class="svg-legend-item"><span class="svg-legend-dot" style="' + dotStyle + '"></span><span class="svg-legend-label">' + item.label + '</span></div>';
-            });
+            leg.style.cssText = 'display:flex;justify-content:center;gap:14px;margin-top:10px;padding:4px 0;';
+            leg.innerHTML =
+                '<div style="display:flex;align-items:center;gap:5px;"><div style="width:12px;height:8px;border-radius:3px;background:linear-gradient(180deg,#40916C,#52B788);"></div><span style="font-size:10px;color:#8D99AE;font-weight:600;">' + (data.legend[0] ? data.legend[0].label : '') + '</span></div>' +
+                (data.legend[1] ? '<div style="display:flex;align-items:center;gap:5px;"><div style="width:12px;height:8px;border-radius:3px;background:linear-gradient(180deg,#D4A03C,#E8B84A);"></div><span style="font-size:10px;color:#8D99AE;font-weight:600;">' + data.legend[1].label + '</span></div>' : '');
             container.appendChild(leg);
         }
     }
