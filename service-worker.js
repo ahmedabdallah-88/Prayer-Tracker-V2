@@ -1,5 +1,5 @@
-// Prayer Tracker PWA — Service Worker v81
-const CACHE_NAME = 'salah-tracker-v81';
+// Prayer Tracker PWA — Service Worker v82
+const CACHE_NAME = 'salah-tracker-v82';
 const ASSETS = [
     './',
     './index.html',
@@ -9,28 +9,28 @@ const ASSETS = [
     './css/themes.css',
     './css/dashboard.css',
     // JS modules (dependency order)
-    './js/config.js?v=81',
-    './js/storage.js?v=81',
-    './js/hijri-calendar.js?v=81',
-    './js/ui-utils.js?v=81',
-    './js/i18n.js?v=81',
-    './js/themes.js?v=81',
-    './js/profiles.js?v=81',
-    './js/female-features.js?v=81',
-    './js/fard-tracker.js?v=81',
-    './js/sunnah-tracker.js?v=81',
-    './js/jamaah-tracker.js?v=81',
-    './js/weekly-view.js?v=81',
-    './js/fasting-tracker.js?v=81',
-    './js/prayer-times.js?v=81',
-    './js/notifications.js?v=81',
-    './js/azkar-tracker.js?v=81',
-    './js/svg-charts.js?v=81',
-    './js/qada-report.js?v=81',
-    './js/dashboard.js?v=81',
-    './js/year-overview.js?v=81',
-    './js/data-io.js?v=81',
-    './js/app.js?v=81',
+    './js/config.js?v=82',
+    './js/storage.js?v=82',
+    './js/hijri-calendar.js?v=82',
+    './js/ui-utils.js?v=82',
+    './js/i18n.js?v=82',
+    './js/themes.js?v=82',
+    './js/profiles.js?v=82',
+    './js/female-features.js?v=82',
+    './js/fard-tracker.js?v=82',
+    './js/sunnah-tracker.js?v=82',
+    './js/jamaah-tracker.js?v=82',
+    './js/weekly-view.js?v=82',
+    './js/fasting-tracker.js?v=82',
+    './js/prayer-times.js?v=82',
+    './js/notifications.js?v=82',
+    './js/azkar-tracker.js?v=82',
+    './js/svg-charts.js?v=82',
+    './js/qada-report.js?v=82',
+    './js/dashboard.js?v=82',
+    './js/year-overview.js?v=82',
+    './js/data-io.js?v=82',
+    './js/app.js?v=82',
     // Icons
     './icons/icon-72x72.png',
     './icons/icon-96x96.png',
@@ -49,7 +49,7 @@ const ASSETS = [
 
 // ==================== INSTALL ====================
 self.addEventListener('install', event => {
-    console.log('[SW] Installing v81...');
+    console.log('[SW] Installing v82...');
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => cache.addAll(ASSETS))
@@ -59,7 +59,7 @@ self.addEventListener('install', event => {
 
 // ==================== ACTIVATE ====================
 self.addEventListener('activate', event => {
-    console.log('[SW] Activating v81...');
+    console.log('[SW] Activating v82...');
     event.waitUntil(
         caches.keys().then(keys => {
             return Promise.all(
