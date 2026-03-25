@@ -40,7 +40,7 @@ window.App.Dashboard = (function() {
                 }
             }
             var pct = total > 0 ? Math.round((completed / total) * 100) : 0;
-            var congPct = completed > 0 ? Math.round((congCount / completed) * 100) : 0;
+            var congPct = total > 0 ? Math.round((congCount / total) * 100) : 0;
             results.push({
                 id: prayer.id,
                 name: I18n.getPrayerName(prayer.id),
@@ -237,19 +237,10 @@ window.App.Dashboard = (function() {
             Charts.mountainChart(mtnEl, mtnData);
         }
 
-        // 4. Prayer Radar
-        var radarEl = document.getElementById(type + 'RadarChart');
-        if (radarEl) {
-            Charts.prayerRadar(radarEl, {
-                prayers: prayerStats,
-                showCongregation: type === 'fard'
-            });
-        }
-
-        // 5. Prayer Lollipop
-        var lolEl = document.getElementById(type + 'LollipopChart');
-        if (lolEl) {
-            Charts.prayerLollipop(lolEl, {
+        // 4. Prayer Dual Bars
+        var dualEl = document.getElementById(type + 'DualBarsCard');
+        if (dualEl) {
+            Charts.prayerDualBars(dualEl, {
                 prayers: prayerStats,
                 showCongregation: type === 'fard'
             });

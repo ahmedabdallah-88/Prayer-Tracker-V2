@@ -441,158 +441,108 @@ window.App.SVGCharts = (function() {
         }
     }
 
-    // ==================== 4. PRAYER RADAR (Pentagon/Spider) ====================
+    // ==================== 4. PRAYER DUAL BARS ====================
 
-    function prayerRadar(container, data) {
-        container.innerHTML = '';
-        var prayers = data.prayers || []; // [{name, completion, congregation, color}]
-        var n = prayers.length;
-        if (n < 3) return;
-
-        var size = 280, cx = 140, cy = 140, R = 80;
-        var labelR = R + 35;
-        var children = [];
-
-        // Grid rings
-        [25, 50, 75, 100].forEach(function(pct) {
-            var r = (pct / 100) * R;
-            children.push(el('circle', { cx: cx, cy: cy, r: r, fill: 'none', stroke: 'rgba(0,0,0,0.04)', 'stroke-width': 1 }));
-        });
-
-        // Axis lines
-        for (var i = 0; i < n; i++) {
-            var angle = (Math.PI * 2 * i / n) - Math.PI / 2;
-            children.push(el('line', { x1: cx, y1: cy, x2: cx + R * Math.cos(angle), y2: cy + R * Math.sin(angle), stroke: 'rgba(0,0,0,0.04)', 'stroke-width': 1 }));
-        }
-
-        function makePoly(vals, color, fillOpacity, strokeWidth) {
-            var pts = vals.map(function(v, idx) {
-                var r = (v / 100) * R;
-                var angle = (Math.PI * 2 * idx / n) - Math.PI / 2;
-                return (cx + r * Math.cos(angle)).toFixed(1) + ',' + (cy + r * Math.sin(angle)).toFixed(1);
-            });
-            children.push(el('polygon', { points: pts.join(' '), fill: color, 'fill-opacity': fillOpacity, stroke: color, 'stroke-width': strokeWidth, 'stroke-linejoin': 'round' }));
-        }
-
-        // Congregation polygon (gold, behind)
-        if (data.showCongregation) {
-            makePoly(prayers.map(function(p) { return p.congregation || 0; }), '#D4A03C', 0.1, 1.5);
-        }
-        // Completion polygon (green)
-        makePoly(prayers.map(function(p) { return p.completion || 0; }), '#40916C', 0.12, 2);
-
-        // Data points — colored per prayer
-        prayers.forEach(function(p, i) {
-            var v = p.completion || 0;
-            var r = (v / 100) * R;
-            var angle = (Math.PI * 2 * i / n) - Math.PI / 2;
-            var px = cx + r * Math.cos(angle);
-            var py = cy + r * Math.sin(angle);
-            children.push(el('circle', { cx: px, cy: py, r: 4, fill: p.color, stroke: '#fff', 'stroke-width': 2 }));
-        });
-
-        // Labels — per-prayer color + individual percentage
-        prayers.forEach(function(p, i) {
-            var angle = (Math.PI * 2 * i / n) - Math.PI / 2;
-            var lx = cx + labelR * Math.cos(angle);
-            var ly = cy + labelR * Math.sin(angle);
-            children.push(el('text', { x: lx, y: ly - 6, 'text-anchor': 'middle', fill: '#2B2D42', 'font-size': '11', 'font-weight': '700', 'font-family': 'Noto Kufi Arabic, sans-serif' }, p.name));
-            children.push(el('text', { x: lx, y: ly + 8, 'text-anchor': 'middle', fill: p.color, 'font-size': '10', 'font-weight': '700', 'font-family': 'Rubik, sans-serif' }, p.completion + '%'));
-        });
-
-        var s = svg(size, size, '0 0 ' + size + ' ' + size, children);
-        container.appendChild(s);
-    }
-
-    // ==================== 5. PRAYER LOLLIPOP (horizontal bars) ====================
-
-    function prayerLollipop(container, data) {
+    function prayerDualBars(container, data) {
         container.innerHTML = '';
         var prayers = data.prayers || [];
         var showCong = data.showCongregation !== false;
 
         var gradients = {
-            '#D4A0A7': ['#E8B4B8', '#D4A0A7'],
-            '#E8B84A': ['#F0C75E', '#E8B84A'],
-            '#D4943A': ['#E8A849', '#D4943A'],
-            '#B0664A': ['#C47A5A', '#B0664A'],
-            '#4A5A7A': ['#5B6B8A', '#4A5A7A']
+            '#D4A0A7': 'linear-gradient(135deg,#E8B4B8,#D4A0A7)',
+            '#E8B84A': 'linear-gradient(135deg,#F0C75E,#E8B84A)',
+            '#D4943A': 'linear-gradient(135deg,#E8A849,#D4943A)',
+            '#B0664A': 'linear-gradient(135deg,#C47A5A,#B0664A)',
+            '#4A5A7A': 'linear-gradient(135deg,#5B6B8A,#4A5A7A)'
         };
 
-        var wrap = document.createElement('div');
-        wrap.style.cssText = 'display:flex;flex-direction:column;gap:14px;padding:4px 0;';
+        // Card container
+        var card = document.createElement('div');
+        card.style.cssText = 'background:rgba(255,255,255,0.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:20px;border:1px solid rgba(0,0,0,0.04);padding:16px 14px;';
 
-        prayers.forEach(function(p) {
-            var row = document.createElement('div');
-            row.style.cssText = 'display:flex;flex-direction:column;gap:4px;';
+        // Header
+        var hdr = document.createElement('div');
+        hdr.style.cssText = 'display:flex;align-items:center;gap:6px;margin-bottom:16px;';
+        hdr.innerHTML = '<span class="material-symbols-rounded" style="font-size:18px;color:#2D6A4F;">compare_arrows</span>' +
+            '<span style="font-size:14px;font-weight:700;color:#2B2D42;font-family:\'Noto Kufi Arabic\',sans-serif;">\u0645\u0642\u0627\u0631\u0646\u0629 \u0627\u0644\u0635\u0644\u0648\u0627\u062a</span>';
+        card.appendChild(hdr);
 
-            // Top line: [icon] [name] ... [percentage]
-            var topLine = document.createElement('div');
-            topLine.style.cssText = 'display:flex;align-items:center;gap:8px;';
+        prayers.forEach(function(p, idx) {
+            var block = document.createElement('div');
+            block.style.cssText = idx < prayers.length - 1 ? 'margin-bottom:14px;' : '';
 
-            // Gradient icon square
-            var grad = gradients[p.color] || [[p.color, p.color]];
-            var iconBg = document.createElement('div');
-            iconBg.style.cssText = 'width:28px;height:28px;min-width:28px;border-radius:8px;background:linear-gradient(135deg,' + (grad[0] || p.color) + ',' + (grad[1] || p.color) + ');display:flex;align-items:center;justify-content:center;';
-            var icon = document.createElement('span');
-            icon.className = 'material-symbols-rounded';
-            icon.style.cssText = 'font-size:14px;color:#fff;font-variation-settings:"FILL" 1,"wght" 500;';
-            icon.textContent = p.icon;
-            iconBg.appendChild(icon);
-            topLine.appendChild(iconBg);
+            // Row 1: prayer header
+            var row1 = document.createElement('div');
+            row1.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:6px;';
 
-            // Prayer name
+            var iconDiv = document.createElement('div');
+            iconDiv.style.cssText = 'width:28px;height:28px;min-width:28px;border-radius:8px;background:' + (gradients[p.color] || p.color) + ';display:flex;align-items:center;justify-content:center;';
+            var iconSpan = document.createElement('span');
+            iconSpan.className = 'material-symbols-rounded';
+            iconSpan.style.cssText = 'font-size:14px;color:#fff;font-variation-settings:"FILL" 1;';
+            iconSpan.textContent = p.icon;
+            iconDiv.appendChild(iconSpan);
+            row1.appendChild(iconDiv);
+
             var nameSpan = document.createElement('span');
-            nameSpan.style.cssText = 'font-size:12px;font-weight:700;color:#2B2D42;font-family:"Noto Kufi Arabic",sans-serif;flex:1;';
+            nameSpan.style.cssText = 'font-size:13px;font-weight:700;color:#2B2D42;font-family:"Noto Kufi Arabic",sans-serif;flex:1;';
             nameSpan.textContent = p.name;
-            topLine.appendChild(nameSpan);
+            row1.appendChild(nameSpan);
 
-            // Percentage
             var pctSpan = document.createElement('span');
-            pctSpan.style.cssText = 'font-size:13px;font-weight:800;color:' + p.color + ';font-family:Rubik,sans-serif;min-width:40px;text-align:left;';
+            pctSpan.style.cssText = 'font-size:16px;font-weight:800;color:' + p.color + ';font-family:Rubik,sans-serif;';
             pctSpan.textContent = p.completion + '%';
-            topLine.appendChild(pctSpan);
+            row1.appendChild(pctSpan);
 
-            row.appendChild(topLine);
+            block.appendChild(row1);
 
-            // Bar track + fill
-            var barWrap = document.createElement('div');
-            barWrap.style.cssText = 'position:relative;height:18px;border-radius:9px;background:rgba(0,0,0,0.04);overflow:visible;margin-inline-start:36px;margin-inline-end:4px;';
+            // Row 2: completion bar
+            var row2 = document.createElement('div');
+            row2.style.cssText = 'display:flex;align-items:center;gap:6px;margin-bottom:4px;';
 
-            // Congregation bar (behind, gold)
-            if (showCong && (p.congregation || 0) > 0) {
-                var congBar = document.createElement('div');
-                congBar.style.cssText = 'position:absolute;top:0;inset-inline-start:0;height:100%;width:' + (p.congregation || 0) + '%;border-radius:9px;background:linear-gradient(90deg,#D4A03C,#E8B84A);opacity:0.4;';
-                barWrap.appendChild(congBar);
+            var lbl2 = document.createElement('span');
+            lbl2.style.cssText = 'font-size:8px;color:#8D99AE;width:32px;text-align:right;font-family:"Noto Kufi Arabic",sans-serif;';
+            lbl2.textContent = '\u0627\u0644\u0625\u0646\u062c\u0627\u0632';
+            row2.appendChild(lbl2);
+
+            var track2 = document.createElement('div');
+            track2.style.cssText = 'flex:1;height:8px;border-radius:4px;background:rgba(0,0,0,0.04);overflow:hidden;';
+            var fill2 = document.createElement('div');
+            fill2.style.cssText = 'width:' + (p.completion || 0) + '%;height:100%;border-radius:4px;background:linear-gradient(270deg,' + p.color + ',' + p.color + 'aa);';
+            track2.appendChild(fill2);
+            row2.appendChild(track2);
+
+            block.appendChild(row2);
+
+            // Row 3: congregation bar (fard only)
+            if (showCong) {
+                var row3 = document.createElement('div');
+                row3.style.cssText = 'display:flex;align-items:center;gap:6px;';
+
+                var lbl3 = document.createElement('span');
+                lbl3.style.cssText = 'font-size:8px;color:#8D99AE;width:32px;text-align:right;font-family:"Noto Kufi Arabic",sans-serif;';
+                lbl3.textContent = '\u0627\u0644\u062c\u0645\u0627\u0639\u0629';
+                row3.appendChild(lbl3);
+
+                var track3 = document.createElement('div');
+                track3.style.cssText = 'flex:1;height:6px;border-radius:3px;background:rgba(0,0,0,0.03);overflow:hidden;';
+                var fill3 = document.createElement('div');
+                fill3.style.cssText = 'width:' + (p.congregation || 0) + '%;height:100%;border-radius:3px;background:linear-gradient(270deg,#D4A03C,#E8B84Aaa);';
+                track3.appendChild(fill3);
+                row3.appendChild(track3);
+
+                var val3 = document.createElement('span');
+                val3.style.cssText = 'font-size:10px;font-weight:700;color:#D4A03C;width:30px;text-align:left;font-family:Rubik,sans-serif;';
+                val3.textContent = (p.congregation || 0) + '%';
+                row3.appendChild(val3);
+
+                block.appendChild(row3);
             }
 
-            // Completion bar
-            var compW = p.completion || 0;
-            if (compW > 0) {
-                var compBar = document.createElement('div');
-                compBar.style.cssText = 'position:absolute;top:0;inset-inline-start:0;height:100%;width:' + compW + '%;border-radius:9px;background:linear-gradient(90deg,' + p.color + ',' + p.color + 'cc);';
-                barWrap.appendChild(compBar);
-
-                // Lollipop dot — prayer color
-                var dot = document.createElement('div');
-                dot.style.cssText = 'position:absolute;top:50%;inset-inline-start:' + compW + '%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:' + p.color + ';border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.15);z-index:1;';
-                barWrap.appendChild(dot);
-            }
-
-            row.appendChild(barWrap);
-
-            // Congregation info below bar
-            if (showCong && p.congCount !== undefined) {
-                var congInfo = document.createElement('div');
-                congInfo.style.cssText = 'display:flex;align-items:center;gap:4px;margin-inline-start:36px;margin-inline-end:4px;';
-                congInfo.innerHTML = '<span class="material-symbols-rounded" style="font-size:12px;color:#D4A03C;font-variation-settings:\'FILL\' 1;">mosque</span><span style="font-size:10px;color:#D4A03C;font-weight:600;font-family:\'Noto Kufi Arabic\',sans-serif;">جماعة: ' + (p.congregation || 0) + '% (' + p.congCount + ')</span>';
-                row.appendChild(congInfo);
-            }
-
-            wrap.appendChild(row);
+            card.appendChild(block);
         });
 
-        container.appendChild(wrap);
+        container.appendChild(card);
     }
 
     // ==================== 6. WEEKLY RHYTHM (Radial chart) ====================
@@ -764,8 +714,7 @@ window.App.SVGCharts = (function() {
         orbitalProgress: orbitalProgress,
         streakFlameBars: streakFlameBars,
         mountainChart: mountainChart,
-        prayerRadar: prayerRadar,
-        prayerLollipop: prayerLollipop,
+        prayerDualBars: prayerDualBars,
         weeklyRhythm: weeklyRhythm,
         congregationHeatmap: congregationHeatmap,
         barChart: barChart
