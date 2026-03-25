@@ -2594,6 +2594,28 @@ body::before {
 
 .day-box.today-box .day-number { color: var(--primary); }
 
+/* Today + checked/congregation/qada: filled state wins */
+.day-box.today-box.checked {
+    background: linear-gradient(135deg, var(--primary-mid), var(--primary-light));
+    border: 2px solid transparent;
+}
+.day-box.today-box.checked .day-number { color: white; }
+.day-box.today-box.checked .day-greg { color: rgba(255,255,255,0.7); }
+
+.day-box.today-box.congregation {
+    background: linear-gradient(135deg, var(--primary-mid), var(--primary-light)) !important;
+    border: 2.5px solid var(--accent) !important;
+}
+.day-box.today-box.congregation .day-number { color: white !important; }
+.day-box.today-box.congregation .day-greg { color: rgba(255,255,255,0.7) !important; }
+
+.day-box.today-box.qada {
+    background: linear-gradient(135deg, var(--danger), var(--danger-light));
+    border: 2px solid transparent;
+}
+.day-box.today-box.qada .day-number { color: white; }
+.day-box.today-box.qada .day-greg { color: rgba(255,255,255,0.7); }
+
 /* SVG Chart Legend (used by dashboard charts) */
 .svg-chart-legend {
     display: flex;
