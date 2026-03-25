@@ -271,27 +271,49 @@
                     <button class="nav-circle" onclick="document.getElementById('fardDashboardYear').value=parseInt(document.getElementById('fardDashboardYear').value)-1;updateDashboard('fard')"><span class="material-symbols-rounded">chevron_left</span></button>
                 </div>
 
-                <div class="dashboard-grid">
-                    <div class="stat-card hero-stat">
-                        <div class="label" data-t="total_discipline">إجمالي الانضباط</div>
-                        <div class="value" id="fardYearTotalCompleted">0</div>
-                        <div class="sublabel">/ <span id="fardYearTotalPossible">0</span></div>
-                        <div class="hero-badge" id="fardYearCompletionRate">0%</div>
+                <!-- Hidden spans for JS compat (dashboard.js _set still writes to these) -->
+                <span id="fardYearTotalCompleted" style="display:none">0</span>
+                <span id="fardYearTotalPossible" style="display:none">0</span>
+                <span id="fardYearCompletionRate" style="display:none">0%</span>
+
+                <div style="background:rgba(255,255,255,0.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:20px;padding:16px;border:1px solid rgba(0,0,0,0.04);margin-bottom:14px;">
+                    <!-- ROW 1: Best Month + Best Prayer -->
+                    <div style="display:flex;gap:10px;">
+                        <!-- Card 1: أفضل شهر -->
+                        <div style="flex:1;padding:14px 12px;border-radius:14px;background:rgba(45,106,79,0.05);border:1px solid rgba(45,106,79,0.08);display:flex;align-items:center;gap:10px;">
+                            <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#D4A03C,#E8B84A);box-shadow:0 3px 8px rgba(212,160,60,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span class="material-symbols-rounded" style="font-size:20px;color:#fff;font-variation-settings:'FILL' 1,'wght' 500;">emoji_events</span>
+                            </div>
+                            <div>
+                                <div style="font-size:10px;color:#8D99AE;font-weight:600;" data-t="best_month_label">أفضل شهر</div>
+                                <div id="fardBestMonth" style="font-size:15px;font-weight:800;color:#2B2D42;font-family:'Noto Kufi Arabic',sans-serif;">-</div>
+                                <div id="fardBestMonthRate" style="font-size:10px;color:#40916C;font-weight:700;">0%</div>
+                            </div>
+                        </div>
+                        <!-- Card 2: الأكثر انتظاماً -->
+                        <div style="flex:1;padding:14px 12px;border-radius:14px;background:rgba(45,106,79,0.05);border:1px solid rgba(45,106,79,0.08);display:flex;align-items:center;gap:10px;">
+                            <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#2D6A4F,#40916C);box-shadow:0 3px 8px rgba(45,106,79,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span class="material-symbols-rounded" style="font-size:20px;color:#fff;font-variation-settings:'FILL' 1,'wght' 500;">star</span>
+                            </div>
+                            <div>
+                                <div style="font-size:10px;color:#8D99AE;font-weight:600;" data-t="best_prayer">الأكثر انتظاماً</div>
+                                <div id="fardBestPrayer" style="font-size:15px;font-weight:800;color:#2B2D42;font-family:'Noto Kufi Arabic',sans-serif;">-</div>
+                                <div id="fardBestPrayerRate" style="font-size:10px;color:#40916C;font-weight:700;">0%</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="label" data-t="best_month_label">أفضل شهر</div>
-                        <div class="value" id="fardBestMonth">-</div>
-                        <div class="sublabel" id="fardBestMonthRate">0%</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="label" data-t="best_prayer">الأكثر انتظاماً</div>
-                        <div class="value" id="fardBestPrayer">-</div>
-                        <div class="sublabel" id="fardBestPrayerRate">0%</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="label" data-t="cong_rate">نسبة الجماعة</div>
-                        <div class="value" id="fardYearCongRate">0%</div>
-                        <div class="sublabel" id="fardYearCongCount">0</div>
+                    <!-- ROW 2: Congregation bar -->
+                    <div style="margin-top:10px;padding:14px 16px;border-radius:14px;background:rgba(212,160,60,0.05);border:1px solid rgba(212,160,60,0.1);display:flex;align-items:center;justify-content:space-between;">
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#D4A03C,#E8B84A);box-shadow:0 3px 8px rgba(212,160,60,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span class="material-symbols-rounded" style="font-size:20px;color:#fff;font-variation-settings:'FILL' 1,'wght' 500;">mosque</span>
+                            </div>
+                            <div>
+                                <div style="font-size:10px;color:#8D99AE;font-weight:600;" data-t="cong_rate">نسبة صلاة الجماعة</div>
+                                <div id="fardYearCongCount" style="font-size:12px;color:#8D99AE;font-weight:500;">0</div>
+                            </div>
+                        </div>
+                        <div id="fardYearCongRate" style="font-size:28px;font-weight:800;color:#D4A03C;font-family:'Rubik',sans-serif;font-variant-numeric:tabular-nums;">0%</div>
                     </div>
                 </div>
 
