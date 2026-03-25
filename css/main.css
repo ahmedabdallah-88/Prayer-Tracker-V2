@@ -173,7 +173,7 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--text-primary);
+    color: #2B2D42;
     font-family: 'Noto Kufi Arabic', sans-serif;
     font-weight: 800;
     font-size: 1.05em;
@@ -184,9 +184,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--green-deep), var(--green-light));
+    background: linear-gradient(135deg, #2D6A4F, #40916C);
     border-radius: 10px;
     color: white;
+    box-shadow: 0 2px 8px rgba(45,106,79,0.2);
 }
 
 .shell-bar-profile {
@@ -223,15 +224,15 @@ body {
 .shell-bar-actions {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
 }
 
 .shell-btn {
     width: 36px; height: 36px;
-    border-radius: 10px;
-    border: none;
-    background: transparent;
-    color: var(--text-secondary);
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.06);
+    background: rgba(255,255,255,0.6);
+    color: #2B2D42;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -243,7 +244,22 @@ body {
 }
 
 .shell-btn:hover {
-    background: rgba(0,0,0,0.04);
+    background: rgba(255,255,255,0.8);
+}
+
+#shellProfileBtn {
+    width: 38px; height: 38px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2D6A4F, #40916C);
+    border: none;
+    box-shadow: 0 3px 10px rgba(45,106,79,0.3);
+}
+
+#shellProfileBtn .material-symbols-rounded {
+    background: none;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: #fff;
+    font-variation-settings: 'FILL' 1, 'wght' 500;
 }
 
 /* ==================== THEME OPTIONS ==================== */
@@ -391,25 +407,25 @@ body {
 /* ==================== SEGMENTED CONTROL (Sub Tabs) ==================== */
 .sub-tabs {
     display: flex;
-    background: rgba(0,0,0,0.04);
-    border-radius: 14px;
+    background: rgba(43,45,66,0.06);
+    border-radius: 12px;
     padding: 3px;
     margin-bottom: 16px;
-    gap: 2px;
+    gap: 0;
 }
 
 .sub-tab {
     flex: 1;
-    padding: 10px 8px;
+    padding: 8px 0;
     border: none;
-    border-radius: 12px;
+    border-radius: 10px;
     background: transparent;
-    color: var(--text-secondary);
+    color: #8D99AE;
     font-family: 'Noto Kufi Arabic', sans-serif;
-    font-weight: 600;
-    font-size: 0.8em;
+    font-weight: 700;
+    font-size: 12px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.25s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -418,9 +434,19 @@ body {
 }
 
 .sub-tab.active {
-    background: white;
-    color: var(--text-primary);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    background: #fff;
+    color: #2B2D42;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.sub-tab .material-symbols-rounded {
+    font-variation-settings: 'FILL' 0, 'wght' 400;
+    color: #8D99AE;
+}
+
+.sub-tab.active .material-symbols-rounded {
+    font-variation-settings: 'FILL' 1, 'wght' 600;
+    color: #2D6A4F;
 }
 
 /* ==================== MONTH NAVIGATION ==================== */
@@ -517,64 +543,67 @@ body {
 }
 
 .prayer-times-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 6px;
+    display: flex;
+    gap: 5px;
+    padding: 0 2px;
 }
 
 .pt-item {
+    flex: 1;
     text-align: center;
-    padding: 10px 4px;
+    padding: 8px 4px;
     border-radius: 12px;
-    background: rgba(0,0,0,0.02);
+    background: rgba(255,255,255,0.5);
     border: 1px solid rgba(0,0,0,0.04);
-    transition: all 0.3s;
-    position: relative;
+    transition: all 0.3s ease;
 }
 
 .pt-item .pt-icon {
-    width: 28px; height: 28px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 4px;
-    color: white;
-    font-size: 16px;
+    margin-bottom: 3px;
+    line-height: 1;
 }
 
-.pt-item[data-prayer="fajr"] .pt-icon { background: linear-gradient(135deg, var(--fajr), #C48A92); }
-.pt-item[data-prayer="dhuhr"] .pt-icon { background: linear-gradient(135deg, var(--dhuhr), #D4A03C); }
-.pt-item[data-prayer="asr"] .pt-icon { background: linear-gradient(135deg, var(--asr), #C4832E); }
-.pt-item[data-prayer="maghrib"] .pt-icon { background: linear-gradient(135deg, var(--maghrib), #9A5640); }
-.pt-item[data-prayer="isha"] .pt-icon { background: linear-gradient(135deg, var(--isha), #3A4A6A); }
+.pt-item .pt-icon .material-symbols-rounded {
+    font-size: 16px;
+    font-variation-settings: 'FILL' 0, 'wght' 300;
+    color: #8D99AE;
+}
+
+.pt-item.active-prayer .pt-icon .material-symbols-rounded {
+    font-variation-settings: 'FILL' 1, 'wght' 500;
+    color: rgba(255,255,255,0.85);
+}
 
 .pt-item.active-prayer {
-    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
-    color: white;
-    border-color: transparent;
-    box-shadow: 0 4px 12px rgba(45,106,79,0.25);
-    transform: scale(1.03);
+    background: linear-gradient(135deg, #2D6A4F, #40916C);
+    border: none;
+    box-shadow: 0 3px 12px rgba(45,106,79,0.25);
 }
 
 .pt-item.passed-prayer { opacity: 0.45; }
 
 .pt-item .pt-name {
-    font-size: 0.65em;
-    font-weight: 700;
-    margin-bottom: 2px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #8D99AE;
+    margin-bottom: 1px;
 }
 
 .pt-item .pt-time {
-    font-size: 0.8em;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 700;
+    color: #2B2D42;
     font-family: 'Rubik', sans-serif;
-    direction: ltr;
     font-variant-numeric: tabular-nums;
 }
 
-.pt-item.active-prayer .pt-name { color: rgba(255,255,255,0.85); }
-.pt-item.active-prayer .pt-time { color: white; }
+.pt-item .pt-time .pt-period {
+    font-size: 9px;
+    opacity: 0.7;
+}
+
+.pt-item.active-prayer .pt-name { color: rgba(255,255,255,0.8); }
+.pt-item.active-prayer .pt-time { color: #fff; }
 
 /* ==================== NEXT PRAYER COUNTDOWN ==================== */
 #nextPrayerInfo {
@@ -2007,13 +2036,15 @@ body {
     .prayer-section { padding: 12px; }
     .prayer-name { font-size: 0.95em; gap: 8px; }
     .prayer-counter { font-size: 0.7em; padding: 3px 8px; }
-    .pt-item .pt-name { font-size: 0.55em; }
-    .pt-item .pt-time { font-size: 0.7em; }
+    .pt-item .pt-name { font-size: 9px; }
+    .pt-item .pt-time { font-size: 10px; }
 }
 
 @media (max-width: 400px) {
     .prayer-times-grid { gap: 3px; }
     .pt-item { padding: 6px 2px; }
+    .pt-item .pt-name { font-size: 8px; }
+    .pt-item .pt-time { font-size: 9px; }
 }
 
 /* ==================== PROFILE SETTINGS SCREEN ==================== */
@@ -2204,23 +2235,16 @@ body {
 .month-nav-compact {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 14px;
-    padding: 10px 16px;
-    background: rgba(255,255,255,0.55);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-radius: 16px;
-    border: 1px solid rgba(0,0,0,0.04);
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding: 0 4px;
 }
 
 .nav-circle {
     width: 30px; height: 30px;
     border-radius: 10px;
     border: none;
-    background: rgba(0,0,0,0.04);
-    color: var(--text-secondary);
+    background: rgba(255,255,255,0.5);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -2230,8 +2254,17 @@ body {
     flex-shrink: 0;
 }
 
+.nav-circle .material-symbols-rounded {
+    font-size: 20px;
+    color: #8D99AE;
+    font-variation-settings: 'wght' 500;
+}
+
 .nav-circle:hover {
     background: var(--green-deep);
+}
+
+.nav-circle:hover .material-symbols-rounded {
     color: white;
 }
 
@@ -2242,9 +2275,9 @@ body {
 }
 
 .month-nav-label {
-    font-size: 1em;
+    font-size: 16px;
     font-weight: 700;
-    color: var(--text-primary);
+    color: #2B2D42;
     font-family: 'Noto Kufi Arabic', sans-serif;
 }
 
@@ -2252,24 +2285,21 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 26px;
-    height: 22px;
-    padding: 0 6px;
-    background: rgba(45,106,79,0.08);
-    color: var(--green-deep);
-    border-radius: 11px;
-    font-size: 0.75em;
+    padding: 2px 8px;
+    background: rgba(43,45,66,0.06);
+    color: #8D99AE;
+    border-radius: 6px;
+    font-size: 11px;
     font-weight: 700;
     font-family: 'Rubik', sans-serif;
     cursor: pointer;
 }
 
 .nav-gear {
-    width: 26px; height: 26px;
-    border-radius: 8px;
+    width: 24px; height: 24px;
+    border-radius: 6px;
     border: none;
-    background: transparent;
-    color: var(--text-muted);
+    background: rgba(43,45,66,0.06);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -2278,9 +2308,14 @@ body {
     transition: all 0.2s;
 }
 
+.nav-gear .material-symbols-rounded {
+    font-size: 14px;
+    color: #8D99AE;
+    font-variation-settings: 'wght' 400;
+}
+
 .nav-gear:hover {
-    background: rgba(0,0,0,0.04);
-    color: var(--text-secondary);
+    background: rgba(43,45,66,0.1);
 }
 
 /* ==================== FLOWING GRID (Sequential Days) ==================== */
@@ -2352,18 +2387,23 @@ body {
     border: 1px solid rgba(0,0,0,0.04);
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 10px;
 }
 
 .npc-icon {
     width: 36px; height: 36px;
     border-radius: 10px;
-    background: rgba(45,106,79,0.1);
-    color: var(--green-deep);
+    background: rgba(45,106,79,0.08);
+    color: #2D6A4F;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+}
+
+.npc-icon .material-symbols-rounded {
+    font-size: 18px;
+    font-variation-settings: 'FILL' 1, 'wght' 500;
 }
 
 .npc-info {
@@ -2371,74 +2411,72 @@ body {
 }
 
 .npc-label {
-    font-size: 0.7em;
-    color: var(--text-muted);
+    font-size: 11px;
+    color: #8D99AE;
     font-weight: 600;
 }
 
 .npc-name {
-    font-size: 0.9em;
+    font-size: 14px;
     font-weight: 700;
-    color: var(--text-primary);
+    color: #2B2D42;
 }
 
 .npc-timer {
-    font-size: 1.2em;
+    font-size: 20px;
     font-weight: 800;
-    color: var(--green-deep);
+    color: #2D6A4F;
     font-family: 'Rubik', sans-serif;
     font-variant-numeric: tabular-nums;
+    letter-spacing: 1px;
+    margin-inline-start: auto;
 }
 
 /* ==================== PRAYER TIMES COMPACT ==================== */
 .prayer-times-compact {
-    margin-bottom: 12px;
-    background: rgba(255,255,255,0.55);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-radius: 16px;
-    border: 1px solid rgba(0,0,0,0.04);
-    padding: 10px;
+    margin-bottom: 14px;
 }
 
 /* ==================== PRAYER LEGEND (bottom of prayers) ==================== */
 .prayer-legend {
     display: flex;
     justify-content: center;
-    gap: 16px;
-    margin-top: 14px;
-    padding: 10px;
+    gap: 20px;
+    margin-top: 12px;
+    padding: 8px 0;
     flex-wrap: wrap;
 }
 
 .prayer-legend .legend-item {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 0.75em;
+    gap: 5px;
+    font-size: 11px;
     font-weight: 600;
-    color: var(--text-secondary);
+    color: #8D99AE;
 }
 
 .prayer-legend .legend-dot {
     width: 18px; height: 18px;
-    border-radius: 5px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .prayer-legend .legend-dot.checked-dot {
-    background: linear-gradient(135deg, var(--green-deep), var(--green-light));
+    background: linear-gradient(135deg, #40916C, #40916Cdd);
+    border: 2px solid #40916C;
 }
 
 .prayer-legend .legend-dot.cong-dot {
-    background: linear-gradient(135deg, var(--green-deep), var(--green-light));
-    border: 2px solid var(--gold);
+    background: linear-gradient(135deg, #40916C, #40916Cdd);
+    border: 2px solid #D4A03C;
 }
 
 .prayer-legend .legend-dot.qada-dot {
-    background: linear-gradient(135deg, var(--red), var(--red-light));
+    background: linear-gradient(135deg, #C1574E, #C1574Edd);
+    border: 2px solid #C1574E;
 }
 
 /* ==================== REMINDER BAR GLASSMORPHISM ==================== */

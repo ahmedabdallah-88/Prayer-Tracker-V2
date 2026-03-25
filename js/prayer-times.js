@@ -336,11 +336,11 @@ window.App.PrayerTimes = (function() {
         var currentLang = getCurrentLang();
 
         var prayersList = [
-            { id: 'fajr', name: getPrayerName('fajr'), time: timings.fajr },
-            { id: 'dhuhr', name: getPrayerName('dhuhr'), time: timings.dhuhr },
-            { id: 'asr', name: getPrayerName('asr'), time: timings.asr },
-            { id: 'maghrib', name: getPrayerName('maghrib'), time: timings.maghrib },
-            { id: 'isha', name: getPrayerName('isha'), time: timings.isha }
+            { id: 'fajr', name: getPrayerName('fajr'), time: timings.fajr, matIcon: 'wb_twilight' },
+            { id: 'dhuhr', name: getPrayerName('dhuhr'), time: timings.dhuhr, matIcon: 'wb_sunny' },
+            { id: 'asr', name: getPrayerName('asr'), time: timings.asr, matIcon: 'partly_cloudy_day' },
+            { id: 'maghrib', name: getPrayerName('maghrib'), time: timings.maghrib, matIcon: 'wb_twilight' },
+            { id: 'isha', name: getPrayerName('isha'), time: timings.isha, matIcon: 'dark_mode' }
         ];
 
         prayersList.forEach(function(p) {
@@ -358,7 +358,15 @@ window.App.PrayerTimes = (function() {
                 }
             }
 
-            item.innerHTML = '<div class="pt-name">' + p.name + '</div><div class="pt-time">' + formatTime12h(p.time) + '</div>';
+            var formatted = formatTime12h(p.time);
+            var timeParts = formatted.split(' ');
+            var timeNum = timeParts[0] || formatted;
+            var period = timeParts[1] || '';
+
+            item.innerHTML =
+                '<div class="pt-icon"><span class="material-symbols-rounded">' + p.matIcon + '</span></div>' +
+                '<div class="pt-name">' + p.name + '</div>' +
+                '<div class="pt-time">' + timeNum + (period ? ' <span class="pt-period">' + period + '</span>' : '') + '</div>';
             grid.appendChild(item);
         });
 
