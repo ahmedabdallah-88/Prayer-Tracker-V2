@@ -65,13 +65,19 @@ window.App.Main = (function() {
         Storage.loadAllData('fard');
         Storage.loadAllData('sunnah');
 
-        // Update shell bar date — show Hijri + Gregorian
+        // Update shell bar date — show Hijri + Gregorian (language-aware)
         var shellDate = document.getElementById('shellDateText');
         if (shellDate) {
-            var hijriMonthName = window.App.Config.hijriMonthNamesAr[todayH.month - 1] || '';
+            var lang = window.App.I18n ? window.App.I18n.getCurrentLang() : 'ar';
+            var hijriMonthName = lang === 'en'
+                ? (window.App.Config.hijriMonthNamesEn[todayH.month - 1] || '')
+                : (window.App.Config.hijriMonthNamesAr[todayH.month - 1] || '');
             var now = new Date();
-            var gregMonthName = window.App.Config.gregorianMonthNamesAr[now.getMonth()] || '';
-            shellDate.innerHTML = '<span class="material-symbols-rounded" style="font-size:12px;vertical-align:middle;">calendar_today</span> ' + hijriMonthName + ' ' + todayH.year + ' \u0647\u0640 \u2014 ' + gregMonthName + ' ' + now.getFullYear();
+            var gregMonthName = lang === 'en'
+                ? (window.App.Config.gregorianMonthNamesEn[now.getMonth()] || '')
+                : (window.App.Config.gregorianMonthNamesAr[now.getMonth()] || '');
+            var eraLabel = lang === 'en' ? 'AH' : '\u0647\u0640';
+            shellDate.innerHTML = '<span class="material-symbols-rounded" style="font-size:12px;vertical-align:middle;">calendar_today</span> ' + hijriMonthName + ' ' + todayH.year + ' ' + eraLabel + ' \u2014 ' + gregMonthName + ' ' + now.getFullYear();
         }
 
         // Defer initial render to ensure DOM is fully ready
@@ -137,6 +143,22 @@ window.App.Main = (function() {
             var isChild = activeProfile.age < 12;
             var genderLabel = activeProfile.gender === 'female' ? (isChild ? t('child_f') : t('female')) : (isChild ? t('child_m') : t('male'));
             psDetails.textContent = genderLabel + ' \u00B7 ' + activeProfile.age + ' ' + t('years_old');
+        }
+
+        // Update shell bar date (language-aware)
+        var shellDate = document.getElementById('shellDateText');
+        if (shellDate && window.App.Hijri) {
+            var todayH = window.App.Hijri.getTodayHijri();
+            var lang = window.App.I18n ? window.App.I18n.getCurrentLang() : 'ar';
+            var hijriMonthName = lang === 'en'
+                ? (window.App.Config.hijriMonthNamesEn[todayH.month - 1] || '')
+                : (window.App.Config.hijriMonthNamesAr[todayH.month - 1] || '');
+            var now = new Date();
+            var gregMonthName = lang === 'en'
+                ? (window.App.Config.gregorianMonthNamesEn[now.getMonth()] || '')
+                : (window.App.Config.gregorianMonthNamesAr[now.getMonth()] || '');
+            var eraLabel = lang === 'en' ? 'AH' : '\u0647\u0640';
+            shellDate.innerHTML = '<span class="material-symbols-rounded" style="font-size:12px;vertical-align:middle;">calendar_today</span> ' + hijriMonthName + ' ' + todayH.year + ' ' + eraLabel + ' \u2014 ' + gregMonthName + ' ' + now.getFullYear();
         }
     }
 

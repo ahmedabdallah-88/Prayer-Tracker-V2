@@ -32,12 +32,12 @@ window.App.Fasting = (function() {
         if (!cfg) return null;
         var badge = document.createElement('span');
         badge.className = 'sunnah-fast-badge';
-        badge.style.cssText = 'position:absolute;bottom:-3px;left:-3px;width:12px;height:12px;' +
-            'background:var(--card-bg);border:1px solid ' + cfg.color + ';border-radius:' + cfg.radius + ';' +
+        badge.style.cssText = 'position:absolute;bottom:-5px;left:-5px;width:18px;height:18px;' +
+            'background:var(--card-bg);border:1px solid ' + cfg.color + ';border-radius:6px;' +
             'display:flex;align-items:center;justify-content:center;z-index:2;';
         var icon = document.createElement('span');
         icon.className = 'material-symbols-rounded';
-        icon.style.cssText = 'font-size:7px;color:' + cfg.color + ';' +
+        icon.style.cssText = 'font-size:11px;color:' + cfg.color + ';' +
             (cfg.fill ? "font-variation-settings:'FILL' 1;" : '');
         icon.textContent = cfg.icon;
         badge.appendChild(icon);

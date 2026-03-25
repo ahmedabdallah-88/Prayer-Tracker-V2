@@ -118,7 +118,7 @@ window.App.Notifications = (function() {
             // Disable
             notificationsEnabled = false;
             localStorage.setItem('salah_notif_enabled', 'false');
-            showToast(currentLang === 'ar' ? 'تم إيقاف التنبيهات' : 'Notifications disabled', 'info');
+            showToast(t('notif_disabled'), 'info');
         } else {
             // Check iOS standalone mode
             var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -152,7 +152,7 @@ window.App.Notifications = (function() {
             if (permission === 'granted') {
                 notificationsEnabled = true;
                 localStorage.setItem('salah_notif_enabled', 'true');
-                showToast(currentLang === 'ar' ? 'تم تفعيل التنبيهات' : 'Notifications enabled', 'success');
+                showToast(t('notif_enabled'), 'success');
 
                 // Show test notification via SW
                 sendPrayerNotification(
@@ -175,14 +175,14 @@ window.App.Notifications = (function() {
 
         if (type === 'test') {
             title = prayerName;
-            body = currentLang === 'ar' ? 'سيتم تذكيرك قبل كل صلاة بـ ٢٠ دقيقة' : 'You will be reminded 20 min before each prayer';
+            body = t('notif_test_body');
             tag = 'prayer-test';
         } else if (type === 'before') {
-            title = currentLang === 'ar' ? 'قرب وقت الصلاة' : 'Prayer time approaching';
+            title = t('notif_before_title');
             body = (currentLang === 'ar' ? 'يقترب وقت صلاة ' + prayerName + ' — استعد!' : prayerName + ' is coming in ~20 minutes');
             tag = 'prayer-before-' + prayerName;
         } else {
-            title = currentLang === 'ar' ? 'هل صليت؟' : 'Did you pray?';
+            title = t('notif_after_title');
             body = (currentLang === 'ar' ? 'مرّ وقت صلاة ' + prayerName + ' — سجّل صلاتك' : prayerName + ' time has passed — log your prayer');
             tag = 'prayer-after-' + prayerName;
         }

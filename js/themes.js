@@ -16,11 +16,8 @@ window.App.Themes = (function() {
     });
 
     function setTheme(theme) {
-        if (theme === 'green') {
-            document.documentElement.removeAttribute('data-theme');
-        } else {
-            document.documentElement.setAttribute('data-theme', theme);
-        }
+        // Always set data-theme (even for green) so dark overrides are fully removed
+        document.documentElement.setAttribute('data-theme', theme);
 
         // Update active state
         document.querySelectorAll('.theme-option').forEach(function(opt) {
@@ -45,10 +42,8 @@ window.App.Themes = (function() {
     }
 
     function loadTheme() {
-        var saved = localStorage.getItem('salah_tracker_theme');
-        if (saved && saved !== 'green') {
-            setTheme(saved);
-        }
+        var saved = localStorage.getItem('salah_tracker_theme') || 'green';
+        setTheme(saved);
     }
 
     return {

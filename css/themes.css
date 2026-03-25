@@ -228,8 +228,12 @@
 }
 
 [data-theme="dark"] .theme-options {
-    background: rgba(30,30,34,0.95);
+    background: rgba(30,30,34,0.98);
     border-color: rgba(255,255,255,0.08);
+}
+
+[data-theme="dark"] .theme-option:hover {
+    opacity: 0.85;
 }
 
 [data-theme="dark"] .confirm-box {
@@ -428,4 +432,51 @@
 [data-theme="dark"] .notif-onboard-btn.later {
     background: rgba(255,255,255,0.08);
     color: #A3A3A3;
+}
+
+/* Dark mode: shell profile btn needs visible border */
+[data-theme="dark"] .shell-profile-btn {
+    border-color: rgba(255,255,255,0.2) !important;
+}
+
+/* Dark mode: action/reset buttons */
+[data-theme="dark"] .action-btn {
+    background: rgba(255,255,255,0.08);
+    color: #E8E6E1;
+    border-color: rgba(255,255,255,0.06);
+}
+
+/* Dark mode: modals */
+[data-theme="dark"] .profile-overlay {
+    background: rgba(0,0,0,0.8);
+}
+
+/* Dark mode: select and number inputs in all contexts */
+[data-theme="dark"] select,
+[data-theme="dark"] input[type="number"] {
+    background: #2A2A2E;
+    color: #E8E6E1;
+    border-color: rgba(255,255,255,0.1);
+}
+
+/* Dark mode: stats section */
+[data-theme="dark"] .stats {
+    background: rgba(40,40,44,0.8);
+    border-color: rgba(255,255,255,0.06);
+}
+
+/* Dark mode: exempt day box */
+[data-theme="dark"] .day-box.exempt {
+    background: #7C3AED !important;
+    border-color: #6D28D9 !important;
+}
+
+/* Dark mode: fasting legend */
+[data-theme="dark"] .fasting-legend {
+    border-color: rgba(255,255,255,0.06);
+}
+
+/* Dark mode: shawwal banner */
+[data-theme="dark"] .shawwal-banner {
+    border-color: rgba(212,160,60,0.2);
 }

@@ -266,9 +266,8 @@ window.App.Tracker = (function() {
         var daysInMonth = Hijri.getHijriDaysInMonth(hYear, hMonth);
         var profile     = Storage.getActiveProfile();
         var isFemale    = profile && profile.gender === 'female' && profile.age >= 12;
+        var isFemaleUser = isFemale;
         var exemptData  = isFemale ? Female.getExemptDays(hYear, hMonth) : {};
-        var isExemptModeOn = false;
-        try { isExemptModeOn = Female.getExemptMode()[type]; } catch(e) {}
         var currentLang = I18n.getCurrentLang();
         var todayH = Hijri.getTodayHijri();
         var isCurrentMonth = (todayH.year === hYear && todayH.month === hMonth);
@@ -361,41 +360,31 @@ window.App.Tracker = (function() {
                 var isDayToday = isCurrentMonth && todayH.day === day;
                 if (isDayToday) dayBox.classList.add('today-box');
 
-                if (Female.isPrayerExempt(exemptData, prayer.id, day)) {
-                    dayBox.classList.add('exempt');
-                    if (isExemptModeOn) {
-                        dayBox.onclick = (function(pId, d) {
-                            return function() { Female.toggleExemptPrayer(pId, d); };
-                        })(prayer.id, day);
-                    }
-                } else if (Hijri.isFutureDateHijri(day, hMonth, hYear)) {
+                if (Hijri.isFutureDateHijri(day, hMonth, hYear)) {
                     dayBox.classList.add('disabled');
                 } else {
-                    if (isExemptModeOn) {
-                        dayBox.onclick = (function(pId, d) {
-                            return function() { Female.toggleExemptPrayer(pId, d); };
-                        })(prayer.id, day);
-                        dayBox.style.cursor = 'crosshair';
-                    } else {
-                        if (dataObj[hMonth][prayer.id] && dataObj[hMonth][prayer.id][day]) {
-                            dayBox.classList.add('checked');
-                            if (type === 'fard') {
-                                var congData = Storage.getCongregationData(hYear, hMonth);
-                                if (isCongregation(congData, prayer.id, day)) {
-                                    dayBox.classList.add('congregation');
-                                    dayBox.classList.remove('checked');
-                                }
-                            }
-                            var qadaData = Storage.getQadaData(hYear, hMonth);
-                            if (qadaData[prayer.id] && qadaData[prayer.id][day]) {
-                                dayBox.classList.remove('checked', 'congregation');
-                                dayBox.classList.add('qada');
+                    // Check current state and apply visual classes
+                    var isExempt = Female.isPrayerExempt(exemptData, prayer.id, day);
+                    if (isExempt) {
+                        dayBox.classList.add('exempt');
+                    } else if (dataObj[hMonth][prayer.id] && dataObj[hMonth][prayer.id][day]) {
+                        dayBox.classList.add('checked');
+                        if (type === 'fard') {
+                            var congData = Storage.getCongregationData(hYear, hMonth);
+                            if (isCongregation(congData, prayer.id, day)) {
+                                dayBox.classList.add('congregation');
+                                dayBox.classList.remove('checked');
                             }
                         }
-                        dayBox.onclick = (function(t, pId, d) {
-                            return function() { handleDayClick(t, pId, d); };
-                        })(type, prayer.id, day);
+                        var qadaData = Storage.getQadaData(hYear, hMonth);
+                        if (qadaData[prayer.id] && qadaData[prayer.id][day]) {
+                            dayBox.classList.remove('checked', 'congregation');
+                            dayBox.classList.add('qada');
+                        }
                     }
+                    dayBox.onclick = (function(t, pId, d) {
+                        return function() { handleDayClick(t, pId, d); };
+                    })(type, prayer.id, day);
                 }
 
                 grid.appendChild(dayBox);
@@ -414,9 +403,17 @@ window.App.Tracker = (function() {
                 '<div class="legend-item"><div class="legend-dot checked-dot"><span class="material-symbols-rounded" style="font-size:10px;color:white;">check</span></div><span>' + (currentLang === 'ar' ? 'منفرد' : 'Alone') + '</span></div>' +
                 '<div class="legend-item"><div class="legend-dot cong-dot"><span class="material-symbols-rounded" style="font-size:10px;color:white;">mosque</span></div><span>' + (currentLang === 'ar' ? 'جماعة' : 'Congregation') + '</span></div>' +
                 '<div class="legend-item"><div class="legend-dot qada-dot"><span class="material-symbols-rounded" style="font-size:10px;color:white;">schedule</span></div><span>' + (currentLang === 'ar' ? 'قضاء' : 'Qada') + '</span></div>';
+            if (isFemaleUser) {
+                legend.innerHTML +=
+                    '<div class="legend-item"><div class="legend-dot exempt-dot"><span class="material-symbols-rounded" style="font-size:10px;color:white;">do_not_disturb</span></div><span>' + (currentLang === 'ar' ? 'إعفاء' : 'Exemption') + '</span></div>';
+            }
         } else {
             legend.innerHTML =
                 '<div class="legend-item"><div class="legend-dot checked-dot"><span class="material-symbols-rounded" style="font-size:10px;color:white;">check</span></div><span>' + (currentLang === 'ar' ? 'مؤداة' : 'Done') + '</span></div>';
+            if (isFemaleUser) {
+                legend.innerHTML +=
+                    '<div class="legend-item"><div class="legend-dot exempt-dot"><span class="material-symbols-rounded" style="font-size:10px;color:white;">do_not_disturb</span></div><span>' + (currentLang === 'ar' ? 'إعفاء' : 'Exemption') + '</span></div>';
+            }
         }
         container.appendChild(legend);
     }
@@ -566,6 +563,7 @@ window.App.Tracker = (function() {
         var Hijri   = _getHijri();
         var UI      = _getUI();
         var I18n    = _getI18n();
+        var Female  = _getFemale();
 
         var currentMonth = Storage.getCurrentMonth();
         var currentYear  = Storage.getCurrentYear();
@@ -585,39 +583,103 @@ window.App.Tracker = (function() {
         var qadaData  = Storage.getQadaData(currentYear, currentMonth);
         var isQada    = qadaData[prayerId] && qadaData[prayerId][day];
 
-        if (!isChecked) {
-            // State 0 -> State 1: Mark as prayed (alone)
-            dataObj[currentMonth][prayerId][day] = true;
-            UI.hapticFeedback('success');
-        } else if (isChecked && !isCong && !isQada) {
-            // State 1 -> State 2: Mark as congregation
-            UI.hapticFeedback('medium');
-            if (type === 'fard' && congData) {
-                if (!congData[prayerId]) congData[prayerId] = {};
-                congData[prayerId][day] = true;
-            } else {
-                // For sunnah: skip congregation, go to qada
+        // Check if female user for 5-state cycle
+        var profile = Storage.getActiveProfile();
+        var isFemale = profile && profile.gender === 'female' && profile.age >= 12;
+        var exemptData = isFemale ? Female.getExemptDays(currentYear, currentMonth) : {};
+        var isExempt = isFemale && exemptData[day] && exemptData[day][prayerId];
+
+        if (isFemale) {
+            // 5-state cycle: empty → alone → exempt → qada → congregation → empty
+            // (sunnah skips congregation: empty → alone → exempt → qada → empty)
+            if (!isChecked && !isExempt) {
+                // State 0 -> State 1: Mark as prayed (alone)
+                dataObj[currentMonth][prayerId][day] = true;
+                UI.hapticFeedback('success');
+            } else if (isChecked && !isCong && !isQada && !isExempt) {
+                // State 1 -> State 2: Mark as exempt
+                UI.hapticFeedback('medium');
+                dataObj[currentMonth][prayerId][day] = false;
+                if (!exemptData[day]) exemptData[day] = {};
+                exemptData[day][prayerId] = true;
+                Female.saveExemptDays(currentYear, currentMonth, exemptData);
+                Female.savePeriodHistory();
+            } else if (isExempt) {
+                // State 2 -> State 3: Mark as qada (remove exempt)
+                UI.hapticFeedback('light');
+                if (exemptData[day]) {
+                    delete exemptData[day][prayerId];
+                    if (Object.keys(exemptData[day]).length === 0) delete exemptData[day];
+                }
+                Female.saveExemptDays(currentYear, currentMonth, exemptData);
+                Female.savePeriodHistory();
+                dataObj[currentMonth][prayerId][day] = true;
                 if (!qadaData[prayerId]) qadaData[prayerId] = {};
                 qadaData[prayerId][day] = true;
+            } else if (isQada) {
+                if (type === 'fard') {
+                    // State 3 -> State 4: Mark as congregation
+                    UI.hapticFeedback('medium');
+                    if (qadaData[prayerId]) {
+                        delete qadaData[prayerId][day];
+                        if (Object.keys(qadaData[prayerId]).length === 0) delete qadaData[prayerId];
+                    }
+                    if (!congData[prayerId]) congData[prayerId] = {};
+                    congData[prayerId][day] = true;
+                } else {
+                    // Sunnah: State 3 -> State 0: Remove everything
+                    UI.hapticFeedback('light');
+                    dataObj[currentMonth][prayerId][day] = false;
+                    if (qadaData[prayerId]) {
+                        delete qadaData[prayerId][day];
+                        if (Object.keys(qadaData[prayerId]).length === 0) delete qadaData[prayerId];
+                    }
+                }
+            } else if (isCong) {
+                // State 4 -> State 0: Remove everything
+                UI.hapticFeedback('light');
+                dataObj[currentMonth][prayerId][day] = false;
+                if (congData[prayerId]) {
+                    delete congData[prayerId][day];
+                    if (Object.keys(congData[prayerId]).length === 0) delete congData[prayerId];
+                }
             }
-        } else if (isCong) {
-            // State 2 -> State 3: Mark as qada
-            UI.hapticFeedback('light');
-            if (congData[prayerId]) {
-                delete congData[prayerId][day];
-                if (Object.keys(congData[prayerId]).length === 0) delete congData[prayerId];
+        } else {
+            // Original 4-state cycle: empty → alone → congregation → qada → empty
+            if (!isChecked) {
+                // State 0 -> State 1: Mark as prayed (alone)
+                dataObj[currentMonth][prayerId][day] = true;
+                UI.hapticFeedback('success');
+            } else if (isChecked && !isCong && !isQada) {
+                // State 1 -> State 2: Mark as congregation
+                UI.hapticFeedback('medium');
+                if (type === 'fard' && congData) {
+                    if (!congData[prayerId]) congData[prayerId] = {};
+                    congData[prayerId][day] = true;
+                } else {
+                    // For sunnah: skip congregation, go to qada
+                    if (!qadaData[prayerId]) qadaData[prayerId] = {};
+                    qadaData[prayerId][day] = true;
+                }
+            } else if (isCong) {
+                // State 2 -> State 3: Mark as qada
+                UI.hapticFeedback('light');
+                if (congData[prayerId]) {
+                    delete congData[prayerId][day];
+                    if (Object.keys(congData[prayerId]).length === 0) delete congData[prayerId];
+                }
+                if (!qadaData[prayerId]) qadaData[prayerId] = {};
+                qadaData[prayerId][day] = true;
+            } else if (isQada) {
+                // State 3 -> State 0: Remove everything
+                UI.hapticFeedback('light');
+                dataObj[currentMonth][prayerId][day] = false;
+                if (qadaData[prayerId]) {
+                    delete qadaData[prayerId][day];
+                    if (Object.keys(qadaData[prayerId]).length === 0) delete qadaData[prayerId];
+                }
+                if (congData && congData[prayerId]) { delete congData[prayerId][day]; }
             }
-            if (!qadaData[prayerId]) qadaData[prayerId] = {};
-            qadaData[prayerId][day] = true;
-        } else if (isQada) {
-            // State 3 -> State 0: Remove everything
-            UI.hapticFeedback('light');
-            dataObj[currentMonth][prayerId][day] = false;
-            if (qadaData[prayerId]) {
-                delete qadaData[prayerId][day];
-                if (Object.keys(qadaData[prayerId]).length === 0) delete qadaData[prayerId];
-            }
-            if (congData && congData[prayerId]) { delete congData[prayerId][day]; }
         }
 
         Storage.saveMonthData(type, currentMonth);

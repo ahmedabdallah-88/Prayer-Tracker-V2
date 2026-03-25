@@ -242,6 +242,12 @@ body {
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
+}
+
+.shell-profile-btn {
+    background: linear-gradient(135deg, var(--primary), var(--primary-mid)) !important;
+    border: 2px solid rgba(255,255,255,0.3) !important;
+    color: #fff !important;
     font-family: 'Noto Kufi Arabic', sans-serif;
     font-weight: 600;
     font-size: 0.8em;
@@ -302,17 +308,15 @@ body {
     font-size: 0.85em;
     transition: all 0.2s;
     white-space: nowrap;
-    background: none;
-    color: var(--text-primary);
 }
 
 .theme-option:hover {
-    background: rgba(0,0,0,0.04);
+    opacity: 0.85;
 }
 
 .theme-option.active {
-    border-color: var(--primary);
-    background: rgba(var(--primary-rgb),0.08);
+    border-color: currentColor;
+    box-shadow: 0 0 0 1px currentColor;
 }
 
 .theme-dot {
@@ -938,27 +942,30 @@ body {
 
 /* === Exempt (Female) === */
 .day-box.exempt {
-    background: rgba(139,92,246,0.08) !important;
-    border-color: var(--purple) !important;
-    opacity: 0.7;
+    background: #8B5CF6 !important;
+    border-color: #7C3AED !important;
+    opacity: 1;
 }
+
+.day-box.exempt .day-num { color: white !important; }
+.day-box.exempt .day-num-g { color: rgba(255,255,255,0.7) !important; }
 
 .day-box.exempt::after {
     content: '';
     position: absolute;
-    top: -4px; right: -4px;
+    top: -5px; right: -5px;
     width: 14px; height: 14px;
     border-radius: 50%;
-    background: var(--purple);
+    background: #7C3AED;
     box-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
 
 .day-box.exempt::before {
-    content: 'block';
+    content: 'do_not_disturb';
     font-family: 'Material Symbols Rounded';
-    font-variation-settings: 'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 14;
+    font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 14;
     position: absolute;
-    top: -4px; right: -4px;
+    top: -5px; right: -5px;
     width: 14px; height: 14px;
     font-size: 9px;
     color: white;
@@ -2581,6 +2588,11 @@ body {
 .prayer-legend .legend-dot.qada-dot {
     background: var(--danger);
     border: 2px solid var(--danger);
+}
+
+.prayer-legend .legend-dot.exempt-dot {
+    background: #8B5CF6;
+    border: 2px solid #7C3AED;
 }
 
 /* ==================== REMINDER BAR GLASSMORPHISM ==================== */

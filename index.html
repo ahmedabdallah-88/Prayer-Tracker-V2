@@ -138,41 +138,41 @@
         <div class="shell-bar-actions">
             <button class="shell-btn" onclick="toggleThemeMenu()" id="shellThemeBtn" aria-label="Theme" aria-haspopup="true" aria-expanded="false"><span class="material-symbols-rounded" style="font-size:20px;">palette</span></button>
             <button class="shell-btn" onclick="toggleLang()" id="langBtn" role="button" aria-label="Switch language">EN</button>
-            <button class="shell-btn" onclick="openProfileSettings()" id="shellProfileBtn" style="display:none;" aria-label="Profile settings">
-                <span class="material-symbols-rounded" style="font-size:20px;background:linear-gradient(135deg,var(--primary),var(--primary-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">person</span>
+            <button class="shell-btn shell-profile-btn" onclick="openProfileSettings()" id="shellProfileBtn" style="display:none;" aria-label="Profile settings">
+                <span class="material-symbols-rounded" style="font-size:16px;color:#fff;">person</span>
             </button>
         </div>
     </div>
 
     <!-- Theme dropdown (absolute positioned from shell bar) -->
     <div class="theme-options" id="themeOptions" style="position:fixed;top:calc(56px + env(safe-area-inset-top, 0px));right:60px;z-index:10001;">
-        <button class="theme-option active" data-theme="green" onclick="setTheme('green')">
-            <span class="theme-dot" style="background: linear-gradient(135deg, var(--primary), var(--accent));"></span>
-            <span data-t="green_gold">أخضر وذهبي</span>
+        <button class="theme-option active" data-theme="green" onclick="setTheme('green')" style="background:#fff;">
+            <span class="theme-dot" style="background: linear-gradient(135deg, #2D6A4F, #D4A03C);"></span>
+            <span data-t="green_gold" style="color:#2D6A4F;">أخضر وذهبي</span>
         </button>
-        <button class="theme-option" data-theme="navy" onclick="setTheme('navy')">
+        <button class="theme-option" data-theme="navy" onclick="setTheme('navy')" style="background:#fff;">
             <span class="theme-dot" style="background: linear-gradient(135deg, #1B2A4A, #A8B4C4);"></span>
-            <span data-t="navy_silver">كحلي وفضي</span>
+            <span data-t="navy_silver" style="color:#1B2A4A;">كحلي وفضي</span>
         </button>
-        <button class="theme-option" data-theme="purple" onclick="setTheme('purple')">
-            <span class="theme-dot" style="background: linear-gradient(135deg, #5B21B6, var(--accent));"></span>
-            <span data-t="purple_gold">بنفسجي وذهبي</span>
+        <button class="theme-option" data-theme="purple" onclick="setTheme('purple')" style="background:#fff;">
+            <span class="theme-dot" style="background: linear-gradient(135deg, #5B21B6, #D4A03C);"></span>
+            <span data-t="purple_gold" style="color:#5B21B6;">بنفسجي وذهبي</span>
         </button>
-        <button class="theme-option" data-theme="feminine" onclick="setTheme('feminine')">
-            <span class="theme-dot" style="background: linear-gradient(135deg, #9D174D, var(--accent));"></span>
-            <span data-t="pink">وردي</span>
+        <button class="theme-option" data-theme="feminine" onclick="setTheme('feminine')" style="background:#fff;">
+            <span class="theme-dot" style="background: linear-gradient(135deg, #9D174D, #D4A03C);"></span>
+            <span data-t="pink" style="color:#9D174D;">وردي</span>
         </button>
-        <button class="theme-option" data-theme="sky" onclick="setTheme('sky')">
+        <button class="theme-option" data-theme="sky" onclick="setTheme('sky')" style="background:#fff;">
             <span class="theme-dot" style="background: linear-gradient(135deg, #0C4A6E, #F59E0B);"></span>
-            <span data-t="sky_blue">أزرق سماوي</span>
+            <span data-t="sky_blue" style="color:#0C4A6E;">أزرق سماوي</span>
         </button>
-        <button class="theme-option" data-theme="dark" onclick="setTheme('dark')">
-            <span class="theme-dot" style="background: linear-gradient(135deg, #1A1A1E, var(--accent));"></span>
-            <span data-t="dark_mode">دارك مود</span>
+        <button class="theme-option" data-theme="dark" onclick="setTheme('dark')" style="background:#1A1A1E;">
+            <span class="theme-dot" style="background: linear-gradient(135deg, #1A1A1E, #D4A03C);border-color:rgba(255,255,255,0.2);"></span>
+            <span data-t="dark_mode" style="color:#D4A03C;">دارك مود</span>
         </button>
-        <button class="theme-option" data-theme="olive" onclick="setTheme('olive')">
+        <button class="theme-option" data-theme="olive" onclick="setTheme('olive')" style="background:#fff;">
             <span class="theme-dot" style="background: linear-gradient(135deg, #3D5A3E, #C8B56E);"></span>
-            <span data-t="olive_cream">زيتوني</span>
+            <span data-t="olive_cream" style="color:#3D5A3E;">زيتوني</span>
         </button>
     </div>
 
@@ -291,16 +291,7 @@
 
                 
 
-                <!-- Exempt Days Toggle (Females Only) -->
-                <div class="exempt-toggle-bar" id="fardExemptBar" style="display:none;">
-                    <span><span class="material-symbols-rounded" style="font-size:16px;color:#db2777;">water_drop</span></span>
-                    <label data-t="exempt_mode">وضع تحديد الإعفاء (حيض/نفاس) — لكل صلاة على حدة</label>
-                    <label class="exempt-switch">
-                        <input type="checkbox" id="fardExemptMode" onchange="toggleExemptMode('fard')">
-                        <span class="exempt-slider"></span>
-                    </label>
-                    <div class="exempt-info" id="fardExemptInfo"></div>
-                </div>
+                <div class="exempt-info" id="fardExemptInfo" style="display:none;"></div>
 
 
                 <!-- Prayer Times Bar (compact, no header text) -->
@@ -515,16 +506,7 @@
 
                 
 
-                <!-- Exempt Days Toggle (Females Only) -->
-                <div class="exempt-toggle-bar" id="sunnahExemptBar" style="display:none;">
-                    <span><span class="material-symbols-rounded" style="font-size:16px;color:#db2777;">water_drop</span></span>
-                    <label data-t="exempt_mode">وضع تحديد الإعفاء (حيض/نفاس) — لكل صلاة على حدة</label>
-                    <label class="exempt-switch">
-                        <input type="checkbox" id="sunnahExemptMode" onchange="toggleExemptMode('sunnah')">
-                        <span class="exempt-slider"></span>
-                    </label>
-                    <div class="exempt-info" id="sunnahExemptInfo"></div>
-                </div>
+                <div class="exempt-info" id="sunnahExemptInfo" style="display:none;"></div>
                 <div class="prayers-container" id="sunnahTrackerPrayersContainer"></div>
 
             </div>
@@ -661,15 +643,6 @@
                     <button class="nav-circle" onclick="changeFastingMonth(-1)"><span class="material-symbols-rounded">chevron_left</span></button>
                 </div>
 
-                <!-- Female Exempt Bar for Fasting -->
-                <div class="exempt-toggle-bar" id="fastingExemptBar" style="display:none;">
-                    <span><span class="material-symbols-rounded" style="font-size:16px;color:#db2777;">water_drop</span></span>
-                    <label data-t="fasting_exempt_label">وضع تحديد أيام الحيض</label>
-                    <label class="exempt-switch">
-                        <input type="checkbox" id="fastingExemptMode" onchange="window.fastingExemptModeOn=this.checked;window.updateVoluntaryFasting()">
-                        <span class="exempt-slider"></span>
-                    </label>
-                </div>
 
                 <div class="stats">
                     <div class="stat-item">
@@ -966,7 +939,7 @@
                         <div class="ps-title" data-t="switch_profile_menu">تبديل الملف الشخصي</div>
                     </div>
                 </div>
-                <div class="ps-menu-item" onclick="closeProfileSettings();showProfileForm()">
+                <div class="ps-menu-item" onclick="closeProfileSettings();showProfileScreen();setTimeout(function(){showProfileForm();},150)">
                     <div class="ps-icon"><span class="material-symbols-rounded">person_add</span></div>
                     <div class="ps-content">
                         <div class="ps-title" data-t="add_new_profile">إضافة ملف جديد</div>
@@ -992,13 +965,6 @@
             </div>
 
             <div class="ps-section">
-                <div class="ps-menu-item" onclick="toggleThemeMenu()">
-                    <div class="ps-icon"><span class="material-symbols-rounded">palette</span></div>
-                    <div class="ps-content">
-                        <div class="ps-title" data-t="colors_theme">الألوان والثيم</div>
-                    </div>
-                    <div class="ps-trail" id="psThemeTrail"></div>
-                </div>
                 <div class="ps-menu-item" onclick="toggleLang()">
                     <div class="ps-icon"><span class="material-symbols-rounded">translate</span></div>
                     <div class="ps-content">
@@ -1026,19 +992,6 @@
             </div>
 
             <div class="ps-section">
-                <div class="ps-menu-item" onclick="closeProfileSettings();resetTrackerMonth('fard')">
-                    <div class="ps-icon"><span class="material-symbols-rounded">refresh</span></div>
-                    <div class="ps-content">
-                        <div class="ps-title" data-t="clear_fard_month">مسح بيانات الشهر (الفرائض)</div>
-                        <div class="ps-subtitle" data-t="clear_fard_subtitle">مسح بيانات الشهر الحالي</div>
-                    </div>
-                </div>
-                <div class="ps-menu-item" onclick="closeProfileSettings();resetTrackerMonth('sunnah')">
-                    <div class="ps-icon"><span class="material-symbols-rounded">refresh</span></div>
-                    <div class="ps-content">
-                        <div class="ps-title" data-t="clear_sunnah_month">مسح بيانات الشهر (السنن)</div>
-                    </div>
-                </div>
                 <div class="ps-menu-item" onclick="window.print()">
                     <div class="ps-icon"><span class="material-symbols-rounded">print</span></div>
                     <div class="ps-content">
