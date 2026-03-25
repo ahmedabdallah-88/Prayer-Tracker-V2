@@ -180,19 +180,20 @@ window.App.Dashboard = (function() {
         // 1. Orbital Progress
         var orbitalEl = document.getElementById(type + 'OrbitalProgress');
         if (orbitalEl) {
-            var rings = [{ value: yearStats.completed, max: yearStats.total, color: '#2D6A4F', label: currentLang === 'ar' ? 'الإنجاز' : 'Completion' }];
-            var legend = [{ color: '#2D6A4F', label: currentLang === 'ar' ? 'الإنجاز' : 'Completion', value: yearStats.percentage + '%' }];
+            var completionPct = yearStats.percentage;
+            var congPct = 0, yCong = 0, yComp = 0;
             if (type === 'fard') {
-                var yCong = 0, yComp = 0;
                 prayerStats.forEach(function(p) { yCong += p.congCount; yComp += p.completed; });
-                rings.push({ value: yCong, max: yComp || 1, color: '#D4A03C', label: currentLang === 'ar' ? 'الجماعة' : 'Congregation' });
-                legend.push({ color: '#D4A03C', label: currentLang === 'ar' ? 'الجماعة' : 'Congregation', value: (yComp > 0 ? Math.round((yCong / yComp) * 100) : 0) + '%' });
+                congPct = yComp > 0 ? Math.round((yCong / yComp) * 100) : 0;
             }
             Charts.orbitalProgress(orbitalEl, {
-                rings: rings,
-                centerText: yearStats.percentage + '%',
-                centerSub: currentLang === 'ar' ? 'الإنجاز السنوي' : 'Yearly',
-                legend: legend
+                completionPct: completionPct,
+                congPct: congPct,
+                completed: yearStats.completed,
+                total: yearStats.total,
+                congCount: yCong,
+                isFard: type === 'fard',
+                lang: currentLang
             });
         }
 

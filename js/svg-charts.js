@@ -31,45 +31,84 @@ window.App.SVGCharts = (function() {
     function orbitalProgress(container, data) {
         container.innerHTML = '';
         var size = 180, cx = 90, cy = 90;
-        var rings = data.rings || []; // [{value, max, color, label}]
-        var centerText = data.centerText || '';
-        var centerSub = data.centerSub || '';
-        var ringDefs = [{r: 72, w: 10}, {r: 56, w: 8}];
+        var completionPct = data.completionPct || 0;
+        var congPct = data.congPct || 0;
+        var isAr = data.lang === 'ar';
 
+        // --- Build SVG ---
         var children = [];
 
-        rings.forEach(function(ring, i) {
-            var rd = ringDefs[i] || {r: 72 - i * 16, w: 8};
-            var r = rd.r;
-            var strokeW = rd.w;
-            var pct = ring.max > 0 ? Math.min(ring.value / ring.max, 1) : 0;
-            var circ = 2 * Math.PI * r;
-            var offset = circ * (1 - pct);
+        // Outer track (الإنجاز)
+        children.push(el('circle', { cx: cx, cy: cy, r: 72, fill: 'none', stroke: 'rgba(0,0,0,0.03)', 'stroke-width': 10 }));
+        // Inner track (الجماعة)
+        if (data.isFard) {
+            children.push(el('circle', { cx: cx, cy: cy, r: 56, fill: 'none', stroke: 'rgba(0,0,0,0.03)', 'stroke-width': 8 }));
+        }
 
-            // Track
-            children.push(el('circle', { cx: cx, cy: cy, r: r, fill: 'none', stroke: 'rgba(0,0,0,0.03)', 'stroke-width': strokeW }));
-            // Value arc
-            var arc = el('circle', { cx: cx, cy: cy, r: r, fill: 'none', stroke: ring.color, 'stroke-width': strokeW, 'stroke-linecap': 'round', 'stroke-dasharray': circ, 'stroke-dashoffset': offset, transform: 'rotate(-90 ' + cx + ' ' + cy + ')' });
-            arc.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
-            children.push(arc);
-        });
+        // Outer ring (الإنجاز): r=72, strokeWidth=10, green
+        var outerCirc = 2 * Math.PI * 72;
+        var outerOffset = outerCirc * (1 - completionPct / 100);
+        var outerArc = el('circle', { cx: cx, cy: cy, r: 72, fill: 'none', stroke: '#40916C', 'stroke-width': 10, 'stroke-linecap': 'round', 'stroke-dasharray': outerCirc, 'stroke-dashoffset': outerOffset, transform: 'rotate(-90 ' + cx + ' ' + cy + ')' });
+        outerArc.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
+        children.push(outerArc);
+
+        // Inner ring (الجماعة): r=56, strokeWidth=8, gold
+        if (data.isFard) {
+            var innerCirc = 2 * Math.PI * 56;
+            var innerOffset = innerCirc * (1 - congPct / 100);
+            var innerArc = el('circle', { cx: cx, cy: cy, r: 56, fill: 'none', stroke: '#D4A03C', 'stroke-width': 8, 'stroke-linecap': 'round', 'stroke-dasharray': innerCirc, 'stroke-dashoffset': innerOffset, transform: 'rotate(-90 ' + cx + ' ' + cy + ')' });
+            innerArc.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
+            children.push(innerArc);
+        }
 
         // Center text
-        children.push(el('text', { x: cx, y: cy - 4, 'text-anchor': 'middle', fill: 'var(--text-primary)', 'font-size': '36', 'font-weight': '800', 'font-family': 'Rubik, sans-serif' }, centerText));
-        children.push(el('text', { x: cx, y: cy + 14, 'text-anchor': 'middle', fill: 'var(--text-muted)', 'font-size': '12', 'font-weight': '600', 'font-family': 'Rubik, sans-serif' }, centerSub));
+        children.push(el('text', { x: cx, y: cy - 4, 'text-anchor': 'middle', fill: '#2B2D42', 'font-size': '36', 'font-weight': '800', 'font-family': 'Rubik, sans-serif' }, completionPct + ''));
+        children.push(el('text', { x: cx, y: cy + 14, 'text-anchor': 'middle', fill: '#8D99AE', 'font-size': '12', 'font-weight': '600', 'font-family': 'Rubik, sans-serif' }, '%'));
 
         var s = svg(size, size, '0 0 ' + size + ' ' + size, children);
-        container.appendChild(s);
+        s.style.flexShrink = '0';
+        s.style.width = size + 'px';
+        s.style.height = size + 'px';
 
-        // Legend
-        if (data.legend) {
-            var leg = document.createElement('div');
-            leg.className = 'svg-chart-legend';
-            data.legend.forEach(function(item) {
-                leg.innerHTML += '<div class="svg-legend-item"><span class="svg-legend-dot" style="background:' + item.color + '"></span><span class="svg-legend-label">' + item.label + '</span><span class="svg-legend-value">' + item.value + '</span></div>';
-            });
-            container.appendChild(leg);
-        }
+        // --- Build layout: SVG left + legend right ---
+        var wrapper = document.createElement('div');
+        wrapper.style.cssText = 'display:flex;align-items:center;gap:20px;';
+
+        wrapper.appendChild(s);
+
+        // Right side legend
+        var legend = document.createElement('div');
+        legend.style.cssText = 'flex:1;';
+
+        var title = isAr ? 'التقدم السنوي' : 'Yearly Progress';
+        var completionLabel = isAr ? 'الإنجاز' : 'Completion';
+        var congLabel = isAr ? 'الجماعة' : 'Congregation';
+        var congSuffix = isAr ? ' صلاة' : ' prayers';
+
+        legend.innerHTML =
+            '<div style="font-size:16px;font-weight:700;color:#2B2D42;margin-bottom:14px;font-family:\'Noto Kufi Arabic\',sans-serif;">' + title + '</div>' +
+            // Item 1: الإنجاز
+            '<div style="margin-bottom:12px;">' +
+                '<div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">' +
+                    '<span style="width:10px;height:10px;border-radius:3px;background:#40916C;flex-shrink:0;"></span>' +
+                    '<span style="font-size:12px;color:#8D99AE;font-weight:600;">' + completionLabel + '</span>' +
+                '</div>' +
+                '<div style="font-size:11px;color:#8D99AE;font-weight:500;margin-bottom:2px;margin-inline-start:16px;">' + data.completed + ' / ' + data.total + '</div>' +
+                '<div style="font-size:16px;font-weight:800;color:#40916C;font-family:\'Rubik\',sans-serif;margin-inline-start:16px;">' + completionPct + '%</div>' +
+            '</div>' +
+            // Item 2: الجماعة (fard only)
+            (data.isFard ?
+            '<div>' +
+                '<div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">' +
+                    '<span style="width:10px;height:10px;border-radius:3px;background:#D4A03C;flex-shrink:0;"></span>' +
+                    '<span style="font-size:12px;color:#8D99AE;font-weight:600;">' + congLabel + '</span>' +
+                '</div>' +
+                '<div style="font-size:11px;color:#8D99AE;font-weight:500;margin-bottom:2px;margin-inline-start:16px;">' + data.congCount + congSuffix + '</div>' +
+                '<div style="font-size:16px;font-weight:800;color:#D4A03C;font-family:\'Rubik\',sans-serif;margin-inline-start:16px;">' + congPct + '%</div>' +
+            '</div>' : '');
+
+        wrapper.appendChild(legend);
+        container.appendChild(wrapper);
     }
 
     // ==================== 2. STREAK FLAME BARS ====================
