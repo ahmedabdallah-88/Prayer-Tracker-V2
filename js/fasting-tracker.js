@@ -8,6 +8,81 @@ window.App.Fasting = (function() {
     var fastingExemptModeOn = false;
     var fastingMonth, fastingYear;
 
+    // ==================== SUNNAH FASTING DAY DETECTION ====================
+
+    var SUNNAH_BADGE_CONFIG = {
+        'dhul-hijjah':      { icon: 'brightness_2', color: 'var(--accent)', radius: '50%' },
+        'ashura':           { icon: 'star', color: 'var(--accent)', radius: '50%' },
+        'white-days':       { icon: 'circle', color: '#A8B4C4', radius: '50%', fill: true },
+        'monday-thursday':  { icon: 'event_repeat', color: 'var(--accent)', radius: '4px' }
+    };
+
+    function getSunnahFastingType(hijriYear, hijriMonth, hijriDay) {
+        if (hijriMonth === 12 && hijriDay >= 1 && hijriDay <= 9) return 'dhul-hijjah';
+        if (hijriMonth === 1 && (hijriDay === 9 || hijriDay === 10)) return 'ashura';
+        if (hijriDay === 13 || hijriDay === 14 || hijriDay === 15) return 'white-days';
+        var gregDate = window.App.Hijri.hijriToGregorian(hijriYear, hijriMonth, hijriDay);
+        var weekday = gregDate.getDay();
+        if (weekday === 1 || weekday === 4) return 'monday-thursday';
+        return null;
+    }
+
+    function createSunnahBadge(type) {
+        var cfg = SUNNAH_BADGE_CONFIG[type];
+        if (!cfg) return null;
+        var badge = document.createElement('span');
+        badge.className = 'sunnah-fast-badge';
+        badge.style.cssText = 'position:absolute;bottom:-3px;left:-3px;width:12px;height:12px;' +
+            'background:var(--card-bg);border:1px solid ' + cfg.color + ';border-radius:' + cfg.radius + ';' +
+            'display:flex;align-items:center;justify-content:center;z-index:2;';
+        var icon = document.createElement('span');
+        icon.className = 'material-symbols-rounded';
+        icon.style.cssText = 'font-size:7px;color:' + cfg.color + ';' +
+            (cfg.fill ? "font-variation-settings:'FILL' 1;" : '');
+        icon.textContent = cfg.icon;
+        badge.appendChild(icon);
+        return badge;
+    }
+
+    // ==================== SHAWWAL BANNER ====================
+
+    function renderShawwalBanner(month, year) {
+        var existing = document.getElementById('shawwalBanner');
+        if (existing) existing.remove();
+        if (month !== 10) return; // Shawwal only
+
+        var t = window.App.I18n.t;
+        var data = getVolFastingData(year, 10);
+        var fastedCount = Object.values(data).filter(function(v) { return v; }).length;
+        var completed = fastedCount >= 6;
+
+        var banner = document.createElement('div');
+        banner.id = 'shawwalBanner';
+        banner.className = 'shawwal-banner' + (completed ? ' shawwal-complete' : '');
+
+        if (completed) {
+            banner.innerHTML =
+                '<div class="shawwal-complete-row">' +
+                    '<span class="material-symbols-rounded" style="font-size:20px;color:var(--primary);font-variation-settings:\'FILL\' 1;">check_circle</span>' +
+                    '<span class="shawwal-complete-text">' + t('shawwal_complete') + '</span>' +
+                '</div>';
+        } else {
+            var pct = Math.round((Math.min(fastedCount, 6) / 6) * 100);
+            banner.innerHTML =
+                '<div class="shawwal-header">' +
+                    '<div class="shawwal-title">' + t('shawwal_title') + '</div>' +
+                    '<div class="shawwal-counter">' + Math.min(fastedCount, 6) + ' / ٦</div>' +
+                '</div>' +
+                '<div class="shawwal-hadith">' + t('shawwal_hadith') + '</div>' +
+                '<div class="shawwal-progress-bar"><div class="shawwal-progress-fill" style="width:' + pct + '%"></div></div>';
+        }
+
+        var grid = document.getElementById('voluntaryFastingGrid');
+        if (grid && grid.parentNode) {
+            grid.parentNode.insertBefore(banner, grid);
+        }
+    }
+
     // ==================== HELPERS (delegate to Storage) ====================
 
     function getFastingKey(year) {
@@ -99,6 +174,7 @@ window.App.Fasting = (function() {
         for (var day = 1; day <= daysInMonth; day++) {
             var dayBox = document.createElement('div');
             dayBox.className = 'day-box';
+            dayBox.style.position = 'relative';
 
             if (window.App.Storage.isFutureDate(day, fastingMonth, fastingYear)) {
                 dayBox.appendChild(window.App.Hijri.createDualDayNum(day, fastingYear, fastingMonth));
@@ -142,8 +218,18 @@ window.App.Fasting = (function() {
                 }
             }
 
+            // Sunnah fasting day badge (voluntary calendar only)
+            var sunnahType = getSunnahFastingType(fastingYear, fastingMonth, day);
+            if (sunnahType) {
+                var badge = createSunnahBadge(sunnahType);
+                if (badge) dayBox.appendChild(badge);
+            }
+
             grid.appendChild(dayBox);
         }
+
+        // Shawwal 6-day banner
+        renderShawwalBanner(fastingMonth, fastingYear);
 
         var elFasted = document.getElementById('volFastedCount');
         var elExempt = document.getElementById('volExemptCount');
@@ -333,7 +419,9 @@ window.App.Fasting = (function() {
         cycleFastingDay: cycleFastingDay,
         resetFasting: resetFasting,
         getFastingExemptModeOn: getFastingExemptModeOn,
-        setFastingExemptModeOn: setFastingExemptModeOn
+        setFastingExemptModeOn: setFastingExemptModeOn,
+        getSunnahFastingType: getSunnahFastingType,
+        getVolFastingData: getVolFastingData
     };
 })();
 

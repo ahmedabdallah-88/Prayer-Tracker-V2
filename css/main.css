@@ -2426,6 +2426,80 @@ body {
     }
 }
 
+/* ==================== SUNNAH FASTING BADGES ==================== */
+.sunnah-fast-badge {
+    pointer-events: none;
+}
+
+/* ==================== SHAWWAL 6-DAY BANNER ==================== */
+.shawwal-banner {
+    background: rgba(var(--accent-rgb, 200,168,78), 0.1);
+    border: 1px solid rgba(var(--accent-rgb, 200,168,78), 0.15);
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+}
+
+.shawwal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.shawwal-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.shawwal-counter {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--accent);
+    font-family: 'Rubik', sans-serif;
+}
+
+.shawwal-hadith {
+    font-size: 9px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-top: 4px;
+    line-height: 1.5;
+}
+
+.shawwal-progress-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(var(--accent-rgb, 200,168,78), 0.15);
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.shawwal-progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--accent);
+    transition: width 0.4s ease;
+}
+
+.shawwal-banner.shawwal-complete {
+    background: rgba(var(--primary-rgb), 0.1);
+    border-color: rgba(var(--primary-rgb), 0.15);
+}
+
+.shawwal-complete-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.shawwal-complete-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
 /* ==================== PRAYER HEADER END (pills) ==================== */
 .prayer-header-end {
     display: flex;

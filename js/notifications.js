@@ -263,6 +263,158 @@ window.App.Notifications = (function() {
         osc.stop(startTime + duration + 0.05);
     }
 
+    // ==================== FASTING NOTIFICATIONS ====================
+
+    var fastingNotifEnabled = localStorage.getItem('salah_fasting_notif') === 'true';
+
+    async function toggleFastingNotifications() {
+        var currentLang = getCurrentLang();
+        if (fastingNotifEnabled) {
+            fastingNotifEnabled = false;
+            localStorage.setItem('salah_fasting_notif', 'false');
+            showToast(currentLang === 'ar' ? 'تم إيقاف إشعارات الصيام' : 'Fasting notifications disabled', 'info');
+        } else {
+            if (!('Notification' in window)) {
+                showToast(currentLang === 'ar'
+                    ? 'المتصفح لا يدعم التنبيهات'
+                    : 'Notifications not supported', 'error');
+                return;
+            }
+            var permission = Notification.permission;
+            if (permission === 'denied') {
+                showToast(currentLang === 'ar' ? 'تم حظر التنبيهات — فعّلها من إعدادات المتصفح' : 'Notifications blocked — enable in browser settings', 'error');
+                return;
+            }
+            if (permission !== 'granted') {
+                permission = await Notification.requestPermission();
+            }
+            if (permission === 'granted') {
+                fastingNotifEnabled = true;
+                localStorage.setItem('salah_fasting_notif', 'true');
+                showToast(currentLang === 'ar' ? 'تم تفعيل إشعارات الصيام' : 'Fasting notifications enabled', 'success');
+            } else {
+                showToast(currentLang === 'ar' ? 'لم يتم السماح بالتنبيهات' : 'Permission not granted', 'warning');
+            }
+        }
+    }
+
+    function sendFastingNotification(title, body) {
+        if (Notification.permission !== 'granted') return;
+        playNotificationSound('before');
+        try {
+            if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                navigator.serviceWorker.ready.then(function(reg) {
+                    reg.showNotification(title, {
+                        body: body,
+                        icon: 'icons/icon-192x192.png',
+                        badge: 'icons/icon-72x72.png',
+                        tag: 'fasting-' + new Date().toISOString().split('T')[0],
+                        vibrate: [200, 100, 200]
+                    });
+                });
+            } else {
+                new Notification(title, { body: body, icon: 'icons/icon-192x192.png' });
+            }
+        } catch(e) {
+            showToast(title + ': ' + body, 'info', 5000);
+        }
+    }
+
+    function checkFastingNotifications() {
+        if (!fastingNotifEnabled) return;
+        var prayerTimesData = getPrayerTimesData();
+        if (!prayerTimesData || !prayerTimesData.timings) return;
+
+        var now = new Date();
+        var nowMin = now.getHours() * 60 + now.getMinutes();
+        var todayStr = now.toISOString().split('T')[0];
+
+        // Only send after Maghrib
+        var maghribMin = parseTimeToMinutes(prayerTimesData.timings.maghrib);
+        if (nowMin < maghribMin || nowMin > maghribMin + 60) return; // 1hr window after Maghrib
+
+        var sentKey = 'salah_fasting_notif_sent_' + todayStr;
+        if (localStorage.getItem(sentKey)) return;
+
+        var todayH = gregorianToHijri(now);
+        if (!todayH) return;
+        var weekday = now.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+        var currentLang = getCurrentLang();
+        var notification = null;
+
+        // Priority: Dhul Hijjah > Ashura > Shawwal > White Days > Mon/Thu
+
+        // 1. Dhul Hijjah: day 30 Dhul Qi'dah or days 1-8 Dhul Hijjah
+        if (todayH.month === 11 && todayH.day === 30) {
+            notification = {
+                title: currentLang === 'ar' ? 'عشر ذي الحجة' : 'First 10 of Dhul Hijjah',
+                body: currentLang === 'ar'
+                    ? 'غداً من أيام العشر — ما من أيام العمل الصالح فيهن أحب إلى الله'
+                    : 'Tomorrow begins the blessed 10 days — no days are more beloved to Allah for good deeds'
+            };
+        } else if (todayH.month === 12 && todayH.day >= 1 && todayH.day <= 8) {
+            notification = {
+                title: currentLang === 'ar' ? 'عشر ذي الحجة' : 'First 10 of Dhul Hijjah',
+                body: currentLang === 'ar'
+                    ? 'غداً من أيام العشر — ما من أيام العمل الصالح فيهن أحب إلى الله'
+                    : 'Tomorrow is one of the blessed 10 days — fast for the sake of Allah'
+            };
+        }
+
+        // 2. Ashura: day 8 Muharram
+        if (!notification && todayH.month === 1 && todayH.day === 8) {
+            notification = {
+                title: currentLang === 'ar' ? 'تاسوعاء وعاشوراء' : 'Tasu\'a and Ashura',
+                body: currentLang === 'ar'
+                    ? 'يوم ٩ و١٠ محرم — صيام يوم عاشوراء يكفّر السنة التي قبله'
+                    : 'Days 9 & 10 of Muharram — fasting Ashura expiates the previous year\'s sins'
+            };
+        }
+
+        // 3. Shawwal: every Friday in Shawwal, stop after 6 fasted
+        if (!notification && todayH.month === 10 && weekday === 5) {
+            var shawwalData = (window.App.Fasting && window.App.Fasting.getVolFastingData)
+                ? window.App.Fasting.getVolFastingData(todayH.year, 10) : {};
+            var shawwalFasted = Object.values(shawwalData).filter(function(v) { return v; }).length;
+            if (shawwalFasted < 6) {
+                notification = {
+                    title: currentLang === 'ar' ? 'صيام ٦ من شوال' : '6 Days of Shawwal',
+                    body: currentLang === 'ar'
+                        ? 'من صام رمضان ثم أتبعه ستاً من شوال كان كصيام الدهر'
+                        : 'Whoever fasts Ramadan then follows it with six days of Shawwal, it is as if he fasted the entire year'
+                };
+            }
+        }
+
+        // 4. White Days: day 12 of every Hijri month
+        if (!notification && todayH.day === 12) {
+            notification = {
+                title: currentLang === 'ar' ? 'الأيام البيض' : 'The White Days',
+                body: currentLang === 'ar'
+                    ? 'غداً أول الأيام البيض (١٣، ١٤، ١٥) — صيام ثلاثة أيام من كل شهر'
+                    : 'Tomorrow begins the White Days (13, 14, 15) — fasting 3 days each month'
+            };
+        }
+
+        // 5. Monday/Thursday: Sunday or Wednesday
+        if (!notification && (weekday === 0 || weekday === 3)) {
+            var dayName = weekday === 0
+                ? (currentLang === 'ar' ? 'الاثنين' : 'Monday')
+                : (currentLang === 'ar' ? 'الخميس' : 'Thursday');
+            notification = {
+                title: currentLang === 'ar' ? 'تذكير بصيام التطوع' : 'Voluntary Fasting Reminder',
+                body: currentLang === 'ar'
+                    ? 'غداً يوم ' + dayName + ' — من أراد الصيام فليبيّت النية'
+                    : 'Tomorrow is ' + dayName + ' — a Sunnah day to fast'
+            };
+        }
+
+        if (notification) {
+            sendFastingNotification(notification.title, notification.body);
+            localStorage.setItem(sentKey, '1');
+        }
+    }
+
     // ==================== PRAYER TIME NOTIFICATION CHECK ====================
 
     function checkPrayerTimeNotifications() {
@@ -327,6 +479,7 @@ window.App.Notifications = (function() {
 
             // Check notifications
             checkPrayerTimeNotifications();
+            checkFastingNotifications();
 
             // At midnight, reset and refetch
             var now = new Date();
@@ -448,14 +601,17 @@ window.App.Notifications = (function() {
     return {
         updateNotifButton: updateNotifButton,
         togglePrayerNotifications: togglePrayerNotifications,
+        toggleFastingNotifications: toggleFastingNotifications,
         sendPrayerNotification: sendPrayerNotification,
         playNotificationSound: playNotificationSound,
         playTone: playTone,
         checkPrayerTimeNotifications: checkPrayerTimeNotifications,
+        checkFastingNotifications: checkFastingNotifications,
         startPrayerTimesMonitor: startPrayerTimesMonitor,
         scheduleSWNotifications: scheduleSWNotifications,
         showOnboardingCard: showOnboardingCard,
         isEnabled: function() { return notificationsEnabled; },
+        isFastingNotifEnabled: function() { return fastingNotifEnabled; },
         setEnabled: function(v) { notificationsEnabled = v; },
         resetNotifSentToday: function() { notifSentToday = {}; }
     };
@@ -465,6 +621,7 @@ window.App.Notifications = (function() {
 // ==================== BACKWARD COMPATIBILITY ====================
 
 window.togglePrayerNotifications = window.App.Notifications.togglePrayerNotifications;
+window.toggleFastingNotifications = window.App.Notifications.toggleFastingNotifications;
 window.startPrayerTimesMonitor = window.App.Notifications.startPrayerTimesMonitor;
 window.scheduleSWNotifications = window.App.Notifications.scheduleSWNotifications;
 window.updateNotifButton = window.App.Notifications.updateNotifButton;

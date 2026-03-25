@@ -401,7 +401,38 @@ window.App.Config = {
         'notif_onboard_title': { ar: '\u062a\u0630\u0643\u064a\u0631 \u0627\u0644\u0635\u0644\u0627\u0629', en: 'Prayer Reminders' },
         'notif_onboard_body': { ar: '\u0641\u0639\u0651\u0644 \u0627\u0644\u062a\u0646\u0628\u064a\u0647\u0627\u062a \u0644\u062a\u0630\u0643\u064a\u0631\u0643 \u0642\u0628\u0644 \u0648\u0628\u0639\u062f \u0643\u0644 \u0635\u0644\u0627\u0629', en: 'Enable notifications to get reminded before and after each prayer' },
         'notif_onboard_enable': { ar: '\u062a\u0641\u0639\u064a\u0644 \u0627\u0644\u062a\u0646\u0628\u064a\u0647\u0627\u062a', en: 'Enable Notifications' },
-        'notif_onboard_later': { ar: '\u0644\u0627\u062d\u0642\u0627\u064b', en: 'Maybe Later' }
+        'notif_onboard_later': { ar: '\u0644\u0627\u062d\u0642\u0627\u064b', en: 'Maybe Later' },
+
+        // Fasting notification settings (Part 3)
+        'salah_notif_label': { ar: 'إشعارات الصلاة', en: 'Prayer Notifications' },
+        'fasting_notif_label': { ar: 'إشعارات الصيام', en: 'Fasting Notifications' },
+        'fasting_notif_subtitle': { ar: 'تذكير بأيام الصيام المسنونة', en: 'Sunnah fasting day reminders' },
+        'fasting_notif_enabled': { ar: 'تم تفعيل إشعارات الصيام', en: 'Fasting notifications enabled' },
+        'fasting_notif_disabled': { ar: 'تم إيقاف إشعارات الصيام', en: 'Fasting notifications disabled' },
+
+        // Fasting notification messages
+        'fasting_notif_mon_thu_title': { ar: 'تذكير بصيام التطوع', en: 'Voluntary Fasting Reminder' },
+        'fasting_notif_mon_body': { ar: 'غداً يوم الاثنين — من أراد الصيام فليبيّت النية', en: 'Tomorrow is Monday — a Sunnah day to fast' },
+        'fasting_notif_thu_body': { ar: 'غداً يوم الخميس — من أراد الصيام فليبيّت النية', en: 'Tomorrow is Thursday — a Sunnah day to fast' },
+        'fasting_notif_white_title': { ar: 'الأيام البيض', en: 'The White Days' },
+        'fasting_notif_white_body': { ar: 'غداً أول الأيام البيض (١٣، ١٤، ١٥) — صيام ثلاثة أيام من كل شهر', en: 'Tomorrow begins the White Days (13, 14, 15) — fasting 3 days each month' },
+        'fasting_notif_shawwal_title': { ar: 'صيام ٦ من شوال', en: '6 Days of Shawwal' },
+        'fasting_notif_shawwal_body': { ar: 'من صام رمضان ثم أتبعه ستاً من شوال كان كصيام الدهر', en: 'Whoever fasts Ramadan then follows it with six days of Shawwal, it is as if he fasted the entire year' },
+        'fasting_notif_dhul_hijjah_title': { ar: 'عشر ذي الحجة', en: 'First 10 of Dhul Hijjah' },
+        'fasting_notif_dhul_hijjah_body': { ar: 'غداً من أيام العشر — ما من أيام العمل الصالح فيهن أحب إلى الله', en: 'Tomorrow is one of the blessed 10 days — no days are more beloved to Allah for good deeds' },
+        'fasting_notif_ashura_title': { ar: 'تاسوعاء وعاشوراء', en: "Tasu'a and Ashura" },
+        'fasting_notif_ashura_body': { ar: 'يوم ٩ و١٠ محرم — صيام يوم عاشوراء يكفّر السنة التي قبله', en: "Days 9 & 10 of Muharram — fasting Ashura expiates the previous year's sins" },
+
+        // Shawwal banner (Part 2)
+        'shawwal_title': { ar: 'صيام ٦ أيام من شوال', en: 'Fasting 6 Days of Shawwal' },
+        'shawwal_hadith': { ar: 'من صام رمضان ثم أتبعه ستاً من شوال كان كصيام الدهر', en: 'Whoever fasts Ramadan then follows it with six days of Shawwal, it is as if he fasted the entire year' },
+        'shawwal_complete': { ar: 'أكملت صيام ٦ من شوال — بارك الله فيك', en: 'You completed 6 days of Shawwal — may Allah bless you' },
+
+        // Sunnah fasting badge tooltips (Part 1)
+        'sunnah_monday_thursday': { ar: 'يوم الاثنين أو الخميس', en: 'Monday or Thursday' },
+        'sunnah_white_days': { ar: 'الأيام البيض', en: 'White Days' },
+        'sunnah_dhul_hijjah': { ar: 'أيام العشر من ذي الحجة', en: 'First 10 of Dhul Hijjah' },
+        'sunnah_ashura': { ar: 'تاسوعاء / عاشوراء', en: "Tasu'a / Ashura" }
     }
 
 };
