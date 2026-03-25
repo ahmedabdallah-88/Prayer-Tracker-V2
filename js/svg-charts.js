@@ -274,71 +274,169 @@ window.App.SVGCharts = (function() {
         var values = data.values || [];
         var values2 = data.values2 || null;
         var currentIdx = data.currentMonth !== undefined ? data.currentMonth - 1 : -1;
+        var n = months.length;
+        if (n === 0) return;
 
-        // --- Bars container ---
-        var barsWrap = document.createElement('div');
-        barsWrap.style.cssText = 'display:flex;align-items:flex-end;gap:5px;height:150px;padding:0 2px;';
+        var W = 360, H = 190;
+        var padL = 8, padR = 8, padTop = 28, padBot = 24;
+        var chartW = W - padL - padR;
+        var chartH = H - padTop - padBot;
+        var baseY = padTop + chartH;
 
-        months.forEach(function(label, i) {
+        // Map values to points
+        function toPoint(i, v) {
+            var x = n === 1 ? padL + chartW / 2 : padL + (i / (n - 1)) * chartW;
+            var y = baseY - (Math.min(v, 100) / 100) * chartH;
+            return { x: x, y: y };
+        }
+
+        // Smooth bezier line path
+        function smoothLine(pts) {
+            if (pts.length === 0) return '';
+            var d = 'M ' + pts[0].x.toFixed(1) + ' ' + pts[0].y.toFixed(1);
+            for (var i = 1; i < pts.length; i++) {
+                var prev = pts[i - 1], cur = pts[i];
+                var midX = (prev.x + cur.x) / 2;
+                d += ' C ' + midX.toFixed(1) + ' ' + prev.y.toFixed(1) +
+                     ' ' + midX.toFixed(1) + ' ' + cur.y.toFixed(1) +
+                     ' ' + cur.x.toFixed(1) + ' ' + cur.y.toFixed(1);
+            }
+            return d;
+        }
+
+        // Smooth bezier area path (closed to baseline)
+        function smoothArea(pts) {
+            if (pts.length === 0) return '';
+            var d = 'M ' + pts[0].x.toFixed(1) + ' ' + baseY;
+            d += ' L ' + pts[0].x.toFixed(1) + ' ' + pts[0].y.toFixed(1);
+            for (var i = 1; i < pts.length; i++) {
+                var prev = pts[i - 1], cur = pts[i];
+                var midX = (prev.x + cur.x) / 2;
+                d += ' C ' + midX.toFixed(1) + ' ' + prev.y.toFixed(1) +
+                     ' ' + midX.toFixed(1) + ' ' + cur.y.toFixed(1) +
+                     ' ' + cur.x.toFixed(1) + ' ' + cur.y.toFixed(1);
+            }
+            d += ' L ' + pts[pts.length - 1].x.toFixed(1) + ' ' + baseY + ' Z';
+            return d;
+        }
+
+        // Build point arrays (only months with data or up to current)
+        var greenPts = [], goldPts = [];
+        for (var i = 0; i < n; i++) {
             var v = values[i] || 0;
             var v2 = values2 ? (values2[i] || 0) : 0;
-            var isCurrent = i === currentIdx;
             var isFuture = currentIdx >= 0 && i > currentIdx;
+            if (isFuture && v === 0) continue;
+            greenPts.push(toPoint(i, v));
+            if (values2) goldPts.push(toPoint(i, v2));
+        }
 
-            var col = document.createElement('div');
-            col.style.cssText = 'flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;' + (isFuture ? 'opacity:0.25;' : '');
+        var defs = '';
+        // Glow filter for peak dots
+        defs += '<filter id="glowF" x="-50%" y="-50%" width="200%" height="200%">';
+        defs += '<feGaussianBlur stdDeviation="3" result="blur"/>';
+        defs += '<feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>';
+        defs += '</filter>';
+        // Green gradient fill
+        defs += '<linearGradient id="greenWaveFill" x1="0" y1="0" x2="0" y2="1">';
+        defs += '<stop offset="0%" stop-color="#40916C" stop-opacity="0.25"/>';
+        defs += '<stop offset="100%" stop-color="#40916C" stop-opacity="0.02"/>';
+        defs += '</linearGradient>';
+        // Gold gradient fill
+        defs += '<linearGradient id="goldWaveFill" x1="0" y1="0" x2="0" y2="1">';
+        defs += '<stop offset="0%" stop-color="#D4A03C" stop-opacity="0.15"/>';
+        defs += '<stop offset="100%" stop-color="#D4A03C" stop-opacity="0.01"/>';
+        defs += '</linearGradient>';
 
-            // Percentage label above bar (only if > 20% to avoid overlap)
-            if (v > 20) {
-                var pctLbl = document.createElement('div');
-                pctLbl.style.cssText = 'font-size:7px;font-weight:700;color:#8D99AE;font-family:Rubik,sans-serif;margin-bottom:2px;';
-                pctLbl.textContent = v + '%';
-                col.appendChild(pctLbl);
+        var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg">';
+        svg += '<defs>' + defs + '</defs>';
+
+        // Baseline
+        svg += '<line x1="' + padL + '" y1="' + baseY + '" x2="' + (W - padR) + '" y2="' + baseY + '" stroke="rgba(0,0,0,0.06)" stroke-width="0.5"/>';
+
+        // Green area + line
+        if (greenPts.length > 1) {
+            svg += '<path d="' + smoothArea(greenPts) + '" fill="url(#greenWaveFill)"/>';
+            svg += '<path d="' + smoothLine(greenPts) + '" fill="none" stroke="#40916C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+        }
+
+        // Gold area + dashed line
+        if (goldPts.length > 1) {
+            svg += '<path d="' + smoothArea(goldPts) + '" fill="url(#goldWaveFill)"/>';
+            svg += '<path d="' + smoothLine(goldPts) + '" fill="none" stroke="#D4A03C" stroke-width="1.5" stroke-dasharray="4 3" stroke-linecap="round" stroke-linejoin="round"/>';
+        }
+
+        // Current month dashed vertical line
+        if (currentIdx >= 0 && currentIdx < n) {
+            var curPt = toPoint(currentIdx, values[currentIdx] || 0);
+            svg += '<line x1="' + curPt.x.toFixed(1) + '" y1="' + curPt.y.toFixed(1) + '" x2="' + curPt.x.toFixed(1) + '" y2="' + baseY + '" stroke="#2D6A4F" stroke-width="1" stroke-dasharray="3 2" opacity="0.4"/>';
+        }
+
+        // Dots and labels for each month
+        var gIdx = 0;
+        for (var j = 0; j < n; j++) {
+            var val = values[j] || 0;
+            var val2 = values2 ? (values2[j] || 0) : 0;
+            var isFut = currentIdx >= 0 && j > currentIdx;
+            var hasData = val > 0 || (isFut === false);
+            var pt = toPoint(j, val);
+
+            // Month labels along baseline
+            var lblColor = (j === currentIdx) ? '#2D6A4F' : (isFut ? '#C8C8C8' : '#8D99AE');
+            var lblWeight = (j === currentIdx) ? '700' : '500';
+            var lblX = pt.x;
+            svg += '<text x="' + lblX.toFixed(1) + '" y="' + (baseY + 14) + '" text-anchor="middle" font-family="\'Noto Kufi Arabic\',sans-serif" font-size="7" font-weight="' + lblWeight + '" fill="' + lblColor + '">' + months[j] + '</text>';
+
+            if (isFut && val === 0) continue;
+
+            // Green dots
+            var isPeak = val >= 95;
+            var isLow = val > 0 && val < 30;
+            var dotR = isPeak ? 5 : (isLow ? 4 : 3.5);
+            var dotColor = isLow ? '#C1574E' : '#40916C';
+
+            if (isPeak) {
+                svg += '<circle cx="' + pt.x.toFixed(1) + '" cy="' + pt.y.toFixed(1) + '" r="' + dotR + '" fill="' + dotColor + '" filter="url(#glowF)"/>';
+            } else {
+                svg += '<circle cx="' + pt.x.toFixed(1) + '" cy="' + pt.y.toFixed(1) + '" r="' + dotR + '" fill="' + dotColor + '"/>';
+            }
+            // White inner ring
+            svg += '<circle cx="' + pt.x.toFixed(1) + '" cy="' + pt.y.toFixed(1) + '" r="' + (dotR - 1.5) + '" fill="white"/>';
+            svg += '<circle cx="' + pt.x.toFixed(1) + '" cy="' + pt.y.toFixed(1) + '" r="' + (dotR - 2.5) + '" fill="' + dotColor + '"/>';
+
+            // Percentage label above dot (all months with data)
+            if (val > 0) {
+                var lblY = pt.y - dotR - 4;
+                var pctColor = isLow ? '#C1574E' : (isPeak ? '#2D6A4F' : '#6B7B8D');
+                var pctWeight = isPeak ? '700' : '600';
+                var pctSize = isPeak ? '9' : '7.5';
+                svg += '<text x="' + pt.x.toFixed(1) + '" y="' + lblY.toFixed(1) + '" text-anchor="middle" font-family="Rubik,sans-serif" font-size="' + pctSize + '" font-weight="' + pctWeight + '" fill="' + pctColor + '">' + val + '%</text>';
             }
 
-            // Bar container (relative for stacking green + gold)
-            var barOuter = document.createElement('div');
-            barOuter.style.cssText = 'width:100%;max-width:22px;position:relative;border-radius:8px 8px 4px 4px;overflow:hidden;';
-            var greenH = v;
-            barOuter.style.height = Math.max(greenH, 0) + '%';
-            barOuter.style.minHeight = v > 0 ? '4px' : '0';
-
-            // Green fill (الإنجاز)
-            var greenBar = document.createElement('div');
-            var greenBg = isCurrent
-                ? 'linear-gradient(180deg, #2D6A4F, #40916C)'
-                : 'linear-gradient(180deg, #40916C, #52B788)';
-            greenBar.style.cssText = 'position:absolute;inset:0;background:' + greenBg + ';border-radius:8px 8px 4px 4px;';
-            barOuter.appendChild(greenBar);
-
-            // Gold fill (الجماعة) — from bottom, height relative to bar
-            if (values2 && v2 > 0 && v > 0) {
-                var goldH = (v2 / v) * 100;
-                var goldBar = document.createElement('div');
-                goldBar.style.cssText = 'position:absolute;bottom:0;left:0;right:0;height:' + goldH + '%;background:linear-gradient(180deg, #D4A03C, #E8B84A);border-radius:0 0 4px 4px;';
-                barOuter.appendChild(goldBar);
+            // Gold congregation dot
+            if (values2 && val2 > 0) {
+                var gPt = toPoint(j, val2);
+                svg += '<circle cx="' + gPt.x.toFixed(1) + '" cy="' + gPt.y.toFixed(1) + '" r="2" fill="#D4A03C"/>';
+                svg += '<circle cx="' + gPt.x.toFixed(1) + '" cy="' + gPt.y.toFixed(1) + '" r="0.8" fill="white"/>';
             }
+        }
 
-            col.appendChild(barOuter);
-
-            // Month label below
-            var mLbl = document.createElement('div');
-            mLbl.style.cssText = 'font-size:7px;font-weight:' + (isCurrent ? '700' : '500') + ';color:' + (isCurrent ? '#2D6A4F' : '#8D99AE') + ';font-family:"Noto Kufi Arabic",sans-serif;margin-top:4px;white-space:nowrap;';
-            mLbl.textContent = label;
-            col.appendChild(mLbl);
-
-            barsWrap.appendChild(col);
-        });
-
-        container.appendChild(barsWrap);
+        svg += '</svg>';
+        container.innerHTML = svg;
 
         // Legend
         if (data.legend) {
             var leg = document.createElement('div');
-            leg.style.cssText = 'display:flex;justify-content:center;gap:14px;margin-top:10px;padding:4px 0;';
+            leg.style.cssText = 'display:flex;justify-content:center;gap:16px;margin-top:8px;padding:4px 0;';
+            var l1 = data.legend[0] ? data.legend[0].label : '';
+            var l2 = data.legend[1] ? data.legend[1].label : '';
             leg.innerHTML =
-                '<div style="display:flex;align-items:center;gap:5px;"><div style="width:12px;height:8px;border-radius:3px;background:linear-gradient(180deg,#40916C,#52B788);"></div><span style="font-size:10px;color:#8D99AE;font-weight:600;">' + (data.legend[0] ? data.legend[0].label : '') + '</span></div>' +
-                (data.legend[1] ? '<div style="display:flex;align-items:center;gap:5px;"><div style="width:12px;height:8px;border-radius:3px;background:linear-gradient(180deg,#D4A03C,#E8B84A);"></div><span style="font-size:10px;color:#8D99AE;font-weight:600;">' + data.legend[1].label + '</span></div>' : '');
+                '<div style="display:flex;align-items:center;gap:5px;">' +
+                '<svg width="18" height="8"><line x1="0" y1="4" x2="18" y2="4" stroke="#40916C" stroke-width="2.5" stroke-linecap="round"/></svg>' +
+                '<span style="font-size:10px;color:#8D99AE;font-weight:600;">' + l1 + '</span></div>' +
+                (l2 ? '<div style="display:flex;align-items:center;gap:5px;">' +
+                '<svg width="18" height="8"><line x1="0" y1="4" x2="18" y2="4" stroke="#D4A03C" stroke-width="1.5" stroke-dasharray="4 3" stroke-linecap="round"/></svg>' +
+                '<span style="font-size:10px;color:#8D99AE;font-weight:600;">' + l2 + '</span></div>' : '');
             container.appendChild(leg);
         }
     }
