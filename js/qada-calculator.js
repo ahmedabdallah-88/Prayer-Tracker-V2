@@ -277,7 +277,7 @@ window.App.QadaCalc = (function() {
         '</div>';
 
         // Hijri conversion preview
-        html += '<div id="qadaHijriPreview" style="padding:8px 12px;font-size:0.8em;color:var(--text-muted);background:var(--primary-light,rgba(45,106,79,0.08));border-radius:10px;margin-bottom:12px;display:none;"></div>';
+        html += '<div id="qadaHijriPreview" style="padding:8px 12px;font-size:0.8em;color:var(--text-primary);background:rgba(var(--accent-rgb,45,106,79),0.1);border-radius:10px;margin-bottom:12px;display:none;"></div>';
 
         // Female: menstrual days
         if (isFemale) {
@@ -309,7 +309,7 @@ window.App.QadaCalc = (function() {
         html += '</div>';
 
         // Running total
-        html += '<div id="qadaRunningTotal" style="padding:14px 16px;background:var(--primary-light,rgba(45,106,79,0.08));border-radius:14px;margin-bottom:16px;display:none;">' +
+        html += '<div id="qadaRunningTotal" style="padding:14px 16px;background:rgba(var(--accent-rgb,45,106,79),0.1);border-radius:14px;margin-bottom:16px;display:none;">' +
             '<div style="display:flex;justify-content:space-between;align-items:center;">' +
                 '<span style="font-weight:700;color:var(--primary);font-size:0.95em;">' + t('qada_running_total') + '</span>' +
                 '<span id="qadaTotalNum" style="font-weight:800;color:var(--primary);font-size:1.2em;">0</span>' +
@@ -349,13 +349,11 @@ window.App.QadaCalc = (function() {
     // ==================== STEP 2 ====================
 
     function renderStep2() {
-        var base = calculateBase();
-        if (!base) return '<div style="padding:16px;text-align:center;color:var(--text-muted);">Error</div>';
-        var totals = calculateTotals(base);
-        wizardData = Object.assign({}, wizardData, base);
-        wizardData.additionalPeriods = JSON.parse(JSON.stringify(additionalPeriods));
-        wizardData.totalByPrayer = totals.totalByPrayer;
-        wizardData.totalAll = totals.totalAll;
+        // wizardData was populated by Step 1 Next handler (before DOM was destroyed)
+        if (!wizardData.totalByPrayer || !wizardData.totalAll) {
+            return '<div style="padding:16px;text-align:center;color:var(--text-muted);">Error</div>';
+        }
+        var totals = { totalByPrayer: wizardData.totalByPrayer, totalAll: wizardData.totalAll };
 
         var html = '<div style="padding:0 16px 16px;">';
 
@@ -372,7 +370,7 @@ window.App.QadaCalc = (function() {
             '</div>';
         });
 
-        html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--primary-light,rgba(45,106,79,0.08));border-radius:0 0 14px 14px;">' +
+        html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(var(--accent-rgb,45,106,79),0.1);border-radius:0 0 14px 14px;">' +
             '<span style="font-weight:800;color:var(--primary);">' + t('qada_total') + '</span>' +
             '<span style="font-weight:800;color:var(--primary);font-size:1.15em;">' + totals.totalAll + '</span>' +
         '</div>';
@@ -395,7 +393,7 @@ window.App.QadaCalc = (function() {
         '</div>';
 
         // Completion estimate
-        html += '<div id="qadaCompletionCard" style="display:none;padding:14px 16px;background:var(--primary-light,rgba(45,106,79,0.08));border-radius:14px;margin-bottom:16px;">';
+        html += '<div id="qadaCompletionCard" style="display:none;padding:14px 16px;background:rgba(var(--accent-rgb,45,106,79),0.1);border-radius:14px;margin-bottom:16px;">';
         html += '<div id="qadaCompletionContent"></div>';
         html += '</div>';
 
@@ -533,14 +531,14 @@ window.App.QadaCalc = (function() {
             '</div>';
         });
 
-        html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--primary-light,rgba(45,106,79,0.08));border-radius:0 0 14px 14px;">' +
+        html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(var(--accent-rgb,45,106,79),0.1);border-radius:0 0 14px 14px;">' +
             '<span style="font-weight:800;color:var(--primary);">' + t('qada_total') + '</span>' +
             '<span style="font-weight:800;color:var(--primary);font-size:1.15em;">' + wizardData.totalAll + '</span>' +
         '</div>';
         html += '</div>';
 
         // Daily target info
-        html += '<div style="padding:14px 16px;background:var(--primary-light,rgba(45,106,79,0.08));border-radius:14px;margin-bottom:16px;font-size:0.9em;">' +
+        html += '<div style="padding:14px 16px;background:rgba(var(--accent-rgb,45,106,79),0.1);border-radius:14px;margin-bottom:16px;font-size:0.9em;">' +
             '<div style="display:flex;justify-content:space-between;margin-bottom:4px;">' +
                 '<span style="color:var(--text-secondary);">' + t('qada_daily_count') + '</span>' +
                 '<span style="font-weight:700;color:var(--primary);">' + wizardData.dailyTarget + '</span>' +
@@ -852,6 +850,12 @@ window.App.QadaCalc = (function() {
                     showToast(t('qada_invalid_dates'), 'warning');
                     return;
                 }
+                // Save Step 1 data BEFORE re-render destroys DOM inputs
+                var totals = calculateTotals(base);
+                wizardData = Object.assign({}, wizardData, base);
+                wizardData.additionalPeriods = JSON.parse(JSON.stringify(additionalPeriods));
+                wizardData.totalByPrayer = totals.totalByPrayer;
+                wizardData.totalAll = totals.totalAll;
                 currentStep = 2;
                 renderOverlay();
             };
