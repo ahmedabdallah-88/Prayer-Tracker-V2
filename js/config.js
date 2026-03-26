@@ -512,7 +512,16 @@ window.App.Config = {
         'qada_summary': { ar: 'ملخص الخطة', en: 'Plan Summary' },
         'qada_base_period': { ar: 'الفترة الأساسية', en: 'Base period' },
         'qada_menstrual_deduction': { ar: 'خصم أيام الحيض', en: 'Menstrual deduction' },
-        'qada_additional_periods': { ar: 'فترات إضافية', en: 'Additional periods' }
+        'qada_additional_periods': { ar: 'فترات إضافية', en: 'Additional periods' },
+
+        // Qada Tracker (Phase 2)
+        'qada_tab': { ar: 'القضاء', en: 'Qada' },
+        'qada_today_label': { ar: 'اليوم', en: 'Today' },
+        'qada_remaining_short': { ar: 'باقي', en: 'Remaining' },
+        'qada_progress': { ar: 'التقدم', en: 'Progress' },
+        'qada_no_plan': { ar: 'لا توجد خطة قضاء', en: 'No qada plan' },
+        'qada_create_plan_prompt': { ar: 'أنشئ خطة من الإعدادات', en: 'Create a plan from Settings' },
+        'qada_prayer_label': { ar: 'صلاة', en: 'prayer' }
     }
 
 };

@@ -2654,6 +2654,127 @@ body {
     appearance: none;
 }
 
+/* ==================== QADA TRACKER (Phase 2) ==================== */
+
+/* Summary banner */
+.qada-summary-banner {
+    padding: 14px 16px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    margin-bottom: 14px;
+    border: 1px solid rgba(0,0,0,0.04);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+.qada-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.qada-progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 3px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+.qada-progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+}
+
+/* Qada filled day-box */
+.day-box.qada-filled {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark, #1B5E3B));
+    border-color: transparent;
+    box-shadow: 0 2px 8px rgba(var(--primary-rgb, 45,106,79), 0.35);
+}
+.day-box.qada-filled .qada-count {
+    color: white;
+    font-weight: 800;
+    font-size: 0.9em;
+    font-family: 'Rubik', sans-serif;
+    line-height: 1;
+}
+
+/* Popup */
+.qada-popup {
+    position: fixed;
+    z-index: 20001;
+    animation: qadaPopIn 0.15s ease;
+}
+@keyframes qadaPopIn {
+    0% { opacity: 0; transform: scale(0.85); }
+    100% { opacity: 1; transform: scale(1); }
+}
+.qada-popup-body {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: var(--card-bg, white);
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+    border: 1px solid rgba(0,0,0,0.06);
+    overflow: hidden;
+}
+.qada-popup-btn {
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: transparent;
+    font-size: 1.3em;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    font-family: 'Rubik', sans-serif;
+}
+.qada-popup-btn:active { background: rgba(0,0,0,0.06); }
+.qada-popup-btn.plus { color: var(--primary); }
+.qada-popup-btn.minus { color: var(--danger); }
+.qada-popup-num {
+    min-width: 36px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 1.2em;
+    color: var(--text-primary);
+    font-family: 'Rubik', sans-serif;
+}
+
+/* Popup arrow */
+.qada-popup-arrow {
+    width: 12px;
+    height: 12px;
+    background: var(--card-bg, white);
+    border: 1px solid rgba(0,0,0,0.06);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    z-index: -1;
+}
+.qada-popup-arrow.arrow-bottom {
+    bottom: -6px;
+    border-top: none;
+    border-left: none;
+}
+.qada-popup-arrow.arrow-top {
+    top: -6px;
+    border-bottom: none;
+    border-right: none;
+}
+
+/* 4-tab pill support */
+.sub-tabs-pill[data-pos="3"] {
+    /* JS sets transform inline for 4-tab mode */
+}
+[dir="rtl"] .sub-tabs-pill[data-pos="3"] { transform: translateX(calc(-300% - 6px)); }
+[dir="ltr"] .sub-tabs-pill[data-pos="3"] { transform: translateX(calc(300% + 6px)); }
+
 /* ==================== PERIOD HISTORY ==================== */
 .period-history { margin-top: 20px; }
 
