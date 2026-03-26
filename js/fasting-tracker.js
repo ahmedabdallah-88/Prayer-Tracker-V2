@@ -112,6 +112,7 @@ window.App.Fasting = (function() {
     // ==================== FASTING VIEW SWITCH (MERGED with Fiori override) ====================
 
     function switchFastingView(view) {
+        if (window.App.UI && window.App.UI.haptic) window.App.UI.haptic('soft');
         document.querySelectorAll('#fastingSection .view').forEach(function(v) { v.classList.remove('active'); });
         document.querySelectorAll('#fastingSection .toggle-btn').forEach(function(b) { b.classList.remove('active'); });
 
@@ -133,15 +134,28 @@ window.App.Fasting = (function() {
             updateFastingDashboard();
         }
 
-        // Fiori sub-tab active state management
+        // Fiori sub-tab active state management + sliding pill
         var subTabs = document.getElementById('fastingSubTabs');
         if (subTabs) {
+            var pillPos = 0;
             subTabs.querySelectorAll('.sub-tab').forEach(function(tab, i) {
                 tab.classList.remove('active');
                 if ((view === 'voluntary' && i === 0) || (view === 'ramadan' && i === 1) || (view === 'dashboard' && i === 2)) {
                     tab.classList.add('active');
+                    pillPos = i;
                 }
             });
+            var pill = subTabs.querySelector('.sub-tabs-pill');
+            if (pill) pill.setAttribute('data-pos', pillPos);
+        }
+
+        // View slide-in animation
+        var activeView = document.querySelector('#fastingSection .view.active');
+        if (activeView) {
+            activeView.classList.remove('view-slide-in');
+            void activeView.offsetWidth;
+            activeView.classList.add('view-slide-in');
+            setTimeout(function() { activeView.classList.remove('view-slide-in'); }, 300);
         }
     }
 
@@ -244,6 +258,7 @@ window.App.Fasting = (function() {
     }
 
     function changeFastingMonth(delta) {
+        if (window.App.UI && window.App.UI.haptic) window.App.UI.haptic('soft');
         var mEl = document.getElementById('fastingMonthSelect');
         var yEl = document.getElementById('fastingYearVoluntary');
         if (mEl) fastingMonth = parseInt(mEl.value);
@@ -253,6 +268,16 @@ window.App.Fasting = (function() {
         else if (fastingMonth < 1) { fastingMonth = 12; fastingYear--; }
         if (mEl) mEl.value = fastingMonth;
         if (yEl) yEl.value = fastingYear;
+
+        // Animate month label slide
+        var monthLabel = document.getElementById('fastingMonthLabel');
+        if (monthLabel) {
+            monthLabel.classList.remove('slide-from-left', 'slide-from-right');
+            void monthLabel.offsetWidth;
+            monthLabel.classList.add(delta > 0 ? 'slide-from-left' : 'slide-from-right');
+            setTimeout(function() { monthLabel.classList.remove('slide-from-left', 'slide-from-right'); }, 250);
+        }
+
         updateVoluntaryFasting();
     }
 

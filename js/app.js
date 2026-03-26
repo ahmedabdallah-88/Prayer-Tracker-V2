@@ -11,6 +11,12 @@ window.App.Main = (function() {
         var Profiles = window.App.Profiles;
         var DataIO = window.App.DataIO;
 
+        // Safety: always clear body scroll locks left from prior state
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.top = '';
+
         // --- Profile check (from _origInit) ---
         var profiles = Profiles.getProfiles();
         var activeId = Profiles.getActiveProfileId();
@@ -98,25 +104,37 @@ window.App.Main = (function() {
             }
         }, 1000);
 
-        // Notification onboarding card (first-launch prompt)
+        // Notification reminder banner (shows if neither before/after enabled)
         setTimeout(function() {
-            if (window.App.Notifications && window.App.Notifications.showOnboardingCard) {
-                window.App.Notifications.showOnboardingCard();
+            if (window.App.Notifications && window.App.Notifications.updateReminderBanner) {
+                window.App.Notifications.updateReminderBanner();
             }
         }, 2000);
+
+        // Onboarding for returning users (profile already loaded via init)
+        // Wait for splash (if first visit) + render to finish
+        var splashDelay = document.getElementById('splashScreen') ? 11000 : 800;
+        setTimeout(function() {
+            if (window.App.Onboarding && window.App.Onboarding.shouldShow()) {
+                window.App.Onboarding.start();
+            }
+        }, splashDelay);
     }
 
     // ==================== FIORI: switchTab ====================
 
     function switchTab(tab) {
+        if (window.App.UI && window.App.UI.haptic) window.App.UI.haptic('soft');
         document.querySelectorAll('.tab-item').forEach(function(t) {
-            t.classList.remove('active');
+            t.classList.remove('active', 'tab-bounce');
             t.setAttribute('aria-selected', 'false');
         });
         var tabEl = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
         if (tabEl) {
-            tabEl.classList.add('active');
+            tabEl.classList.add('active', 'tab-bounce');
             tabEl.setAttribute('aria-selected', 'true');
+            // Remove bounce class after animation completes
+            setTimeout(function() { tabEl.classList.remove('tab-bounce'); }, 400);
         }
         if (typeof window.switchSection === 'function') {
             window.switchSection(tab);
@@ -190,6 +208,55 @@ window.App.Main = (function() {
         }
     }
 
+    // ==================== CHECK FOR UPDATES (manual) ====================
+
+    function checkForUpdates() {
+        var lang = window.App.I18n ? window.App.I18n.getCurrentLang() : 'ar';
+        var toast = window.App.UI && window.App.UI.showToast;
+
+        if (toast) toast(lang === 'ar' ? 'جاري التحديث...' : 'Updating...', 'info', 3000);
+
+        // 1. Unregister service worker
+        // 2. Clear all caches
+        // 3. Force reload
+        var swPromise = Promise.resolve();
+        if ('serviceWorker' in navigator) {
+            swPromise = navigator.serviceWorker.getRegistrations().then(function(regs) {
+                return Promise.all(regs.map(function(r) { return r.unregister(); }));
+            });
+        }
+        var cachePromise = ('caches' in window) ? caches.keys().then(function(keys) {
+            return Promise.all(keys.map(function(k) { return caches.delete(k); }));
+        }) : Promise.resolve();
+
+        Promise.all([swPromise, cachePromise]).then(function() {
+            setTimeout(function() { window.location.reload(true); }, 1000);
+        }).catch(function() {
+            setTimeout(function() { window.location.reload(true); }, 1000);
+        });
+    }
+
+    // ==================== UPDATE BANNER ====================
+
+    function showUpdateBanner() {
+        if (document.getElementById('swUpdateBanner')) return;
+        var lang = window.App.I18n ? window.App.I18n.getCurrentLang() : 'ar';
+        var banner = document.createElement('div');
+        banner.id = 'swUpdateBanner';
+        banner.style.cssText = 'position:fixed;top:0;left:0;right:0;background:var(--primary);color:white;padding:12px 16px;z-index:9999;display:flex;align-items:center;gap:10px;justify-content:center;font-family:inherit;font-size:0.85em;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.2);';
+        banner.innerHTML = '<span class="material-symbols-rounded" style="font-size:20px;">system_update</span>' +
+            '<span>' + (lang === 'ar' ? 'تحديث جديد متاح — اضغط للتحديث' : 'New update available — tap to update') + '</span>';
+        banner.onclick = function() {
+            banner.textContent = lang === 'ar' ? 'جاري التحديث...' : 'Updating...';
+            navigator.serviceWorker.ready.then(function(reg) {
+                if (reg.waiting) {
+                    reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+                }
+            });
+        };
+        document.body.appendChild(banner);
+    }
+
     // ==================== STARTUP SEQUENCE ====================
 
     function startup() {
@@ -203,7 +270,7 @@ window.App.Main = (function() {
             DataIO.migrateExistingData();
         }
 
-        // Load theme + language
+        // Load theme + language (always, even during splash)
         if (window.App.Themes && window.App.Themes.loadTheme) {
             window.App.Themes.loadTheme();
         }
@@ -211,15 +278,38 @@ window.App.Main = (function() {
             window.App.I18n.applyLang();
         }
 
-        // Main init
-        init();
-
-        // Init info tooltip buttons on static HTML cards
-        setTimeout(function() {
-            if (window.App.InfoTooltips && window.App.InfoTooltips.initStaticButtons) {
-                window.App.InfoTooltips.initStaticButtons();
+        // If splash is active, defer init + monitors until splash finishes
+        if (window._splashActive) {
+            window._onSplashDone = function() {
+                try {
+                    init();
+                    startPostInitTasks();
+                } catch(e) {
+                    console.error('[APP] init/post-init error:', e);
+                    // Ensure page is usable even if init fails
+                    document.body.style.overflow = '';
+                    document.body.style.position = '';
+                }
+                // Fade in app content: add transition class, then remove hiding class
+                document.body.classList.add('app-revealing');
+                requestAnimationFrame(function() {
+                    document.body.classList.remove('splash-active');
+                    setTimeout(function() {
+                        document.body.classList.remove('app-revealing');
+                    }, 350);
+                });
+            };
+        } else {
+            // No splash (return visit) — init immediately
+            try {
+                init();
+                startPostInitTasks();
+            } catch(e) {
+                console.error('[APP] init/post-init error:', e);
+                document.body.style.overflow = '';
+                document.body.style.position = '';
             }
-        }, 500);
+        }
 
         // Clamp year inputs to valid Hijri range (1400-1500)
         document.addEventListener('input', function(e) {
@@ -234,47 +324,45 @@ window.App.Main = (function() {
             }
         });
 
-        // Start prayer times monitor
-        setTimeout(function() {
-            var activeProfile = window.App.Storage.getActiveProfile();
-            if (activeProfile && typeof window.startPrayerTimesMonitor === 'function') {
-                window.startPrayerTimesMonitor();
-            }
-        }, 1500);
-
         // PWA Service Worker
         if ('serviceWorker' in navigator) {
+            // Auto-reload when new SW takes control
+            var swRefreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', function() {
+                if (!swRefreshing) {
+                    swRefreshing = true;
+                    window.location.reload();
+                }
+            });
+
+            // Listen for notification clicks from SW
+            navigator.serviceWorker.addEventListener('message', function(event) {
+                if (event.data && event.data.type === 'notification-click') {
+                    window.focus();
+                    if (event.data.tag && event.data.tag.indexOf('prayer-after-') !== -1) {
+                        try { if (typeof window.scrollToUnmarkedPrayer === 'function') window.scrollToUnmarkedPrayer(); } catch(e) {}
+                    }
+                }
+            });
+
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('./service-worker.js')
                     .then(function(reg) {
+                        // If a new SW is already waiting, activate it immediately
+                        if (reg.waiting) {
+                            reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+                        }
 
-                        // Listen for notification clicks from SW
-                        navigator.serviceWorker.addEventListener('message', function(event) {
-                            if (event.data && event.data.type === 'notification-click') {
-                                window.focus();
-                                if (event.data.tag && event.data.tag.indexOf('prayer-after-') !== -1) {
-                                    try { if (typeof window.scrollToUnmarkedPrayer === 'function') window.scrollToUnmarkedPrayer(); } catch(e) {}
-                                }
-                            }
-                        });
-
-                        // Auto-apply SW update immediately (no manual click needed)
+                        // Detect new SW installing — force activate as soon as installed
                         reg.addEventListener('updatefound', function() {
                             var newWorker = reg.installing;
+                            if (!newWorker) return;
                             newWorker.addEventListener('statechange', function() {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New version ready — skip waiting immediately
                                     newWorker.postMessage({ type: 'SKIP_WAITING' });
                                 }
                             });
-                        });
-
-                        // Auto-reload when new SW takes control
-                        var swRefreshing = false;
-                        navigator.serviceWorker.addEventListener('controllerchange', function() {
-                            if (!swRefreshing) {
-                                swRefreshing = true;
-                                window.location.reload();
-                            }
                         });
 
                         // Force check for SW updates on every page load
@@ -295,15 +383,12 @@ window.App.Main = (function() {
             });
         }
 
-        // Re-check prayer times when app becomes visible
+        // Re-check prayer times and ALL notifications when app becomes visible
         document.addEventListener('visibilitychange', function() {
             if (document.visibilityState === 'visible') {
                 var activeProfile = window.App.Storage.getActiveProfile();
-                if (activeProfile) {
-                    if (typeof window.renderPrayerTimes === 'function') window.renderPrayerTimes();
-                    if (window.App.Notifications && window.App.Notifications.checkPrayerTimeNotifications) {
-                        window.App.Notifications.checkPrayerTimeNotifications();
-                    }
+                if (activeProfile && window.App.Notifications) {
+                    window.App.Notifications.runAllChecks();
                 }
             }
         });
@@ -311,9 +396,10 @@ window.App.Main = (function() {
         // Schedule SW notifications when app goes to background
         document.addEventListener('visibilitychange', function() {
             if (document.visibilityState === 'hidden') {
-                if (window.App.Notifications && window.App.Notifications.isEnabled()) {
-                    if (window.App.Notifications.scheduleSWNotifications) {
-                        window.App.Notifications.scheduleSWNotifications();
+                if (window.App.Notifications) {
+                    var N = window.App.Notifications;
+                    if (N.isBeforeEnabled() || N.isAfterEnabled()) {
+                        N.scheduleSWNotifications();
                     }
                 }
             }
@@ -324,14 +410,32 @@ window.App.Main = (function() {
             window.App.UI.initInstallBanner();
         }
 
-        // Fade out splash screen after animation completes
+        // Onboarding is triggered from selectProfile() in profiles.js
+        // AFTER profile is loaded and main UI is fully rendered.
+    }
+
+    // ==================== POST-INIT TASKS (deferred if splash active) ====================
+
+    function startPostInitTasks() {
+        // Info tooltip buttons on static HTML cards
         setTimeout(function() {
-            var splash = document.getElementById('splashScreen');
-            if (splash) {
-                splash.classList.add('splash-hidden');
-                setTimeout(function() { splash.remove(); }, 600);
+            if (window.App.InfoTooltips && window.App.InfoTooltips.initStaticButtons) {
+                window.App.InfoTooltips.initStaticButtons();
             }
-        }, 5000);
+        }, 500);
+
+        // Prayer times display + notification monitor
+        setTimeout(function() {
+            var activeProfile = window.App.Storage.getActiveProfile();
+            if (activeProfile) {
+                if (window.App.PrayerTimes && window.App.PrayerTimes.startPrayerTimesMonitor) {
+                    window.App.PrayerTimes.startPrayerTimesMonitor();
+                }
+                if (window.App.Notifications && window.App.Notifications.startMonitor) {
+                    window.App.Notifications.startMonitor();
+                }
+            }
+        }, 1500);
     }
 
     return {
@@ -341,7 +445,9 @@ window.App.Main = (function() {
         updateShellBar: updateShellBar,
         openProfileSettings: openProfileSettings,
         closeProfileSettings: closeProfileSettings,
-        applyUpdate: applyUpdate
+        applyUpdate: applyUpdate,
+        checkForUpdates: checkForUpdates,
+        showUpdateBanner: showUpdateBanner
     };
 })();
 
@@ -351,6 +457,56 @@ window.updateShellBar = window.App.Main.updateShellBar;
 window.openProfileSettings = window.App.Main.openProfileSettings;
 window.closeProfileSettings = window.App.Main.closeProfileSettings;
 window.applyUpdate = window.App.Main.applyUpdate;
+window.checkForUpdates = window.App.Main.checkForUpdates;
+
+// ==================== SCROLL SAFETY CLEANUP ====================
+// Ensures the app is scrollable after splash ends. Only runs when
+// splash is NOT actively animating (window._splashActive === false).
+function _scrollSafetyCleanup() {
+    // NEVER interfere while splash is actively animating
+    if (window._splashActive) return;
+
+    // 1. Remove splash-active/app-revealing if splash is gone
+    if (!document.getElementById('splashScreen')) {
+        document.body.classList.remove('splash-active');
+        document.body.classList.remove('app-revealing');
+    }
+
+    // 2. Clear body scroll locks if no overlay is legitimately open
+    var profileOverlay = document.getElementById('profileOverlay');
+    var profileOpen = profileOverlay && !profileOverlay.classList.contains('hidden');
+    var confirmOverlay = document.querySelector('.confirm-overlay.show');
+    var profileSettings = document.getElementById('profileSettingsOverlay');
+    var profileSettingsOpen = profileSettings && profileSettings.classList.contains('show');
+    if (!profileOpen && !confirmOverlay && !profileSettingsOpen) {
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.top = '';
+    }
+
+    // 3. Kill any orphaned onboarding overlays
+    var onboard = document.getElementById('onboardOverlay');
+    if (onboard && !onboard.classList.contains('active')) {
+        onboard.remove();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Only remove stale splash on RETURN visits (splash already played
+    // this session AND is not currently animating). The splash script
+    // sets sessionStorage BEFORE animation starts, so we must also
+    // check _splashActive to avoid killing an in-progress animation.
+    if (sessionStorage.getItem('splashShown') && !window._splashActive) {
+        var stale = document.getElementById('splashScreen');
+        if (stale) stale.remove();
+        document.body.classList.remove('splash-active');
+    }
+
+    // Run safety cleanup at intervals AFTER splash would have finished
+    setTimeout(_scrollSafetyCleanup, 12000);
+    setTimeout(_scrollSafetyCleanup, 16000);
+});
 
 // ==================== RUN STARTUP ====================
 window.App.Main.startup();
