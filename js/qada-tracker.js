@@ -114,6 +114,9 @@ window.App.QadaTracker = (function() {
 
     // ==================== RENDER ====================
 
+    // Track current view state for in-place updates
+    var _viewState = { hYear: 0, hMonth: 0 };
+
     function render() {
         var container = document.getElementById('qadaTrackerContainer');
         if (!container) return;
@@ -138,6 +141,9 @@ window.App.QadaTracker = (function() {
         var isCurrentMonth = (todayH.year === hYear && todayH.month === hMonth);
         var logData = loadLog(hYear, hMonth);
 
+        _viewState.hYear = hYear;
+        _viewState.hMonth = hMonth;
+
         // ---- Summary banner ----
         var completedAll = plan.completedAll || 0;
         var totalAll = plan.totalAll || 1;
@@ -150,16 +156,8 @@ window.App.QadaTracker = (function() {
 
         var banner = document.createElement('div');
         banner.className = 'qada-summary-banner';
-        banner.innerHTML =
-            '<div class="qada-summary-row">' +
-                '<span style="font-weight:700;color:var(--text-primary);">' + t('qada_progress') + '</span>' +
-                '<span style="font-weight:800;color:' + pctColor + ';">' + pct + '%</span>' +
-            '</div>' +
-            '<div class="qada-progress-bar"><div class="qada-progress-fill" style="width:' + Math.min(pct, 100) + '%;background:' + pctColor + ';"></div></div>' +
-            '<div class="qada-summary-row" style="margin-top:8px;font-size:0.85em;">' +
-                '<span style="color:var(--text-secondary);">' + t('qada_today_label') + ': <strong>' + todayCount + ' / ' + dailyTarget + '</strong></span>' +
-                '<span style="color:var(--text-secondary);">' + t('qada_remaining_short') + ': <strong>' + remaining + '</strong> ' + t('qada_period_prayers') + '</span>' +
-            '</div>';
+        banner.id = 'qadaSummaryBanner';
+        banner.innerHTML = _buildBannerHTML(pct, pctColor, todayCount, dailyTarget, remaining);
         container.appendChild(banner);
 
         // ---- Prayer rows ----
@@ -175,6 +173,7 @@ window.App.QadaTracker = (function() {
             // Header
             var header = document.createElement('div');
             header.className = 'prayer-header';
+            header.id = 'qadaHeader_' + prayerId;
             var iconBg = SKY_GRADIENTS[prayerId] || 'linear-gradient(135deg,#888,#666)';
             var prayerDef = window.App.Config.fardPrayers.find(function(p) { return p.id === prayerId; });
             var icon = prayerDef ? prayerDef.icon : 'mosque';
@@ -188,6 +187,7 @@ window.App.QadaTracker = (function() {
 
             var headerEnd = document.createElement('div');
             headerEnd.className = 'prayer-header-end';
+            headerEnd.id = 'qadaHeaderEnd_' + prayerId;
             headerEnd.innerHTML =
                 '<span class="prayer-counter" style="color:var(--text-muted);font-size:0.8em;">' +
                     t('qada_remaining_short') + ': ' + remainForPrayer +
@@ -212,31 +212,27 @@ window.App.QadaTracker = (function() {
 
                 if (isDayToday) dayBox.classList.add('today-box');
 
+                // Always show day number
+                var numSpan = document.createElement('span');
+                numSpan.className = 'day-number';
+                numSpan.textContent = day;
+                dayBox.appendChild(numSpan);
+
                 if (isFuture) {
                     dayBox.classList.add('disabled');
-                    // Show day number
-                    var numSpan = document.createElement('span');
-                    numSpan.className = 'day-number';
-                    numSpan.textContent = day;
-                    dayBox.appendChild(numSpan);
                 } else {
                     if (count > 0) {
                         dayBox.classList.add('qada-filled');
-                        var countSpan = document.createElement('span');
-                        countSpan.className = 'qada-count';
-                        countSpan.textContent = count;
-                        dayBox.appendChild(countSpan);
-                    } else {
-                        var numSpan2 = document.createElement('span');
-                        numSpan2.className = 'day-number';
-                        numSpan2.textContent = day;
-                        dayBox.appendChild(numSpan2);
+                        var badge = document.createElement('span');
+                        badge.className = 'qada-badge';
+                        badge.textContent = count;
+                        dayBox.appendChild(badge);
                     }
 
                     dayBox.onclick = (function(pid, d, box) {
                         return function(e) {
                             e.stopPropagation();
-                            showPopup(pid, d, hYear, hMonth, box);
+                            showPopup(pid, d, _viewState.hYear, _viewState.hMonth, box);
                         };
                     })(prayerId, day, dayBox);
                 }
@@ -248,6 +244,18 @@ window.App.QadaTracker = (function() {
             section.appendChild(grid);
             container.appendChild(section);
         });
+    }
+
+    function _buildBannerHTML(pct, pctColor, todayCount, dailyTarget, remaining) {
+        return '<div class="qada-summary-row">' +
+                '<span style="font-weight:700;color:var(--text-primary);">' + t('qada_progress') + '</span>' +
+                '<span style="font-weight:800;color:' + pctColor + ';">' + pct + '%</span>' +
+            '</div>' +
+            '<div class="qada-progress-bar"><div class="qada-progress-fill" style="width:' + Math.min(pct, 100) + '%;background:' + pctColor + ';"></div></div>' +
+            '<div class="qada-summary-row" style="margin-top:8px;font-size:0.85em;">' +
+                '<span style="color:var(--text-secondary);">' + t('qada_today_label') + ': <strong>' + todayCount + ' / ' + dailyTarget + '</strong></span>' +
+                '<span style="color:var(--text-secondary);">' + t('qada_remaining_short') + ': <strong>' + remaining + '</strong> ' + t('qada_period_prayers') + '</span>' +
+            '</div>';
     }
 
     // ==================== POPUP ====================
@@ -269,6 +277,11 @@ window.App.QadaTracker = (function() {
     }
 
     function showPopup(prayerId, day, hYear, hMonth, dayBox) {
+        // If popup already open for same day+prayer, just reset timer
+        if (_activePopup && _activePopup._prayerId === prayerId && _activePopup._day === day) {
+            resetPopupTimer();
+            return;
+        }
         closePopup();
         haptic('soft');
 
@@ -277,6 +290,8 @@ window.App.QadaTracker = (function() {
 
         var popup = document.createElement('div');
         popup.className = 'qada-popup';
+        popup._prayerId = prayerId;
+        popup._day = day;
 
         // Position: above or below the circle
         var rect = dayBox.getBoundingClientRect();
@@ -295,8 +310,8 @@ window.App.QadaTracker = (function() {
         _activePopup = popup;
 
         // Position the popup
-        var popW = 130;
-        var popH = 48;
+        var popW = 140;
+        var popH = 52;
         var left = rect.left + rect.width / 2 - popW / 2;
         var top;
         if (showBelow) {
@@ -314,7 +329,7 @@ window.App.QadaTracker = (function() {
 
         resetPopupTimer();
 
-        // Button handlers
+        // Button handlers — update in-place, no re-render
         var numEl = document.getElementById('qadaPopNum');
 
         document.getElementById('qadaPopPlus').onclick = function(e) {
@@ -326,7 +341,8 @@ window.App.QadaTracker = (function() {
             saveLog(hYear, hMonth, logData);
             updatePlanCompleted(prayerId, 1);
             updateDayBox(dayBox, count, day);
-            updateBannerAndHeaders();
+            _updateBannerInPlace();
+            _updateHeaderInPlace(prayerId);
             resetPopupTimer();
         };
 
@@ -340,7 +356,8 @@ window.App.QadaTracker = (function() {
             saveLog(hYear, hMonth, logData);
             updatePlanCompleted(prayerId, -1);
             updateDayBox(dayBox, count, day);
-            updateBannerAndHeaders();
+            _updateBannerInPlace();
+            _updateHeaderInPlace(prayerId);
             resetPopupTimer();
         };
 
@@ -360,24 +377,60 @@ window.App.QadaTracker = (function() {
     function updateDayBox(dayBox, count, day) {
         dayBox.innerHTML = '';
         dayBox.classList.remove('qada-filled');
+        // Always show day number
+        var numSpan = document.createElement('span');
+        numSpan.className = 'day-number';
+        numSpan.textContent = day;
+        dayBox.appendChild(numSpan);
         if (count > 0) {
             dayBox.classList.add('qada-filled');
-            var countSpan = document.createElement('span');
-            countSpan.className = 'qada-count';
-            countSpan.textContent = count;
-            dayBox.appendChild(countSpan);
-        } else {
-            var numSpan = document.createElement('span');
-            numSpan.className = 'day-number';
-            numSpan.textContent = day;
-            dayBox.appendChild(numSpan);
+            var badge = document.createElement('span');
+            badge.className = 'qada-badge';
+            badge.textContent = count;
+            dayBox.appendChild(badge);
         }
     }
 
-    function updateBannerAndHeaders() {
-        // Re-render is simplest and avoids stale refs
-        render();
-        closePopup();
+    // Update summary banner without re-rendering the whole view
+    function _updateBannerInPlace() {
+        var banner = document.getElementById('qadaSummaryBanner');
+        if (!banner) return;
+        var plan = _loadPlan();
+        if (!plan) return;
+
+        var Hijri = window.App.Hijri;
+        var hYear = _viewState.hYear;
+        var hMonth = _viewState.hMonth;
+        var todayH = Hijri.getTodayHijri();
+        var isCurrentMonth = (todayH.year === hYear && todayH.month === hMonth);
+        var logData = loadLog(hYear, hMonth);
+
+        var completedAll = plan.completedAll || 0;
+        var totalAll = plan.totalAll || 1;
+        var remaining = totalAll - completedAll;
+        if (remaining < 0) remaining = 0;
+        var pct = Math.round((completedAll / totalAll) * 100);
+        var pctColor = pct >= 75 ? 'var(--primary)' : pct >= 40 ? 'var(--accent)' : 'var(--danger)';
+        var todayCount = isCurrentMonth ? getTodayTotal(logData, String(todayH.day)) : 0;
+        var dailyTarget = plan.dailyTarget || 5;
+
+        banner.innerHTML = _buildBannerHTML(pct, pctColor, todayCount, dailyTarget, remaining);
+    }
+
+    // Update single prayer header remaining count without re-rendering
+    function _updateHeaderInPlace(prayerId) {
+        var headerEnd = document.getElementById('qadaHeaderEnd_' + prayerId);
+        if (!headerEnd) return;
+        var plan = _loadPlan();
+        if (!plan) return;
+        var totalForPrayer = plan.totalByPrayer ? (plan.totalByPrayer[prayerId] || 0) : 0;
+        var completedForPrayer = plan.completedByPrayer ? (plan.completedByPrayer[prayerId] || 0) : 0;
+        var remainForPrayer = totalForPrayer - completedForPrayer;
+        if (remainForPrayer < 0) remainForPrayer = 0;
+        headerEnd.innerHTML =
+            '<span class="prayer-counter" style="color:var(--text-muted);font-size:0.8em;">' +
+                t('qada_remaining_short') + ': ' + remainForPrayer +
+            '</span>';
     }
 
     // ==================== TAB MANAGEMENT ====================
