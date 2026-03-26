@@ -85,6 +85,15 @@ window.App.QadaCalc = (function() {
         return h.day + ' ' + monthName + ' ' + h.year;
     }
 
+    function formatDualDate(h) {
+        var hijriText = formatHijriDate(h) + ' \u0647\u0640';
+        var gDate = window.App.Hijri.hijriToGregorian(h.year, h.month, h.day);
+        var isAr = lang() === 'ar';
+        var gMonths = isAr ? window.App.Config.gregorianMonthNamesAr : window.App.Config.gregorianMonthNamesEn;
+        var gregText = gMonths[gDate.getMonth()] + ' ' + gDate.getFullYear() + ' \u0645';
+        return hijriText + ' \u2014 ' + gregText;
+    }
+
     function addHijriDays(startHijri, days) {
         var gStart = window.App.Hijri.hijriToGregorian(startHijri.year, startHijri.month, startHijri.day);
         var gEnd = new Date(gStart.getTime() + days * 86400000);
@@ -450,16 +459,16 @@ window.App.QadaCalc = (function() {
         if (est.months > 0) durationText += est.months + ' ' + t('qada_months');
         if (!durationText) durationText = '< 1 ' + t('qada_months');
 
-        var endText = formatHijriDate(est.endHijri);
+        var endText = formatDualDate(est.endHijri);
 
         content.innerHTML =
             '<div style="display:flex;justify-content:space-between;margin-bottom:8px;">' +
                 '<span style="font-size:0.85em;color:var(--text-secondary);">' + t('qada_expected_duration') + '</span>' +
                 '<span style="font-weight:700;color:var(--primary);">' + durationText + '</span>' +
             '</div>' +
-            '<div style="display:flex;justify-content:space-between;margin-bottom:8px;">' +
-                '<span style="font-size:0.85em;color:var(--text-secondary);">' + t('qada_expected_end') + '</span>' +
-                '<span style="font-weight:700;color:var(--primary);">' + endText + '</span>' +
+            '<div style="margin-bottom:8px;">' +
+                '<div style="font-size:0.85em;color:var(--text-secondary);margin-bottom:2px;">' + t('qada_expected_end') + '</div>' +
+                '<div style="font-weight:700;color:var(--primary);font-size:0.95em;">' + endText + '</div>' +
             '</div>' +
             '<div style="display:flex;justify-content:space-between;">' +
                 '<span style="font-size:0.85em;color:var(--text-secondary);">' + t('qada_daily_count') + '</span>' +
@@ -551,9 +560,14 @@ window.App.QadaCalc = (function() {
             if (est.years > 0 && est.months > 0) durationText += ' ' + t('qada_and') + ' ';
             if (est.months > 0) durationText += est.months + ' ' + t('qada_months');
             if (!durationText) durationText = '< 1 ' + t('qada_months');
-            html += '<div style="display:flex;justify-content:space-between;">' +
+            html += '<div style="display:flex;justify-content:space-between;margin-bottom:4px;">' +
                 '<span style="color:var(--text-secondary);">' + t('qada_expected_duration') + '</span>' +
                 '<span style="font-weight:700;color:var(--primary);">' + durationText + '</span>' +
+            '</div>';
+            var endText3 = formatDualDate(est.endHijri);
+            html += '<div style="margin-top:4px;">' +
+                '<div style="color:var(--text-secondary);margin-bottom:2px;">' + t('qada_expected_end') + '</div>' +
+                '<div style="font-weight:700;color:var(--primary);">' + endText3 + '</div>' +
             '</div>';
         }
         html += '</div>';
