@@ -2600,6 +2600,60 @@ body {
     font-size: 0.75em;
 }
 
+/* ==================== QADA CALCULATOR ==================== */
+.qada-primary-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 1em;
+    font-family: inherit;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.qada-primary-btn:active { opacity: 0.85; transform: scale(0.98); }
+
+.qada-secondary-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--bg, #f3f4f6);
+    color: var(--text-secondary);
+    border: none;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 1em;
+    font-family: inherit;
+    cursor: pointer;
+}
+.qada-secondary-btn:active { opacity: 0.85; }
+
+.qada-pill-btn {
+    padding: 8px 16px;
+    border: 1.5px solid var(--border, rgba(0,0,0,0.1));
+    border-radius: 20px;
+    background: var(--card-bg, white);
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.85em;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.qada-pill-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+.qada-pill-btn:active { transform: scale(0.96); }
+
+.qada-date-input {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
 /* ==================== PERIOD HISTORY ==================== */
 .period-history { margin-top: 20px; }
 

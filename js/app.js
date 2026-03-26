@@ -185,6 +185,9 @@ window.App.Main = (function() {
         if (overlay) {
             overlay.classList.add('show');
             updateShellBar();
+            if (window.App.QadaCalc && window.App.QadaCalc.updateSettingsLabel) {
+                window.App.QadaCalc.updateSettingsLabel();
+            }
         }
     }
 
