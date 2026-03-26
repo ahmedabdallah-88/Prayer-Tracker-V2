@@ -56,23 +56,57 @@ window.App.QadaDashboard = (function() {
     function gatherAllLogData(plan) {
         var Hijri = window.App.Hijri;
         var QT = window.App.QadaTracker;
-        if (!QT || !plan || !plan.createdDate) return { monthlyTotals: {}, totalLogged: 0 };
+        if (!QT || !plan) return { monthlyTotals: {}, totalLogged: 0 };
 
-        // Determine range: from plan creation to today
-        var created = new Date(plan.createdDate);
-        var createdH = Hijri.gregorianToHijri(created);
         var todayH = Hijri.getTodayHijri();
+        var pid = window.App.Profiles ? window.App.Profiles.getActiveProfileId() : null;
+        if (!pid) return { monthlyTotals: {}, totalLogged: 0 };
 
+        // Scan localStorage for actual qada log keys to find real data range
+        var prefix = 'salah_qada_log_' + pid + '_h';
+        var foundMonths = []; // [{year, month}]
+        for (var i = 0; i < localStorage.length; i++) {
+            var k = localStorage.key(i);
+            if (k && k.indexOf(prefix) === 0) {
+                var suffix = k.substring(prefix.length); // e.g. "1447_9"
+                var parts = suffix.split('_');
+                if (parts.length === 2) {
+                    foundMonths.push({ year: parseInt(parts[0]), month: parseInt(parts[1]) });
+                }
+            }
+        }
+
+        // Also include createdDate month if available
+        var startY, startM;
+        if (plan.createdDate) {
+            var created = new Date(plan.createdDate);
+            var createdH = Hijri.gregorianToHijri(created);
+            startY = createdH.year;
+            startM = createdH.month;
+        }
+
+        // Find earliest month (min of found keys and createdDate)
+        for (var f = 0; f < foundMonths.length; f++) {
+            var fm = foundMonths[f];
+            if (!startY || fm.year < startY || (fm.year === startY && fm.month < startM)) {
+                startY = fm.year;
+                startM = fm.month;
+            }
+        }
+
+        if (!startY) return { monthlyTotals: {}, totalLogged: 0 };
+
+        // Iterate from earliest month to today
         var monthlyTotals = {};
         var totalLogged = 0;
-        var y = createdH.year, m = createdH.month;
+        var y = startY, m = startM;
 
         while (y < todayH.year || (y === todayH.year && m <= todayH.month)) {
             var logData = QT.loadLog(y, m);
             var monthTotal = 0;
             var days = Object.keys(logData);
-            for (var i = 0; i < days.length; i++) {
-                var dayData = logData[days[i]];
+            for (var di = 0; di < days.length; di++) {
+                var dayData = logData[days[di]];
                 for (var j = 0; j < PRAYER_IDS.length; j++) {
                     monthTotal += (dayData[PRAYER_IDS[j]] || 0);
                 }
@@ -83,7 +117,6 @@ window.App.QadaDashboard = (function() {
 
             m++;
             if (m > 12) { m = 1; y++; }
-            // Safety: don't go beyond 5 years
             if (y > todayH.year + 5) break;
         }
 
@@ -91,10 +124,26 @@ window.App.QadaDashboard = (function() {
     }
 
     function daysSinceCreation(plan) {
-        if (!plan || !plan.createdDate) return 0;
-        var created = new Date(plan.createdDate);
-        var now = new Date();
-        var diff = Math.floor((now - created) / 86400000);
+        if (!plan) return 1;
+        // Use createdDate if available, but also check if data exists earlier
+        var earliest = plan.createdDate ? new Date(plan.createdDate) : new Date();
+        var pid = window.App.Profiles ? window.App.Profiles.getActiveProfileId() : null;
+        if (pid) {
+            var prefix = 'salah_qada_log_' + pid + '_h';
+            var Hijri = window.App.Hijri;
+            for (var i = 0; i < localStorage.length; i++) {
+                var k = localStorage.key(i);
+                if (k && k.indexOf(prefix) === 0) {
+                    var suffix = k.substring(prefix.length);
+                    var parts = suffix.split('_');
+                    if (parts.length === 2) {
+                        var gDate = Hijri.hijriToGregorian(parseInt(parts[0]), parseInt(parts[1]), 1);
+                        if (gDate < earliest) earliest = gDate;
+                    }
+                }
+            }
+        }
+        var diff = Math.floor((new Date() - earliest) / 86400000);
         return diff < 1 ? 1 : diff;
     }
 
