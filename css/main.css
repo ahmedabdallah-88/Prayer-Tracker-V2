@@ -2806,6 +2806,37 @@ body {
 [dir="rtl"] .sub-tabs-pill[data-pos="3"] { transform: translateX(calc(-300% - 6px)); }
 [dir="ltr"] .sub-tabs-pill[data-pos="3"] { transform: translateX(calc(300% + 6px)); }
 
+/* ==================== QADA DASHBOARD SUB-TOGGLE ==================== */
+.qada-dash-sub-btn {
+    flex: 1;
+    padding: 7px 0;
+    border: none;
+    background: transparent;
+    font-size: 0.82em;
+    font-weight: 700;
+    color: var(--text-muted);
+    cursor: pointer;
+    z-index: 1;
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    transition: color 0.25s ease;
+    border-radius: 10px;
+}
+.qada-dash-sub-btn.active {
+    color: var(--text-primary);
+}
+.qada-dash-sub-pill {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: calc(50% - 3px);
+    background: var(--card-bg, white);
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+}
+
 /* ==================== PERIOD HISTORY ==================== */
 .period-history { margin-top: 20px; }
 

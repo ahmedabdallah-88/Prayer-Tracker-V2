@@ -521,7 +521,21 @@ window.App.Config = {
         'qada_progress': { ar: 'التقدم', en: 'Progress' },
         'qada_no_plan': { ar: 'لا توجد خطة قضاء', en: 'No qada plan' },
         'qada_create_plan_prompt': { ar: 'أنشئ خطة من الإعدادات', en: 'Create a plan from Settings' },
-        'qada_prayer_label': { ar: 'صلاة', en: 'prayer' }
+        'qada_prayer_label': { ar: 'صلاة', en: 'prayer' },
+
+        // Qada Dashboard (Phase 3)
+        'fard_label': { ar: 'الفرائض', en: 'Fard' },
+        'qdr_overall_progress': { ar: 'التقدم الكلي', en: 'Overall Progress' },
+        'qdr_per_prayer_progress': { ar: 'التقدم لكل صلاة', en: 'Per-Prayer Progress' },
+        'qdr_performance_summary': { ar: 'ملخص الأداء', en: 'Performance Summary' },
+        'qdr_best_month': { ar: 'أفضل شهر', en: 'Best Month' },
+        'qdr_daily_avg': { ar: 'المعدل اليومي', en: 'Daily Average' },
+        'qdr_expected_completion': { ar: 'تاريخ الانتهاء المتوقع', en: 'Expected Completion' },
+        'qdr_start_logging': { ar: 'ابدأ بتسجيل القضاء', en: 'Start logging qada prayers' },
+        'qdr_plan_vs_reality': { ar: 'الخطة والواقع', en: 'Plan vs Reality' },
+        'qdr_target_label': { ar: 'الهدف', en: 'Target' },
+        'qdr_actual_label': { ar: 'الفعلي', en: 'Actual' },
+        'qdr_monthly_trend': { ar: 'التقدم الشهري', en: 'Monthly Trend' }
     }
 
 };
