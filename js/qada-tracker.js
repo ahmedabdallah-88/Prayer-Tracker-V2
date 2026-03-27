@@ -250,6 +250,10 @@ window.App.QadaTracker = (function() {
         });
         container.appendChild(statsRow);
 
+        // ── CALENDAR CARD (Card 2 — grid) ──
+        var trackerCard = document.createElement('div');
+        trackerCard.className = 'tracker-card';
+
         // ── SINGLE CALENDAR GRID ──
         var gridWrap = document.createElement('div');
         gridWrap.className = 'prayer-tab-grid';
@@ -289,7 +293,8 @@ window.App.QadaTracker = (function() {
             grid.appendChild(dayBox);
         }
         gridWrap.appendChild(grid);
-        container.appendChild(gridWrap);
+        trackerCard.appendChild(gridWrap);
+        container.appendChild(trackerCard);
     }
 
     function _buildBannerHTML(pct, pctColor, todayCount, dailyTarget, remaining) {

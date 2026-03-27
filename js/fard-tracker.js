@@ -372,6 +372,12 @@ window.App.Tracker = (function() {
         var container = document.getElementById(type + 'TrackerPrayersContainer');
         if (!container) return;
         container.innerHTML = '';
+        // Strip outer .prayers-container card so individual cards stand alone
+        container.style.background = 'transparent';
+        container.style.border = 'none';
+        container.style.padding = '0';
+        container.style.boxShadow = 'none';
+        container.style.borderRadius = '0';
 
         var prayers     = Storage.getPrayersArray(type);
         var dataObj     = Storage.getDataObject(type);
@@ -552,6 +558,10 @@ window.App.Tracker = (function() {
         });
         container.appendChild(statsRow);
 
+        // ── CALENDAR CARD (Card 2 — grid + legend) ──
+        var trackerCard = document.createElement('div');
+        trackerCard.className = 'tracker-card';
+
         // ── SINGLE CALENDAR GRID ──
         var gridWrap = document.createElement('div');
         gridWrap.className = 'prayer-tab-grid';
@@ -605,7 +615,7 @@ window.App.Tracker = (function() {
         }
 
         gridWrap.appendChild(grid);
-        container.appendChild(gridWrap);
+        trackerCard.appendChild(gridWrap);
 
         // ── LEGEND ──
         var legend = document.createElement('div');
@@ -627,7 +637,8 @@ window.App.Tracker = (function() {
                     '<div class="legend-item"><div class="legend-dot exempt-dot"><span class="material-symbols-rounded" style="font-size:10px;color:white;">do_not_disturb</span></div><span>' + (currentLang === 'ar' ? 'إعفاء' : 'Exemption') + '</span></div>';
             }
         }
-        container.appendChild(legend);
+        trackerCard.appendChild(legend);
+        container.appendChild(trackerCard);
     }
 
     // ==================== toggleTrackerDay ====================
