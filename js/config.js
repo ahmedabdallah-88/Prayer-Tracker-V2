@@ -20,14 +20,14 @@ window.App.Config = {
     ],
 
     sunnahPrayers: [
-        { id: 'tahajjud', name: '\u0627\u0644\u062a\u0647\u062c\u062f', icon: 'dark_mode', materialIcon: 'dark_mode', class: 'tahajjud', color: '#1e3a8a' },
         { id: 'sunnah-fajr', name: '\u0633\u0646\u0629 \u0627\u0644\u0641\u062c\u0631', icon: 'wb_twilight', materialIcon: 'wb_twilight', class: 'sunnah-fajr', color: '#D4A0A7' },
         { id: 'duha', name: '\u0627\u0644\u0636\u062d\u0649', icon: 'wb_sunny', materialIcon: 'wb_sunny', class: 'duha', color: '#f59e0b' },
         { id: 'sunnah-dhuhr', name: '\u0633\u0646\u0629 \u0627\u0644\u0638\u0647\u0631', icon: 'wb_sunny', materialIcon: 'wb_sunny', class: 'sunnah-dhuhr', color: '#E8B84A' },
         { id: 'sunnah-asr', name: '\u0633\u0646\u0629 \u0627\u0644\u0639\u0635\u0631', icon: 'partly_cloudy_day', materialIcon: 'partly_cloudy_day', class: 'sunnah-asr', color: '#D4943A' },
         { id: 'sunnah-maghrib', name: '\u0633\u0646\u0629 \u0627\u0644\u0645\u063a\u0631\u0628', icon: 'wb_twilight', materialIcon: 'wb_twilight', class: 'sunnah-maghrib', color: '#B0664A' },
         { id: 'sunnah-isha', name: '\u0633\u0646\u0629 \u0627\u0644\u0639\u0634\u0627\u0621', icon: 'dark_mode', materialIcon: 'dark_mode', class: 'sunnah-isha', color: '#4A5A7A' },
-        { id: 'witr', name: '\u0627\u0644\u0648\u062a\u0631', icon: 'auto_awesome', materialIcon: 'auto_awesome', class: 'witr', color: '#8b4789' }
+        { id: 'witr', name: '\u0627\u0644\u0648\u062a\u0631', icon: 'auto_awesome', materialIcon: 'auto_awesome', class: 'witr', color: '#8b4789' },
+        { id: 'tahajjud', name: '\u0627\u0644\u062a\u0647\u062c\u062f', icon: 'dark_mode', materialIcon: 'dark_mode', class: 'tahajjud', color: '#1e3a8a' }
     ],
 
     // ==================== MONTH NAMES ====================
@@ -174,6 +174,7 @@ window.App.Config = {
         'broke_fast': { ar: '\u0623\u0641\u0637\u0631\u062a \u2717', en: 'Missed \u2717' },
         'not_set': { ar: '\u0644\u0645 \u064a\u064f\u062d\u062f\u062f', en: 'Not set' },
         'fasting_days': { ar: '\u0623\u064a\u0627\u0645 \u0627\u0644\u0635\u064a\u0627\u0645', en: 'Fasting Days' },
+        'fasting_days_label': { ar: '\u064a\u0648\u0645 \u0635\u064a\u0627\u0645', en: 'Fasting Days' },
         'period_days': { ar: '\u0623\u064a\u0627\u0645 \u0627\u0644\u062d\u064a\u0636', en: 'Period Days' },
         'missed_days': { ar: '\u0623\u064a\u0627\u0645 \u0627\u0644\u0625\u0641\u0637\u0627\u0631', en: 'Missed Days' },
         'owed_days': { ar: '\u0623\u064a\u0627\u0645 \u0644\u0644\u0642\u0636\u0627\u0621', en: 'Days Owed' },
@@ -280,7 +281,6 @@ window.App.Config = {
         'fiori_theme': { ar: '\u0643\u0648\u0627\u0631\u062a\u0632', en: 'Quartz' },
         'skip_to_content': { ar: '\u062a\u062e\u0637\u064a \u0625\u0644\u0649 \u0627\u0644\u0645\u062d\u062a\u0648\u0649', en: 'Skip to content' },
         'offline_msg': { ar: '\u26A1 \u0623\u0646\u062a \u063a\u064a\u0631 \u0645\u062a\u0635\u0644 \u2014 \u0627\u0644\u062a\u0637\u0628\u064a\u0642 \u064a\u0639\u0645\u0644 \u0628\u062f\u0648\u0646 \u0627\u062a\u0635\u0627\u0644', en: '\u26A1 You are offline \u2014 app works without connection' },
-        'swipe_hint': { ar: '\u27F5 \u0627\u0633\u062d\u0628 \u0644\u0644\u062a\u0646\u0642\u0644 \u0628\u064a\u0646 \u0627\u0644\u0623\u0634\u0647\u0631 \u27F6', en: '\u27F5 Swipe to navigate months \u27F6' },
         'ready_to_track': { ar: '\u062c\u0627\u0647\u0632 \u0644\u062a\u062a\u0628\u0639 \u0647\u0630\u0627 \u0627\u0644\u0634\u0647\u0631!', en: 'Ready to track this month!' },
         'select_all_day': { ar: '\u062a\u062d\u062f\u064a\u062f \u0627\u0644\u064a\u0648\u0645', en: 'Select Day' },
         'mark_all': { ar: '\u062a\u062d\u062f\u064a\u062f \u0627\u0644\u0643\u0644', en: 'Mark All' },
@@ -501,6 +501,14 @@ window.App.Config = {
         'qada_save_changes': { ar: 'حفظ التعديلات', en: 'Save Changes' },
         'qada_delete_plan': { ar: 'حذف الخطة', en: 'Delete Plan' },
         'qada_delete_confirm': { ar: 'هل أنت متأكد؟ سيتم حذف الخطة وجميع بيانات القضاء المرتبطة بها', en: 'Are you sure? The plan and all associated qada data will be deleted.' },
+        'qada_nifas_days': { ar: 'إجمالي أيام النفاس', en: 'Total Nifas days' },
+        'qada_nifas_deduction': { ar: 'خصم النفاس', en: 'Nifas deduction' },
+        'qada_nifas_hint': { ar: 'عدد أيام النفاس خلال فترة الفوائت (الحد الأقصى ٤٠ يوماً لكل ولادة)', en: 'Nifas days during missed period (max 40 days per birth)' },
+        'qada_start_date': { ar: 'تاريخ بداية الخطة', en: 'Plan start date' },
+        'qada_already_prayed': { ar: 'هل قضيت صلوات سابقاً قبل استخدام التطبيق؟', en: 'Did you already make up prayers before using this app?' },
+        'qada_add_already': { ar: 'إضافة صلوات مؤداة', en: 'Add completed prayers' },
+        'qada_already_deduction': { ar: 'تم قضاؤها سابقاً', en: 'Already completed' },
+        'qada_already_count': { ar: 'عدد الصلوات المؤداة', en: 'Number of prayers completed' },
         'qada_plan_saved': { ar: 'تم حفظ خطة القضاء ✓', en: 'Qada plan saved ✓' },
         'qada_plan_deleted': { ar: 'تم حذف خطة القضاء', en: 'Qada plan deleted' },
         'qada_plan_updated': { ar: 'تم تحديث خطة القضاء ✓', en: 'Qada plan updated ✓' },

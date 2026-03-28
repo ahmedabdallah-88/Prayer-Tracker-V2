@@ -66,6 +66,29 @@ window.App.QadaTracker = (function() {
         localStorage.setItem(key, JSON.stringify(data));
     }
 
+    function deleteAllQadaData() {
+        var pid = _profileId();
+        if (!pid) return;
+        // Delete the plan
+        if (window.App.QadaCalc && window.App.QadaCalc.loadPlan) {
+            var planKey = 'salah_qada_plan_' + pid;
+            localStorage.removeItem(planKey);
+        }
+        // Delete all qada log keys (salah_qada_log_{pid}_h...)
+        var logPrefix = 'salah_qada_log_' + pid + '_';
+        // Delete all qada storage keys (salah_qada_{profilePrefix}h...)
+        var profilePrefix = window.App.Storage.getProfilePrefix ? window.App.Storage.getProfilePrefix() : (pid + '_');
+        var storagePrefix = 'salah_qada_' + profilePrefix + 'h';
+        var keysToDelete = [];
+        for (var i = 0; i < localStorage.length; i++) {
+            var k = localStorage.key(i);
+            if (k && (k.indexOf(logPrefix) === 0 || k.indexOf(storagePrefix) === 0)) {
+                keysToDelete.push(k);
+            }
+        }
+        keysToDelete.forEach(function(k) { localStorage.removeItem(k); });
+    }
+
     function getCount(logData, day, prayerId) {
         if (logData[day] && logData[day][prayerId]) return logData[day][prayerId];
         return 0;
@@ -233,7 +256,7 @@ window.App.QadaTracker = (function() {
             }
         });
 
-        // ── STATS ROW ──
+        // ── STATS ROW (Card 1 — own glassmorphism styling) ──
         var totalForPrayer = plan.totalByPrayer ? (plan.totalByPrayer[activePrayerId] || 0) : 0;
         var completedForPrayer = plan.completedByPrayer ? (plan.completedByPrayer[activePrayerId] || 0) : 0;
         var pctForPrayer = totalForPrayer > 0 ? Math.round((completedForPrayer / totalForPrayer) * 100) : 0;
@@ -537,6 +560,7 @@ window.App.QadaTracker = (function() {
         removeTab: removeTab,
         closePopup: closePopup,
         loadLog: loadLog,
-        saveLog: saveLog
+        saveLog: saveLog,
+        deleteAllData: deleteAllQadaData
     };
 })();
